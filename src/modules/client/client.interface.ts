@@ -13,6 +13,7 @@ export type IUser = {
   phoneNumber: string;
   
   role: ENUM_USER_ROLE;
+  dateOfBirth:Date
 
 };
 
@@ -22,11 +23,8 @@ export type IUserExistReturn = {
 
   password: string;
   role: ENUM_USER_ROLE;
-  profileImage: {
-    url: string;
-    public_id: string;
-  };
-  emailVerified: boolean;
+ 
+
 };
 
 export type ILoginUser = {

@@ -36,6 +36,10 @@ const userSchema = new Schema<IUser, UserModel>(
       
       unique: true,
     },
+    dateOfBirth:{
+      type:Date,
+      required:true
+    },
    
     password: {
       type: String,
