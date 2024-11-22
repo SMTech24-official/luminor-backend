@@ -1,11 +1,11 @@
 import express from "express";
-import { UserRoutes } from "../modules/client/client.route";
+import { UserRoutes } from "../modules/shared/user.route";
 
 const router = express.Router();
 
 const moduleRoutes = [
     {
-      path: "/client",
+      path: "/user",
       route: UserRoutes,
     },
 ];

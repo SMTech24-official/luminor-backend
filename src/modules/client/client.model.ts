@@ -1,75 +1,42 @@
-import { Schema, model } from "mongoose";
-
-import bcrypt from "bcrypt";
-
-import { UserRole } from "../shared/user.const";
-import { IUser, IUserExistReturn, UserModel } from "./client.interface";
-import config from "../../config";
+import mongoose, { Schema, model } from "mongoose";
 
 
-//Cleint schema field:firstname,lastname ,email,dateOfBirth,address,phoneNumber
-const userSchema = new Schema<IUser, UserModel>(
+
+
+import { IClient } from "./client.interface";
+
+
+
+
+const clientSchema = new Schema<IClient>(
   {
-    name: {
-      firstName: {
-        type: String,
-        required: true,
-      },
-      lastName: {
-        type: String,
-        required: true,
-      },
-    },
-    email: {
+    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    
+    businessType: {
       type: String,
       required: true,
   
-      unique: true,
+     
     },
-    role: {
+    companyName: {
       type: String,
-      enum: UserRole,
+     
     },
-    phoneNumber: {
+    jobTitle: {
       type: String,
       required: true,
       
-      unique: true,
+
     },
-    dateOfBirth:{
-      type:Date,
-      required:true
-    },
-   
-    password: {
+    linkedinProfile: {
       type: String,
-      required: true,
-    },
- 
+      
+   },
   },
   {
     timestamps: true,
   }
 );
-userSchema.statics.isUserExist = async function (
-  email: string
-): Promise<IUserExistReturn| null> {
-  return await User.findOne({ email });
-};
-userSchema.statics.isPasswordMatched = async function (
-  givenPassword: string,
-  savedPassword: string
-): Promise<boolean> {
-  const isPasswordMatched = await bcrypt.compare(givenPassword, savedPassword);
 
-  return await bcrypt.compare(givenPassword, savedPassword);
-};
-userSchema.pre("save", async function (next) {
-  this.password = await bcrypt.hash(
-    this.password,
-    Number(config.bcrypt_salt_round)
-  );
-  next();
-});
 
-export const User = model<IUser, UserModel>("User", userSchema);
+export const Client = model<IClient>("Client", clientSchema);
