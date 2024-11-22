@@ -1,11 +1,12 @@
 import mongoose from "mongoose";
 import { IClient } from "../client/client.interface";
-import { IUser } from "../shared/user.interface";
-import { User } from "../shared/user.model";
+
 import { Client } from "../client/client.model";
 import ApiError from "../../errors/handleApiError";
 import { IProfessional } from "./professional.interface";
 import { retiredProfessional } from "./professional.model";
+import { IUser } from "../user/user.interface";
+import { User } from "../user/user.model";
 
 const createAccount = async (userData: IUser, professionalData: IProfessional) => {
   console.log(userData)

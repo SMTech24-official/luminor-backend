@@ -1,14 +1,15 @@
 import mongoose from "mongoose";
 import { IClient } from "./client.interface";
-import { IUser } from "../shared/user.interface";
-import { User } from "../shared/user.model";
+
 import { Client } from "./client.model";
 import ApiError from "../../errors/handleApiError";
+import { User } from "../user/user.model";
+import { IUser } from "../user/user.interface";
 
 const createAccount = async (userData: IUser, clientData: IClient) => {
   const session = await mongoose.startSession();
-  console.log(userData,"check user data")
-  console.log(clientData,"check client data")
+  // console.log(userData,"check user data")
+  // console.log(clientData,"check client data")
   session.startTransaction(); // Start the transaction
   try {
 

@@ -12,3 +12,9 @@ router.post(
 
   UserController.createUser
 );
+router.post(
+  "/signIn",
+
+
+  UserController.loginUser
+);

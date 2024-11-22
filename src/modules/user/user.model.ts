@@ -5,7 +5,8 @@ import bcrypt from "bcrypt";
 
 
 import config from "../../config";
-import { IUser, IUserExistReturn, UserModel } from "../shared/user.interface";
+import { IUser, IUserExistReturn, UserModel } from "./user.interface";
+
 
 
 
