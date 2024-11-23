@@ -1,7 +1,11 @@
 import mongoose from "mongoose"
 
 export type IClientProfile={
-
+    name:{
+        firstName:string,
+        lastName:string
+    },
+    phoneNumber:string
     client: mongoose.Schema.Types.ObjectId;
     companyName:string;
     companyWebsite:string;

@@ -7,6 +7,8 @@ import { ENUM_USER_ROLE } from "../../enums/user";
 import { ProfessionalService } from "../professional/professional.service";
 import { ClientService } from "../client/client.service";
 import { UserService } from "./user.service";
+import { ProfessionalProfileService } from "../professionalProfile/professionalProfile.service";
+import { ClientProfileService } from "../clientProfile/clientProfile.service";
 
 const createUser = catchAsync(async (req: Request, res: Response) => {
     const {password,name,email,dateOfBirth,role,phoneNumber,...others} = req.body;
@@ -60,7 +62,37 @@ else if(role===ENUM_USER_ROLE.PROFESSIONAL){
   });
 
 
+const createProfile = catchAsync(async (req: Request, res: Response) => {
+    const profile=req.body
+    const userId=req.params.id
+    let result;
+   const { name, phoneNumber, ...others }=profile
+
+    if(profile.role===ENUM_USER_ROLE.CLIENT){
+      result=await ClientProfileService.createProfile(userId,{name,phoneNumber},others)
+    }
+   else if(profile.role===ENUM_USER_ROLE.PROFESSIONAL){
+    result=await ProfessionalProfileService.createProfile(userId,{name,phoneNumber},others)
+   }
+  
+    sendResponse(res, {
+      success: true,
+      statusCode: 200,
+      message: `
+       ${profile.role} profile  Created   successfully`,
+      data: result,
+    });
+  });
+
+
+  export const ProfessionalProfile={
+    createProfile,
+   
+  }
+
+
   export const UserController={
     createUser,
-    loginUser
+    loginUser,
+    createProfile
   }

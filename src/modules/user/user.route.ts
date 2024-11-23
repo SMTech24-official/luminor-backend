@@ -1,5 +1,6 @@
 import express from "express";
 import { UserController } from "./user.controller";
+import { ProfessionalProfile } from "../professionalProfile/professionalProfile.controller";
 
 
 
@@ -17,4 +18,10 @@ router.post(
 
 
   UserController.loginUser
+);
+router.post(
+  "/profile",
+
+
+  ProfessionalProfile.createProfile
 );

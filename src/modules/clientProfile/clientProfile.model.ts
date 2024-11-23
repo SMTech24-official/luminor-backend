@@ -18,6 +18,6 @@ const clientProfileSchema = new mongoose.Schema< IClientProfile>({
     fileType: { type: String }, },
   });
   
-  const ClientProfile = mongoose.model('ClientProfile', clientProfileSchema);
+  export const ClientProfile = mongoose.model('ClientProfile', clientProfileSchema);
   module.exports = ClientProfile;
-  
+   
