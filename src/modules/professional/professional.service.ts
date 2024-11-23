@@ -46,6 +46,7 @@ const createAccount = async (userData: IUser, professionalData: IProfessional) =
         referenceEmail: professional[0].referenceEmail,
         educationalBackground: professional[0].educationalBackground,
         technicalSkill: professional[0].technicalSkill,
+        industry:professional[0].industry
     }
     
     
