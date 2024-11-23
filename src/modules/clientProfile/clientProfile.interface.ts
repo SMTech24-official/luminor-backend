@@ -17,9 +17,7 @@ export type IClientProfile={
     budgetRange:number;
     projectDurationRange:number;
     projectListing:File
-
-
-
-
-
 }
+export type ICLientFilters = {
+    query?: string;
+  };

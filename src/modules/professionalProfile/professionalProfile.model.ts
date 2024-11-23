@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import { IProfessionalProfile } from "./professionalProfile.interface";
 
 const retiredProfessionalProfileSchema = new mongoose.Schema<IProfessionalProfile>({
-  retiredProfessional: { type: mongoose.Schema.Types.ObjectId, ref: 'RetiredProfessional', required: true },
+  retiredProfessional: { type: mongoose.Schema.Types.ObjectId, ref: 'retiredProfessionalProfile', required: true },
   location: { type: String, required: true },
   bio: { type: String, required: true },
   description: { type: String },
@@ -17,5 +17,5 @@ const retiredProfessionalProfileSchema = new mongoose.Schema<IProfessionalProfil
   ],
 });
 
-export const RetiredProfessionalProfile = mongoose.model('RetiredProfessionalProfile', retiredProfessionalProfileSchema);
+export const retiredProfessionalProfile = mongoose.model('retiredProfessionalProfile', retiredProfessionalProfileSchema);
 

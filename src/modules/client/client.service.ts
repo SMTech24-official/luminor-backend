@@ -10,7 +10,7 @@ const createAccount = async (userData: IUser, clientData: IClient) => {
   const session = await mongoose.startSession();
   // console.log(userData,"check user data")
   // console.log(clientData,"check client data")
-  session.startTransaction(); // Start the transaction
+  session.startTransaction(); 
   try {
 
     const user = await User.create([userData], { session });
@@ -48,6 +48,10 @@ const createAccount = async (userData: IUser, clientData: IClient) => {
   }
 };
 
+const getClient=async()=>{
+
+}
 export const ClientService = {
   createAccount,
+  getClient
 };

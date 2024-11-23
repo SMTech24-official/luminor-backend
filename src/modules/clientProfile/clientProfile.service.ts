@@ -1,8 +1,12 @@
-import mongoose from "mongoose";
+import mongoose, { SortOrder } from "mongoose";
 
 import { User } from "../user/user.model";
-import { IClientProfile } from "./clientProfile.interface";
+import { ICLientFilters, IClientProfile } from "./clientProfile.interface";
 import { ClientProfile } from "./clientProfile.model";
+import { IpaginationOptions } from "../../interfaces/pagination";
+import { IGenericResponse } from "../../interfaces/general";
+import { paginationHelpers } from "../../helpers/paginationHelper";
+import { searchableField } from "./clientProfile.const";
 
 
 const createProfile = async (userId: string, user:any, clientProfileData: IClientProfile) => {
@@ -48,6 +52,8 @@ const createProfile = async (userId: string, user:any, clientProfileData: IClien
   }
 };
 
+
 export const ClientProfileService = {
   createProfile,
+  
 };

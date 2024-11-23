@@ -48,8 +48,7 @@ else if(role===ENUM_USER_ROLE.PROFESSIONAL){
   });
   const loginUser = catchAsync(async (req: Request, res: Response) => {
     const data = req.body;
-
-  const result =await UserService.loginUser(data)
+    const result =await UserService.loginUser(data)
 
   
     sendResponse(res, {
@@ -71,19 +70,18 @@ const createProfile = catchAsync(async (req: Request, res: Response) => {
 
 
     if(role===ENUM_USER_ROLE.CLIENT){
-      console.log("i am client ") 
+
       result=await ClientProfileService.createProfile(userId,{name,phoneNumber},others)
     }
    else if(role===ENUM_USER_ROLE.PROFESSIONAL){
-    console.log("i am professional ")
+   
     result=await ProfessionalProfileService.createProfile(userId,{name,phoneNumber},others)
    }
   
     sendResponse(res, {
       success: true,
       statusCode: 200,
-      message: `
-       ${profile.role} profile  Created   successfully`,
+      message: `${profile.role} profile  Created   successfully`,
       data: result,
     });
   });

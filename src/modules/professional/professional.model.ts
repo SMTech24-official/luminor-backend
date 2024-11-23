@@ -4,19 +4,23 @@ import { IProfessional } from "./professional.interface";
 const RetiredProfessional = new Schema<IProfessional>(
   {
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    industry:{
+      type:String,
+      required:true
+    },
     
     previousPositions: {
-      type: String,
+      type: [String],
       required: true,
   
   
     },
     referencenames: {
-      type: String,
+      type: [String],
      
     },
     referenceEmail: {
-      type: String,
+      type: [String],
       required: true,
       
 
