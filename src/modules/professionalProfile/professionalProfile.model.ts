@@ -17,5 +17,5 @@ const retiredProfessionalProfileSchema = new mongoose.Schema<IProfessionalProfil
   ],
 });
 
-const RetiredProfessionalProfile = mongoose.model('RetiredProfessionalProfile', retiredProfessionalProfileSchema);
-module.exports = RetiredProfessionalProfile;
+export const RetiredProfessionalProfile = mongoose.model('RetiredProfessionalProfile', retiredProfessionalProfileSchema);
+

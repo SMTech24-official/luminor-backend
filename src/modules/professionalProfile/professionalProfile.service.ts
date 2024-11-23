@@ -1,14 +1,15 @@
 import mongoose from "mongoose";
-import { retiredProfessional } from "../professional/professional.model";
+
 import { User } from "../user/user.model";
 import { IProfessionalProfile } from "./professionalProfile.interface";
+import { RetiredProfessionalProfile } from "./professionalProfile.model";
 
 const createProfile = async (userId: string, user:any, professionalData: IProfessionalProfile) => {
   const session = await mongoose.startSession();
   session.startTransaction();
 
   try {
-    // Step 1: Update the User model with common fields
+    
     const { name, phoneNumber, ...professionalFields } = professionalData;
 
     const userUpdate = await User.findByIdAndUpdate(
@@ -21,24 +22,24 @@ const createProfile = async (userId: string, user:any, professionalData: IProfes
       throw new Error("User not found");
     }
 
-    // Step 2: Create the retiredProfessional profile
-    const professionalProfile = await retiredProfessional.create(
+
+    const professionalProfile = await RetiredProfessionalProfile.create(
       [
         {
           userId,
-          ...professionalFields, // Add all fields specific to the retiredProfessional model
+          ...professionalFields, 
         },
       ],
       { session }
     );
 
-    // Commit the transaction
+   
     await session.commitTransaction();
     session.endSession();
 
     return professionalProfile;
   } catch (error:any) {
-    // Rollback transaction in case of error
+
     await session.abortTransaction();
     session.endSession();
     throw new Error(`Failed to create profile: ${error.message}`);

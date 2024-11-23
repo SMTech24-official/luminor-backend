@@ -66,12 +66,16 @@ const createProfile = catchAsync(async (req: Request, res: Response) => {
     const profile=req.body
     const userId=req.params.id
     let result;
-   const { name, phoneNumber, ...others }=profile
+   const { name, phoneNumber, role,...others }=profile
 
-    if(profile.role===ENUM_USER_ROLE.CLIENT){
+
+
+    if(role===ENUM_USER_ROLE.CLIENT){
+      console.log("i am client ") 
       result=await ClientProfileService.createProfile(userId,{name,phoneNumber},others)
     }
-   else if(profile.role===ENUM_USER_ROLE.PROFESSIONAL){
+   else if(role===ENUM_USER_ROLE.PROFESSIONAL){
+    console.log("i am professional ")
     result=await ProfessionalProfileService.createProfile(userId,{name,phoneNumber},others)
    }
   

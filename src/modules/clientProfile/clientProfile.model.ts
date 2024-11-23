@@ -19,5 +19,5 @@ const clientProfileSchema = new mongoose.Schema< IClientProfile>({
   });
   
   export const ClientProfile = mongoose.model('ClientProfile', clientProfileSchema);
-  module.exports = ClientProfile;
+
    
