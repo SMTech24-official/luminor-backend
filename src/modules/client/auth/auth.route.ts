@@ -20,3 +20,5 @@ router.post(
 
   ClientProfileController.createProfile
 );
+
+router.get("/", ClientProfileController.getClients);

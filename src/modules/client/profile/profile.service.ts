@@ -54,7 +54,8 @@ const getClients = async (
     paginationHelpers.calculatePagination(paginationOptions);
 
   const { query, ...filtersData } = filters;
-  console.log(filtersData, "i am from service to check filter data");
+
+  console.log(filters, "i am from service to check filter data");
   const andCondition = [];
   if (query) {
     andCondition.push({
@@ -71,10 +72,20 @@ const getClients = async (
       $and: Object.entries(filtersData).map(([field, value]) => {
         if (field === "minBudget") {
           const parsingMinBudget = parseInt(value as string);
-          return { price: { $lt: parsingMinBudget } };
+          return {
+            $or: [
+              { "budgetRange.min": { $lte: parsingMinBudget } },
+              { "budgetRange.max": { $gte: parsingMinBudget } },
+            ],
+          };
         } else if (field === "maxBudget") {
           const parsingMaxBudget = parseInt(value as string);
-          return { price: { $gt: parsingMaxBudget } };
+          return {
+            $or: [
+              { "budgetRange.min": { $lte: parsingMaxBudget } },
+              { "budgetRange.max": { $gte: parsingMaxBudget } },
+            ],
+          };
         }
         return { [field]: { $regex: value as string, $options: "i" } };
       }),

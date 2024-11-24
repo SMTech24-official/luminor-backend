@@ -5,15 +5,15 @@ export const searchableField = [
   "location",
   "industry",
   "servicePreferences",
+  "projectDurationRange",
 ];
 
 export const filterableField = [
   "query",
-  "destination",
-  "name",
+  "location",
   "minBudget",
   "maxBudget",
-  "budget",
-  "neededMembers",
-  "currentMembers",
+  "industry",
+  "servicePreferences",
+  "projectDurationRange",
 ];
