@@ -99,7 +99,8 @@ const getClients = async (
   const result = await ClientProfile.find(whereConditions)
     .sort(sortCondition)
     .skip(skip)
-    .limit(limit);
+    .limit(limit)
+    .populate("client");
 
   const count = await ClientProfile.countDocuments();
   if (andCondition.length > 0) {

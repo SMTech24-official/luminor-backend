@@ -4,7 +4,7 @@ import { IClientProfile } from "./profile.interface";
 const clientProfileSchema = new mongoose.Schema<IClientProfile>({
   client: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "AuthClient",
+    ref: "Client",
     required: true,
   },
   companyName: { type: String, required: true },
