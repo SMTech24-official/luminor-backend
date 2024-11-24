@@ -1,7 +1,6 @@
 import mongoose, { Model } from "mongoose";
 import { ENUM_USER_ROLE } from "../../enums/user";
 
-
 export type IUser = {
   password: string;
   email: string;
@@ -12,9 +11,8 @@ export type IUser = {
   };
 
   role: ENUM_USER_ROLE;
-  dateOfBirth:Date;
-  phoneNumber:string
-
+  dateOfBirth: Date;
+  phoneNumber: string;
 };
 
 export type IUserExistReturn = {
@@ -23,8 +21,6 @@ export type IUserExistReturn = {
 
   password: string;
   role: ENUM_USER_ROLE;
- 
-
 };
 
 export type ILoginUser = {
@@ -39,18 +35,13 @@ export type IRefreshTokenResponse = {
   accessToken: string;
 };
 
-export type UserModel = {
+export type ClientUserModel = {
   isUserExist(
     email: string
-  ): Promise<
-    Pick<
-      IUserExistReturn,
-      "email" | "password" | "_id" | "role" 
-    >
-  >;
+  ): Promise<Pick<IUserExistReturn, "email" | "password" | "_id" | "role">>;
   isPasswordMatched(
     givenPassword: string,
     savedPassword: string
   ): Promise<boolean>;
 } & Model<IUser>;
-export type IUserRole = "client" | "professional" ;
+export type IUserRole = "client" | "professional";
