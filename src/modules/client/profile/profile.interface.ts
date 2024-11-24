@@ -14,7 +14,10 @@ export type IClientProfile = {
   description: string;
   industry: string;
   servicePreferences: string;
-  budgetRange: number;
+  budgetRange: {
+    min: number;
+    max: number;
+  };
   projectDurationRange: number;
   projectListing: File;
 };

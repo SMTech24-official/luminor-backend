@@ -1,4 +1,4 @@
-import mongoose, { SortOrder } from "mongoose";
+import mongoose from "mongoose";
 
 import { IProfessionalProfile } from "./profile.interface";
 
@@ -44,6 +44,9 @@ export const createProfile = async (data: IProfessionalProfile) => {
   }
 };
 
+export const getClients = async () => {};
+
 export const RetireProfessionalProfileService = {
   createProfile,
+  getClients,
 };

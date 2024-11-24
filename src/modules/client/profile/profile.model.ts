@@ -14,7 +14,10 @@ const clientProfileSchema = new mongoose.Schema<IClientProfile>({
   description: { type: String },
   industry: { type: String, required: true },
   servicePreferences: { type: String, required: true },
-  budgetRange: { type: Number, required: true },
+  budgetRange: {
+    min: { type: Number, required: true },
+    max: { type: Number, required: true },
+  },
   projectDurationRange: { type: Number, required: true },
   projectListing: {
     fileName: { type: String },

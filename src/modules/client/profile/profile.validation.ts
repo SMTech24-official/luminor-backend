@@ -7,7 +7,7 @@ const clientProfileSchema = z.object({
         required_error: "First Name is Required",
       }),
       lastName: z.string({
-        required_error: "Last  Name is Required",
+        required_error: "Last Name is Required",
       }),
     }),
 
@@ -45,11 +45,19 @@ const clientProfileSchema = z.object({
       required_error: "Service preferences are required",
     }),
 
-    budgetRange: z
-      .number({
-        required_error: "Budget range is required",
-      })
-      .nonnegative("Budget range must be a positive number"),
+    // Updated budgetRange to an object with min and max fields
+    budgetRange: z.object({
+      min: z
+        .number({
+          required_error: "Min budget range is required",
+        })
+        .nonnegative("Min budget must be a positive number"),
+      max: z
+        .number({
+          required_error: "Max budget range is required",
+        })
+        .nonnegative("Max budget must be a positive number"),
+    }),
 
     projectDurationRange: z
       .number({
