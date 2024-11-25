@@ -55,13 +55,18 @@ const authRetireProfessionalSchema = new Schema<
       type: [String],
       required: true,
     },
-    referencenames: {
-      type: [String],
-    },
-    referenceEmail: {
-      type: [String],
-      required: true,
-    },
+    references: [
+      {
+        name: {
+          type: String,
+          required: true,
+        },
+        email: {
+          type: String,
+          required: true,
+        },
+      },
+    ],
     educationalBackground: {
       type: String,
     },
