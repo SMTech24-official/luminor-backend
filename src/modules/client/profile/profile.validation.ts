@@ -35,7 +35,7 @@ const clientProfileSchema = z.object({
       required_error: "Location is required",
     }),
 
-    description: z.string().optional(), // Optional description field
+    description: z.string().optional(), 
 
     industry: z.string({
       required_error: "Industry is required",
@@ -73,7 +73,7 @@ const clientProfileSchema = z.object({
         filePath: z.string({
           required_error: "File path is required",
         }),
-        fileType: z.string().optional(), // Optional file type
+        fileType: z.string().optional(), 
       })
       .optional(),
   }),

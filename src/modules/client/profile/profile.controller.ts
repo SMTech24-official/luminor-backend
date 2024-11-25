@@ -14,6 +14,8 @@ import { IClientProfile } from "./profile.interface";
 const createProfile = catchAsync(async (req: Request, res: Response) => {
   const profile = req.body;
   const file = req.file;
+  console.log(req.body,"checxk req body")
+  console.log(file,"check file")
   if (file) {
     profile.projectListing = {
       fileName: file.filename,

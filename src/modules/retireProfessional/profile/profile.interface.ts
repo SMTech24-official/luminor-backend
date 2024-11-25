@@ -1,6 +1,10 @@
 import mongoose from "mongoose";
 
 export type IRetireProfessionalProfile = {
+  name:{
+    firstName:string,
+    lastName:string
+  };
   retireProfessional: mongoose.Schema.Types.ObjectId;
   location: string;
   bio: string;
