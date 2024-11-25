@@ -1,6 +1,7 @@
 import express from "express";
 import { AuthClientController } from "./auth.controller";
 import { ClientProfileController } from "../profile/profile.controller";
+import { multerUpload } from "../../../middlewares/multer";
 
 const router = express.Router();
 
@@ -17,7 +18,7 @@ router.post(
 );
 router.post(
   "/profile",
-
+  multerUpload.single("projectListing"), // File upload middleware
   ClientProfileController.createProfile
 );
 

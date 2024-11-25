@@ -54,6 +54,10 @@ const authClientSchema = z.object({
     }),
 
     linkedinProfile: z.string().url("Invalid LinkedIn profile URL").optional(), // Optional field
+
+    role: z.enum(["client"], {
+      required_error: "Role is required",
+    }), // Add role validation
   }),
 });
 

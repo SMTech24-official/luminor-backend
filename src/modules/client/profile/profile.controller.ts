@@ -7,12 +7,21 @@ import pick from "../../../shared/pick";
 import { paginationFileds } from "../../../constants/pagination";
 import {
   filterableField,
-  searchableField,
+
 } from "../../../constants/searchableField";
 import { IClientProfile } from "./profile.interface";
 
 const createProfile = catchAsync(async (req: Request, res: Response) => {
   const profile = req.body;
+  const file = req.file;
+  if (file) {
+    profile.projectListing = {
+      fileName: file.filename,
+      filePath: file.path,
+      fileType: file.mimetype,
+    };
+  }
+
   const result = await ClientProfileService.createProfile(profile);
 
   sendResponse(res, {

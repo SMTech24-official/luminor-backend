@@ -19,7 +19,11 @@ export type IClientProfile = {
     max: number;
   };
   projectDurationRange: number;
-  projectListing: File;
+  projectListing?: {
+    fileName?: string; // Match schema: not always required
+    filePath?: string; // Match schema: not always required
+    fileType?: string; // Match schema: not always required
+  };
 };
 export type ICLientFilters = {
   query?: string;

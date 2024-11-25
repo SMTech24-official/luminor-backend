@@ -5,6 +5,7 @@ import bcrypt from "bcrypt";
 import config from "../../../config";
 import { ClientUserModel, IAuthClient } from "./auth.interface";
 import { IUserExistReturn } from "../../user/user.interface";
+import { ENUM_USER_ROLE } from "../../../enums/user";
 
 const authClientSchema = new Schema<IAuthClient, ClientUserModel>(
   {
@@ -23,6 +24,11 @@ const authClientSchema = new Schema<IAuthClient, ClientUserModel>(
       required: true,
 
       unique: true,
+    },
+    role:{
+      type:String,
+      required:true,
+      enum: [ENUM_USER_ROLE.CLIENT], 
     },
 
     phoneNumber: {

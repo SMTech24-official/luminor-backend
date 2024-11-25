@@ -23,6 +23,7 @@ const clientProfileSchema = new mongoose.Schema<IClientProfile>({
     fileName: { type: String },
     filePath: { type: String },
     fileType: { type: String },
+    uploadedAt: { type: Date, default: Date.now },
   },
 });
 
