@@ -73,18 +73,18 @@ const getClients = async (
         if (field === "minBudget") {
           const parsingMinBudget = parseInt(value as string);
           return {
-            $or: [
-              { "budgetRange.min": { $lte: parsingMinBudget } },
-              { "budgetRange.max": { $gte: parsingMinBudget } },
-            ],
+          
+            
+               "budgetRange.min": { $gte: parsingMinBudget } ,
+           
           };
         } else if (field === "maxBudget") {
           const parsingMaxBudget = parseInt(value as string);
           return {
-            $or: [
-              { "budgetRange.min": { $lte: parsingMaxBudget } },
-              { "budgetRange.max": { $gte: parsingMaxBudget } },
-            ],
+           
+            
+            "budgetRange.max": { $lte: parsingMaxBudget } 
+          
           };
         }
         return { [field]: { $regex: value as string, $options: "i" } };
