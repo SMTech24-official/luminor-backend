@@ -49,9 +49,9 @@ const retireProfessionalAuthSchema = z.object({
 
       previousPositions: z
       .array(z.string())
-      .optional(), // Optional field for previous positions
+      .optional(), 
 
-    // References field as an array of objects with a name and email
+ 
     references: z
       .array(
         z.object({
@@ -62,10 +62,10 @@ const retireProfessionalAuthSchema = z.object({
           
         })
       )
-      .optional(), // Optional field for references
+      .optional(), 
 
-    educationalBackground: z.string().optional(), // Optional field for educational background
-
+    educationalBackground: z.string().optional(), 
+    linkedinProfile: z.string().url("Invalid LinkedIn profile URL").optional(),
     technicalSkill: z
       .string({
         required_error: "Technical skill is required",
@@ -78,7 +78,7 @@ const retireProfessionalAuthSchema = z.object({
         filePath: z.string().optional(),
         fileType: z.string().optional(),
       })
-      .optional(), // Optional field for CV or Cover Letter file info
+      .optional(), 
   }),
 });
 

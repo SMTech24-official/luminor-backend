@@ -15,6 +15,7 @@ export type IAuthRetireProfessional = {
   dateOfBirth: Date;
   phoneNumber: string;
   previousPositions: string[];
+  linkedinProfile:string,
   references: { name: string; email: string }[]; 
   educationalBackground?: string;
   technicalSkill: string;

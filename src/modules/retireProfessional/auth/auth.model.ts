@@ -67,6 +67,9 @@ const authRetireProfessionalSchema = new Schema<
         },
       },
     ],
+    linkedinProfile: {
+      type: String,
+    },
     educationalBackground: {
       type: String,
     },
