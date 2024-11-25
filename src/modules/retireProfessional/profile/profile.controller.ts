@@ -6,12 +6,25 @@ import { RetireProfessionalProfileService } from "./profile.service";
 
 const createProfile = catchAsync(async (req: Request, res: Response) => {
   const profile = req.body;
+  const file = req.file;
+  if (file) {
+    profile.projects = [{
+      preferredProjects:req.body.preferredProjects,
+      hourlyRate:req.body.hourlyRate, 
+      workSample: {
+        fileName: file.filename,
+        filePath: file.path,
+        fileType: file.mimetype,
+      },
+    }];
+  }
+
   const result = await RetireProfessionalProfileService.createProfile(profile);
 
   sendResponse(res, {
     success: true,
     statusCode: 200,
-    message: `Retire Profiessional  profile  Created   successfully`,
+    message: `Retire Professional profile created successfully`,
     data: result,
   });
 });

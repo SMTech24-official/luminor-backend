@@ -7,6 +7,16 @@ import { AuthRetireProfessionalService } from "./auth.service";
 const createAccount = catchAsync(async (req: Request, res: Response) => {
   const retireProfessional = req.body;
 
+  const file = req.file;
+  if (file) {
+    retireProfessional.cvOrCover = {
+      fileName: file.filename,
+      filePath: file.path,
+      fileType: file.mimetype,
+    };
+  }
+
+
   const data = await AuthRetireProfessionalService.createAccount(
     retireProfessional
   );

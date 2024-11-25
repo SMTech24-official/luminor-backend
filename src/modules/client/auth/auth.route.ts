@@ -18,7 +18,7 @@ router.post(
 );
 router.post(
   "/profile",
-  multerUpload.single("projectListing"), // File upload middleware
+  multerUpload.single("projectListing"), 
   ClientProfileController.createProfile
 );
 

@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
-import { IProfessionalProfile } from "./profile.interface";
+import { IRetireProfessionalProfile } from "./profile.interface";
 
 const retireProfessionalProfileSchema =
-  new mongoose.Schema<IProfessionalProfile>({
+  new mongoose.Schema<IRetireProfessionalProfile>({
     retireProfessional: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "RetireProfessional",
@@ -11,13 +11,18 @@ const retireProfessionalProfileSchema =
     location: { type: String, required: true },
     bio: { type: String, required: true },
     description: { type: String },
-    skills: { type: String, required: true },
+    skills: { type: [String], required: true },
     availability: { type: Boolean, required: true },
     projects: [
       {
         preferredProjects: { type: String, required: true },
         hourlyRate: { type: String, required: true },
-        workSample: { type: String },
+        workSample: { 
+          fileName: { type: String },
+        filePath: { type: String },
+        fileType: { type: String },
+      
+      },
       },
     ],
   });
