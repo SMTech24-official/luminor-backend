@@ -14,4 +14,4 @@ router.post(
 );
 
 
-router.patch("/profile/:id",  multerUpload.single("projectListing"),ClientController.updateClient)
+router.patch("/profile/:id",  multerUpload.single("projectListing"),ClientController.updateSingleClient)

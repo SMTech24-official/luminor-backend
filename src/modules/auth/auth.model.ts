@@ -34,7 +34,7 @@ const userSchema =
     givenPassword: string,
     savedPassword: string
   ): Promise<boolean> {
-    const isPasswordMatched = await bcrypt.compare(givenPassword, savedPassword);
+
   
     return await bcrypt.compare(givenPassword, savedPassword);
   };

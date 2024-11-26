@@ -49,21 +49,29 @@ const getClients = catchAsync(async (req: Request, res: Response) => {
     data: result.data,
   });
 });
-const updateClient = catchAsync(async (req: Request, res: Response) => {
+const updateSingleClient = catchAsync(async (req: Request, res: Response) => {
   const data = req.body;
   const id=req.params.id
-  console.log(req.body,"check body")
-  console.log(req.file,"check file")
-  
+  console.log(id,"check id")
+  const file=req.file
 
-  const result = await ClientService.updateSingleClient(id,data);
+  
+  if (file) {
+    data.projectListing = {
+      fileName: file.filename,
+      filePath: file.path,
+      fileType: file.mimetype,
+    };}
+    const { phoneNumber,name,...clientProfile}=data
+    console.log(data)
+  const result = await ClientService.updateSingleClient(id,{phoneNumber,name},clientProfile);
 
   sendResponse(res, {
     success: true,
     statusCode: 200,
-    message: `client  account  created   successfully`,
+    message: `client  account  updated    successfully`,
     data: result,
   });
 });
 
-export const ClientController = { createClient, getClients,updateClient };
+export const ClientController = { createClient, getClients,updateSingleClient };
