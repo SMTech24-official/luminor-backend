@@ -17,28 +17,28 @@ const clientSchema = new mongoose.Schema<IClient>({
     type: String, required: true
   },
   businessType:{type: String, required: true},
-  companyName: { type: String, required: true },
+  companyName: { type: String,default:null},
   companyWebsite: { type: String, required: true },
   jobTitle:{type: String, required: true},
   linkedinProfile:{type: String, required: true},
   //client profile field
-  problemAreas: { type: String},
-  location: { type: String },
-  description: { type: String },
-  industry: { type: String },
-  servicePreferences: { type: String },
+  problemAreas: { type: String,default:null},
+  location: { type: String ,default:null},
+  description: { type: String,default:null },
+  industry: { type: String,default:null },
+  servicePreferences: { type: String ,default:null},
   budgetRange: {
-    min: { type: Number},
-    max: { type: Number },
+    min: { type: Number,default:null},
+    max: { type: Number ,default:null},
   },
-  projectDurationRange: { type: Number },
+  projectDurationRange: { type: Number,default:null },
   projectListing: {
-    fileName: { type: String },
-    filePath: { type: String },
-    fileType: { type: String },
-    uploadedAt: { type: Date, default: Date.now },
+    fileName: { type: String,default:null },
+    filePath: { type: String,default:null },
+    fileType: { type: String ,default:null},
+  
   },
-});
+},{timestamps:true});
 
 export const Client = mongoose.model(
   "Client",
