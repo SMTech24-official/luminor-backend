@@ -123,38 +123,39 @@ const getClients = async (
 };
 export const updateSingleClient = async (
   id: string,
-  auth:Partial<IClient>,
+  auth: Partial<IClient>,
   clientPayload: Partial<IClient>
-
 ): Promise<IClient | null> => {
   const session = await mongoose.startSession();  // Start a new session for transaction management
   try {
     session.startTransaction();
- 
-    // Find and update the associated User model
-    const updatedClient = await Client.findOneAndUpdate(
-      { _id: id },
-      clientPayload,
-      { new: true, session }
-    );
+
+    // Ensure you're updating the existing client, not creating a new one
+    const updatedClient = await Client.findByIdAndUpdate(id, clientPayload, {
+      new: true,  // return the updated document
+      session,
+    });
 
     if (!updatedClient) {
       throw new ApiError(404, "Client not found");
     }
-    
-   await User.findOneAndUpdate(
-      { _id: updatedClient.client},
-      auth,
-      { new: true, session }
-    );
 
-   
+    // Update the associated User model (linked by client field)
+    const updatedUser = await User.findByIdAndUpdate(updatedClient.client, auth, {
+      new: true,  // return the updated document
+      session,
+    });
+
+    if (!updatedUser) {
+      throw new ApiError(404, "User not found");
+    }
 
     // Commit the transaction after both updates are successful
     await session.commitTransaction();
     session.endSession();
 
-    return updatedClient.populate("client"); // Return the updated client document
+    // Return the updated client with populated user data
+    return updatedClient.populate("client");
   } catch (error: any) {
     // In case of error, rollback the transaction
     await session.abortTransaction();
