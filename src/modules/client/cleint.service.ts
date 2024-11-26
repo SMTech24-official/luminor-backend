@@ -32,11 +32,10 @@ export const createClient = async (user:IUser, clientData: IClient) => {
     // Step 3: Commit transaction
     await session.commitTransaction();
     session.endSession();
+ 
 
-    return {
-      user: newUser[0],
-      client: newClient[0],
-    };
+    return newClient[0].populate("client")
+    
   } catch (error:any) {
     // Rollback transaction in case of an error
     await session.abortTransaction();
@@ -130,8 +129,8 @@ export const updateSingleClient = async (
 ): Promise<IClient | null> => {
   const session = await mongoose.startSession();  // Start a new session for transaction management
   try {
-    session.startTransaction();  // Begin the transaction
-
+    session.startTransaction();
+ 
     // Find and update the associated User model
     const updatedClient = await Client.findOneAndUpdate(
       { _id: id },
@@ -142,6 +141,7 @@ export const updateSingleClient = async (
     if (!updatedClient) {
       throw new ApiError(404, "Client not found");
     }
+    
    await User.findOneAndUpdate(
       { _id: updatedClient.client},
       auth,

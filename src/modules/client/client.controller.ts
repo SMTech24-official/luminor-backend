@@ -62,9 +62,11 @@ const updateSingleClient = catchAsync(async (req: Request, res: Response) => {
       filePath: file.path,
       fileType: file.mimetype,
     };}
-    const { phoneNumber,name,...clientProfile}=data
-    console.log(data)
-  const result = await ClientService.updateSingleClient(id,{phoneNumber,name},clientProfile);
+    const { name,...clientProfile}=data
+ console.log(name)
+
+
+  const result = await ClientService.updateSingleClient(id,name,clientProfile);
 
   sendResponse(res, {
     success: true,
