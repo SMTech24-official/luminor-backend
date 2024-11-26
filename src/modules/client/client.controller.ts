@@ -9,24 +9,19 @@ import { ClientService } from "./cleint.service";
 
 
 const createClient = catchAsync(async (req: Request, res: Response) => {
-  const profile = req.body;
-  const file = req.file;
-  console.log(req.body,"checxk req body")
-  console.log(file,"check file")
-  if (file) {
-    profile.projectListing = {
-      fileName: file.filename,
-      filePath: file.path,
-      fileType: file.mimetype,
-    };
-  }
+  const data = req.body;
+  
+    const {name,email,role,password,...others}=data
 
-  const result = await ClientService.createClient(profile);
+  const result = await ClientService.createClient({
+    name, email, role,password
+   
+  },others);
 
   sendResponse(res, {
     success: true,
     statusCode: 200,
-    message: `client  profile  Created   successfully`,
+    message: `client  account  created   successfully`,
     data: result,
   });
 });

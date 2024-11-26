@@ -6,10 +6,43 @@ import { IGenericResponse } from "../../interfaces/general";
 import { paginationHelpers } from "../../helpers/paginationHelper";
 import { searchableField } from "../../constants/searchableField";
 import { Client } from "./client.model";
+import { User } from "../user/user.model";
+import { IUser } from "../user/user.interface";
+import ApiError from "../../errors/handleApiError";
 
 
-export const createClient = async (data: IClient) => {
-  
+export const createClient = async (user:IUser, clientData: IClient) => {
+  const session = await mongoose.startSession();
+  try {
+    session.startTransaction();
+
+   //Create a User account
+    const newUser = await User.create([user], { session });
+    const userId = newUser[0]._id;
+
+    //Create a Client account linked to the User
+    const newClientData = {
+      ...clientData,
+      client: userId,
+       // Link User ID to the Client
+    };
+
+    const newClient = await Client.create([newClientData], { session });
+
+    // Step 3: Commit transaction
+    await session.commitTransaction();
+    session.endSession();
+
+    return {
+      user: newUser[0],
+      client: newClient[0],
+    };
+  } catch (error:any) {
+    // Rollback transaction in case of an error
+    await session.abortTransaction();
+    session.endSession();
+    throw new ApiError(400,error);
+  }
 };
 
 const getClients = async (

@@ -11,8 +11,7 @@ export type IUser = {
   };
 
   role: ENUM_USER_ROLE;
-  dateOfBirth: Date;
-  phoneNumber: string;
+
 };
 
 export type IUserExistReturn = {
