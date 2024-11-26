@@ -1,55 +1,21 @@
 import mongoose, { SortOrder } from "mongoose";
-import { ICLientFilters, IClientProfile } from "./profile.interface";
-import { ClientProfile } from "./profile.model";
-import { AuthClient } from "../auth/auth.model";
-import ApiError from "../../../errors/handleApiError";
-import { IpaginationOptions } from "../../../interfaces/pagination";
-import { IGenericResponse } from "../../../interfaces/general";
-import { paginationHelpers } from "../../../helpers/paginationHelper";
-import { searchableField } from "../../../constants/searchableField";
 
-export const createProfile = async (data: IClientProfile) => {
-  const session = await mongoose.startSession();
-  session.startTransaction();
+import { IClient, ICLientFilters } from "./client.interface";
+import { IpaginationOptions } from "../../interfaces/pagination";
+import { IGenericResponse } from "../../interfaces/general";
+import { paginationHelpers } from "../../helpers/paginationHelper";
+import { searchableField } from "../../constants/searchableField";
+import { Client } from "./client.model";
 
-  try {
-    const { client, name, ...profileData } = data;
 
-    const updatedClient = await AuthClient.findByIdAndUpdate(
-      client,
-      { name },
-      { new: true, runValidators: true, session }
-    );
-
-    if (!updatedClient) {
-      throw new Error("Client not found.");
-    }
-
-    const newProfile = await ClientProfile.create(
-      [
-        {
-          client,
-          ...profileData,
-        },
-      ],
-      { session }
-    );
-
-    await session.commitTransaction();
-    session.endSession();
-
-    return newProfile;
-  } catch (error: any) {
-    await session.abortTransaction();
-    session.endSession();
-    throw new ApiError(400, error.message);
-  }
+export const createClient = async (data: IClient) => {
+  
 };
 
 const getClients = async (
   filters: ICLientFilters,
   paginationOptions: IpaginationOptions
-): Promise<IGenericResponse<IClientProfile[]>> => {
+): Promise<IGenericResponse<IClient[]>> => {
   const { skip, limit, page, sortBy, sortOrder } =
     paginationHelpers.calculatePagination(paginationOptions);
 
@@ -96,13 +62,13 @@ const getClients = async (
     sortCondition[sortBy] = sortOrder;
   }
   const whereConditions = andCondition.length > 0 ? { $and: andCondition } : {};
-  const result = await ClientProfile.find(whereConditions)
+  const result = await Client.find(whereConditions)
     .sort(sortCondition)
     .skip(skip)
     .limit(limit)
     .populate("client");
 
-  const count = await ClientProfile.countDocuments();
+  const count = await Client.countDocuments();
   if (andCondition.length > 0) {
     return {
       meta: {
@@ -124,7 +90,7 @@ const getClients = async (
   }
 };
 
-export const ClientProfileService = {
-  createProfile,
+export const ClientService = {
+    createClient,
   getClients,
 };

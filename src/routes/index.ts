@@ -1,19 +1,16 @@
 import express from "express";
 
-import { AuthClientRoute } from "../modules/client/auth/auth.route";
-import { RetireProfessionalAuthRoute } from "../modules/retireProfessional/auth/auth.route";
+
+import { ClientRoute } from "../modules/client/client.route";
 
 const router = express.Router();
 
 const moduleRoutes = [
   {
     path: "/client",
-    route: AuthClientRoute,
+    route: ClientRoute,
   },
-  {
-    path: "/retireProfessional",
-    route: RetireProfessionalAuthRoute,
-  },
+
 ];
 
 moduleRoutes.forEach((route) => router.use(route.path, route.route));

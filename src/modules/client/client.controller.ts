@@ -1,17 +1,14 @@
 import { Request, Response } from "express";
-import catchAsync from "../../../shared/catchAsync";
-import { ENUM_USER_ROLE } from "../../../enums/user";
-import sendResponse from "../../../shared/sendResponse";
-import { ClientProfileService } from "./profile.service";
-import pick from "../../../shared/pick";
-import { paginationFileds } from "../../../constants/pagination";
-import {
-  filterableField,
+import catchAsync from "../../shared/catchAsync";
+import sendResponse from "../../shared/sendResponse";
+import pick from "../../shared/pick";
+import { paginationFileds } from "../../constants/pagination";
+import { filterableField } from "../../constants/searchableField";
+import { IClient } from "./client.interface";
+import { ClientService } from "./cleint.service";
 
-} from "../../../constants/searchableField";
-import { IClientProfile } from "./profile.interface";
 
-const createProfile = catchAsync(async (req: Request, res: Response) => {
+const createClient = catchAsync(async (req: Request, res: Response) => {
   const profile = req.body;
   const file = req.file;
   console.log(req.body,"checxk req body")
@@ -24,7 +21,7 @@ const createProfile = catchAsync(async (req: Request, res: Response) => {
     };
   }
 
-  const result = await ClientProfileService.createProfile(profile);
+  const result = await ClientService.createClient(profile);
 
   sendResponse(res, {
     success: true,
@@ -41,12 +38,12 @@ const getClients = catchAsync(async (req: Request, res: Response) => {
     paginationOptions,
     "i am from controller to check filters"
   );
-  const result = await ClientProfileService.getClients(
+  const result = await ClientService.getClients(
     filters,
     paginationOptions
   );
 
-  sendResponse<IClientProfile[]>(res, {
+  sendResponse<IClient[]>(res, {
     success: true,
     statusCode: 200,
 
@@ -56,4 +53,4 @@ const getClients = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-export const ClientProfileController = { createProfile, getClients };
+export const ClientController = { createClient, getClients };
