@@ -25,6 +25,8 @@ const createClient = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+
+
 const getClients = catchAsync(async (req: Request, res: Response) => {
   const paginationOptions = pick(req.query, paginationFileds);
   const filters = pick(req.query, filterableField);
@@ -47,5 +49,21 @@ const getClients = catchAsync(async (req: Request, res: Response) => {
     data: result.data,
   });
 });
+const updateClient = catchAsync(async (req: Request, res: Response) => {
+  const data = req.body;
+  const id=req.params.id
+  console.log(req.body,"check body")
+  console.log(req.file,"check file")
+  
 
-export const ClientController = { createClient, getClients };
+  const result = await ClientService.updateSingleClient(id,data);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: `client  account  created   successfully`,
+    data: result,
+  });
+});
+
+export const ClientController = { createClient, getClients,updateClient };

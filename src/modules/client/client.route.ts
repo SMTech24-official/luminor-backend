@@ -1,5 +1,6 @@
 import express from "express";
 import { ClientController } from "./client.controller";
+import { multerUpload } from "../../middlewares/multer";
 
 
 const router = express.Router();
@@ -13,3 +14,4 @@ router.post(
 );
 
 
+router.patch("/profile/:id",  multerUpload.single("projectListing"),ClientController.updateClient)

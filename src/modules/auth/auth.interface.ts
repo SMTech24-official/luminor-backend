@@ -34,7 +34,7 @@ export type IRefreshTokenResponse = {
   accessToken: string;
 };
 
-export type ClientUserModel = {
+export type UserModel = {
   isUserExist(
     email: string
   ): Promise<Pick<IUserExistReturn, "email" | "password" | "_id" | "role">>;

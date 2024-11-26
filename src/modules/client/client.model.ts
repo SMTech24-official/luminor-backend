@@ -25,8 +25,8 @@ const clientSchema = new mongoose.Schema<IClient>({
   problemAreas: { type: String,default:null},
   location: { type: String ,default:null},
   description: { type: String,default:null },
-  industry: { type: String,default:null },
-  servicePreferences: { type: String ,default:null},
+
+  industry: { type: [String] ,default:[]},
   budgetRange: {
     min: { type: Number,default:null},
     max: { type: Number ,default:null},

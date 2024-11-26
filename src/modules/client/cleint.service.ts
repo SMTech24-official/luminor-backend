@@ -6,8 +6,8 @@ import { IGenericResponse } from "../../interfaces/general";
 import { paginationHelpers } from "../../helpers/paginationHelper";
 import { searchableField } from "../../constants/searchableField";
 import { Client } from "./client.model";
-import { User } from "../user/user.model";
-import { IUser } from "../user/user.interface";
+import { User } from "../auth/auth.model";
+import { IUser } from "../auth/auth.interface";
 import ApiError from "../../errors/handleApiError";
 
 
@@ -122,8 +122,17 @@ const getClients = async (
     };
   }
 };
-
+export const updateSingleClient = async (
+  id: string,
+  payload: Partial<IClient>
+): Promise<IClient | null> => {
+  const result = await Client.findOneAndUpdate({ _id: id }, payload, {
+    new: true,
+  });
+  return result;
+};
 export const ClientService = {
-    createClient,
+  createClient,
   getClients,
+  updateSingleClient
 };

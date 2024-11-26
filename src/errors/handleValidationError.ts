@@ -1,4 +1,4 @@
-import httpStatus from "http-status";
+import {StatusCodes} from "http-status-codes"
 import mongoose from "mongoose";
 import { IGenericErrorMessage } from "../interfaces/error";
 import { IGenericErrorResponse } from "../interfaces/general";
@@ -12,7 +12,7 @@ const handleValidationError = (
       message: el?.message,
     };
   });
-  const statusCode = httpStatus.CONFLICT;
+  const statusCode = StatusCodes.CONFLICT;
 
   return {
     statusCode,

@@ -6,7 +6,7 @@ import { routes } from "./routes";
 import globalErrorHandler from "./middlewares/globalErrorHandler";
 
 const app: Application = express();
-import httpStatus from "http-status";
+import {StatusCodes} from "http-status-codes";
 app.use(cors());
 app.use(cookieParser());
 
@@ -20,7 +20,7 @@ app.use(globalErrorHandler);
 
 //handle not found
 app.use((req: Request, res: Response, next: NextFunction) => {
-  res.status(httpStatus.NOT_FOUND).json({
+  res.status(StatusCodes.NOT_FOUND).json({
     success: false,
     message: "Not Found",
     errorMessages: [

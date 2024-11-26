@@ -1,9 +1,12 @@
 import mongoose from "mongoose";
 
 export type IClient = {
-
-  //client account create field
   client: mongoose.Schema.Types.ObjectId
+name?:{
+  firstName?:string,
+  lastName?:string
+}
+
   dateOfBirth:Date;
   phoneNumber:string;
   businessType:string;
@@ -17,9 +20,9 @@ export type IClient = {
   problemAreas?: string;
   location?: string;
   description?: string;
-  industry?: string;
-  servicePreferences?: string;
-  budgetRange: {
+
+  industry?: string[];
+  budgetRange?: {
     min: number;
     max: number;
   };
@@ -30,6 +33,30 @@ export type IClient = {
     fileType?: string; 
   };
 };
+
+export type IUpdateClient={
+  name?:{
+    firstName?:string,
+    lastName?:string
+  },
+  companyName:string
+  
+  problemAreas: string;
+  location: string;
+  description: string;
+  industry: string;
+  servicePreferences: string[];
+  budgetRange: {
+    min: number;
+    max: number;
+  };
+  projectDurationRange: number;
+  projectListing?: {
+    fileName?: string; 
+    filePath?: string;
+    fileType?: string; 
+  };
+}
 export type ICLientFilters = {
   query?: string;
 };

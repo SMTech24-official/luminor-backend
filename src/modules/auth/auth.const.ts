@@ -1,4 +1,4 @@
-import { IUserRole } from "./user.interface";
+import { IUserRole } from "./auth.interface";
 
 
 
