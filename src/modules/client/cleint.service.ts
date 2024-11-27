@@ -48,13 +48,13 @@ const getClients = async (
   filters: ICLientFilters,
   paginationOptions: IpaginationOptions
 ): Promise<IGenericResponse<IClient[]>> => {
-  console.log(filters)
+ 
   const { skip, limit, page, sortBy, sortOrder } =
     paginationHelpers.calculatePagination(paginationOptions);
 
   const { query, ...filtersData } = filters;
 
-  console.log(filters, "i am from service to check filter data");
+
   const andCondition = [];
   if (query) {
     andCondition.push({
@@ -88,7 +88,7 @@ const getClients = async (
         }
         else if (field === "industry") {
           return {
-            industry: { $in: Array.isArray(value) ? value : [value] },
+            industry: { $in:  value },
           };
         }
         return { [field]: { $regex: value as string, $options: "i" } };
