@@ -8,12 +8,13 @@ import { jwtHelpers } from "../helpers/jwtHelpers";
 import config from "../config";
 import ApiError from "../errors/handleApiError";
 
-const auth =
+export const auth =
   (...requiredRoles: string[]) =>
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       //get authorization token
-      const token = req.headers.authorization;
+      const token = req.headers.authorization?.split(' ')[1];
+      console.log(token)
       if (!token) {
         throw new ApiError(StatusCodes.UNAUTHORIZED, "You are not authorized");
       }
@@ -21,6 +22,7 @@ const auth =
       let verifiedUser = null;
 
       verifiedUser = jwtHelpers.verifyToken(token, config.jwt.secret as Secret);
+      console.log(verifiedUser,"check verify user")
 
       req.user = verifiedUser; // role  , _id
 
