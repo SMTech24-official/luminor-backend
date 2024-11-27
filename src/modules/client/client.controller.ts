@@ -30,11 +30,7 @@ const createClient = catchAsync(async (req: Request, res: Response) => {
 const getClients = catchAsync(async (req: Request, res: Response) => {
   const paginationOptions = pick(req.query, paginationFileds);
   const filters = pick(req.query, filterableField);
-  console.log(
-    filters,
-    paginationOptions,
-    "i am from controller to check filters"
-  );
+
   const result = await ClientService.getClients(
     filters,
     paginationOptions
@@ -47,6 +43,19 @@ const getClients = catchAsync(async (req: Request, res: Response) => {
     message: "Clients  retrived successfully",
     meta: result.meta,
     data: result.data,
+  });
+});
+const getClientById = catchAsync(async (req: Request, res: Response) => {
+    const id=req.params.id 
+    
+    const result =await ClientService.getClientById(id)
+
+  sendResponse<IClient>(res, {
+    success: true,
+    statusCode: 200,
+
+    message: "Client   retrived successfully",
+    data:result
   });
 });
 const updateSingleClient = catchAsync(async (req: Request, res: Response) => {
@@ -76,4 +85,4 @@ const updateSingleClient = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-export const ClientController = { createClient, getClients,updateSingleClient };
+export const ClientController = { createClient, getClients,updateSingleClient ,getClientById};

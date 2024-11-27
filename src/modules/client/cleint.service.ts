@@ -48,6 +48,7 @@ const getClients = async (
   filters: ICLientFilters,
   paginationOptions: IpaginationOptions
 ): Promise<IGenericResponse<IClient[]>> => {
+  console.log(filters)
   const { skip, limit, page, sortBy, sortOrder } =
     paginationHelpers.calculatePagination(paginationOptions);
 
@@ -83,6 +84,11 @@ const getClients = async (
             
             "budgetRange.max": { $lte: parsingMaxBudget } 
           
+          };
+        }
+        else if (field === "industry") {
+          return {
+            industry: { $in: Array.isArray(value) ? value : [value] },
           };
         }
         return { [field]: { $regex: value as string, $options: "i" } };
@@ -163,8 +169,16 @@ export const updateSingleClient = async (
     throw new ApiError(400, error.message || "Error updating client");
   }
 };
+
+ const getClientById=async(id:string):Promise<IClient |null >=>{
+
+
+   const result=await Client.findById(id)
+   return result
+}
 export const ClientService = {
   createClient,
   getClients,
-  updateSingleClient
+  updateSingleClient,
+  getClientById
 };
