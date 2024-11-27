@@ -61,8 +61,10 @@ const getClientById = catchAsync(async (req: Request, res: Response) => {
 const updateSingleClient = catchAsync(async (req: Request, res: Response) => {
   const data = req.body;
   const id=req.params.id
-  console.log(id,"check id")
+
+  console.log(req.body)
   const file=req.file
+
 
   
   if (file) {
@@ -72,10 +74,10 @@ const updateSingleClient = catchAsync(async (req: Request, res: Response) => {
       fileType: file.mimetype,
     };}
     const { name,...clientProfile}=data
- console.log(name)
 
 
-  const result = await ClientService.updateSingleClient(id,name,clientProfile);
+
+ const result = await ClientService.updateSingleClient(id,name,clientProfile);
 
   sendResponse(res, {
     success: true,
