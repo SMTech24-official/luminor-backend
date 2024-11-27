@@ -62,7 +62,5 @@ export type IUpdateClient={
 }
 export interface ICLientFilters {
   query?: string;
-  minBudget?: number; // or string if sent as strings
-  maxBudget?: number; // or string if sent as strings
-  [key: string]: unknown; // Allows additional fields
+
 }

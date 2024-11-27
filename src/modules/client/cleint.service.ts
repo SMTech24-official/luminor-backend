@@ -54,7 +54,7 @@ const getClients = async (
 
   const { query, ...filtersData } = filters;
 
-
+ console.log(filtersData)
   const andCondition = [];
   if (query) {
     andCondition.push({
@@ -69,32 +69,50 @@ const getClients = async (
   if (Object.keys(filtersData).length) {
     andCondition.push({
       $and: Object.entries(filtersData).map(([field, value]) => {
+        // Handle budget range
         if (field === "minBudget") {
           const parsingMinBudget = parseInt(value as string);
           return {
-          
-            
-               "budgetRange.min": { $gte: parsingMinBudget } ,
-           
+            $or: [
+              { "budgetRange.min": { $lte: parsingMinBudget } }, // Overlaps with lower boundary
+              { "budgetRange.max": { $gte: parsingMinBudget } }, // Overlaps with upper boundary
+            ],
           };
         } else if (field === "maxBudget") {
           const parsingMaxBudget = parseInt(value as string);
           return {
-           
-            
-            "budgetRange.max": { $lte: parsingMaxBudget } 
-          
+            $or: [
+              { "budgetRange.min": { $lte: parsingMaxBudget } }, // Overlaps with lower boundary
+              { "budgetRange.max": { $gte: parsingMaxBudget } }, // Overlaps with upper boundary
+            ],
           };
         }
-        else if (field === "industry") {
+
+        // Handle project duration range
+        else if (field === "projectMin") {
+          const parsingMinRange = parseInt(value as string);
           return {
-            industry: { $in:  value },
+            $or: [
+              { "projectDurationRange.min": { $lte: parsingMinRange } }, // Overlaps with lower boundary
+              { "projectDurationRange.max": { $gte: parsingMinRange } }, // Overlaps with upper boundary
+            ],
+          };
+        } else if (field === "projectMax") {
+          const parsingMaxRange = parseInt(value as string);
+          return {
+            $or: [
+              { "projectDurationRange.min": { $lte: parsingMaxRange } }, // Overlaps with lower boundary
+              { "projectDurationRange.max": { $gte: parsingMaxRange } }, // Overlaps with upper boundary
+            ],
           };
         }
+
+        // Default regex-based filtering for other fields
         return { [field]: { $regex: value as string, $options: "i" } };
       }),
     });
   }
+
   const sortCondition: { [key: string]: SortOrder } = {};
   if (sortBy && sortOrder) {
     sortCondition[sortBy] = sortOrder;
