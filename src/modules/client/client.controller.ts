@@ -6,7 +6,7 @@ import { paginationFileds } from "../../constants/pagination";
 import { filterableField } from "../../constants/searchableField";
 import { IClient } from "./client.interface";
 import { ClientService } from "./cleint.service";
-
+import { StatusCodes } from "http-status-codes";
 
 const createClient = catchAsync(async (req: Request, res: Response) => {
   const data = req.body;
@@ -20,7 +20,7 @@ const createClient = catchAsync(async (req: Request, res: Response) => {
 
   sendResponse(res, {
     success: true,
-    statusCode: 200,
+    statusCode: StatusCodes.ACCEPTED,
     message: `client  account  created   successfully`,
     data: result,
   });
@@ -38,7 +38,7 @@ const getClients = catchAsync(async (req: Request, res: Response) => {
 
   sendResponse<IClient[]>(res, {
     success: true,
-    statusCode: 200,
+    statusCode: StatusCodes.ACCEPTED,
 
     message: "Clients  retrived successfully",
     meta: result.meta,
@@ -52,7 +52,7 @@ const getClientById = catchAsync(async (req: Request, res: Response) => {
 
   sendResponse<IClient>(res, {
     success: true,
-    statusCode: 200,
+    statusCode: StatusCodes.ACCEPTED,
 
     message: "Client   retrived successfully",
     data:result
@@ -81,7 +81,7 @@ const updateSingleClient = catchAsync(async (req: Request, res: Response) => {
 
   sendResponse(res, {
     success: true,
-    statusCode: 200,
+    statusCode: StatusCodes.ACCEPTED,
     message: `client  account  updated    successfully`,
     data: result,
   });
