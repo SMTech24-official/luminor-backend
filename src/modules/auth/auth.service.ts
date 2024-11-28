@@ -4,9 +4,7 @@ import ApiError from "../../errors/handleApiError";
 import { ILoginUser, ILoginUserResponse } from "./auth.interface";
 import { User } from "./auth.model";
 import {
-	
 	StatusCodes,
-	
 } from 'http-status-codes';
 import { jwtHelpers } from "../../helpers/jwtHelpers";
 const loginUser = async (
