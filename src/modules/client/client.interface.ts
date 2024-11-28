@@ -50,13 +50,17 @@ export type IUpdateClient={
     min: number;
     max: number;
   };
-  projectDurationRange: number;
+  projectDurationRange: {
+    min:number
+    max:number
+  };
   projectListing?: {
     fileName?: string; 
     filePath?: string;
     fileType?: string; 
   };
 }
-export type ICLientFilters = {
+export interface ICLientFilters {
   query?: string;
-};
+
+}

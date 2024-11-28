@@ -15,5 +15,6 @@ export const filterableField = [
   "maxBudget",
   "industry",
   "servicePreferences",
-  "projectDurationRange",
+  "projectMin",
+  "projectMax"
 ];

@@ -30,11 +30,7 @@ const createClient = catchAsync(async (req: Request, res: Response) => {
 const getClients = catchAsync(async (req: Request, res: Response) => {
   const paginationOptions = pick(req.query, paginationFileds);
   const filters = pick(req.query, filterableField);
-  console.log(
-    filters,
-    paginationOptions,
-    "i am from controller to check filters"
-  );
+   console.log(req.query,"check query")
   const result = await ClientService.getClients(
     filters,
     paginationOptions
@@ -49,11 +45,26 @@ const getClients = catchAsync(async (req: Request, res: Response) => {
     data: result.data,
   });
 });
+const getClientById = catchAsync(async (req: Request, res: Response) => {
+    const id=req.params.id 
+    
+    const result =await ClientService.getClientById(id)
+
+  sendResponse<IClient>(res, {
+    success: true,
+    statusCode: 200,
+
+    message: "Client   retrived successfully",
+    data:result
+  });
+});
 const updateSingleClient = catchAsync(async (req: Request, res: Response) => {
   const data = req.body;
   const id=req.params.id
-  console.log(id,"check id")
+
+  console.log(req.body)
   const file=req.file
+
 
   
   if (file) {
@@ -63,10 +74,10 @@ const updateSingleClient = catchAsync(async (req: Request, res: Response) => {
       fileType: file.mimetype,
     };}
     const { name,...clientProfile}=data
- console.log(name)
 
 
-  const result = await ClientService.updateSingleClient(id,name,clientProfile);
+
+ const result = await ClientService.updateSingleClient(id,name,clientProfile);
 
   sendResponse(res, {
     success: true,
@@ -76,4 +87,4 @@ const updateSingleClient = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-export const ClientController = { createClient, getClients,updateSingleClient };
+export const ClientController = { createClient, getClients,updateSingleClient ,getClientById};
