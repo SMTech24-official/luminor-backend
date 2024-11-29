@@ -32,7 +32,7 @@ const referenceSchema = new mongoose.Schema(
         type:String,required:true
       },
       technicalSkill: { type: String, required: true },
-      cv: {
+      cvOrCoverLetter: {
         fileName: { type: String, default: null },
         filePath: { type: String, default: null },
         fileType: { type: String, default: null },

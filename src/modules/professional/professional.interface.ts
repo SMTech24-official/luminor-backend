@@ -24,7 +24,7 @@ export type IProfessional = {
   educationalBackground: string;
   relevantQualification:string
   technicalSkill: string;
-  cv?: {
+  cvOrCoverLetter?: {
     fileName?: string;
     filePath?: string;
     fileType?: string;
