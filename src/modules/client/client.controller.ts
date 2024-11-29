@@ -5,7 +5,7 @@ import pick from "../../shared/pick";
 import { paginationFileds } from "../../constants/pagination";
 import { filterableField } from "../../constants/searchableField";
 import { IClient } from "./client.interface";
-import { ClientService } from "./cleint.service";
+import { ClientService } from "./client.service";
 import { StatusCodes } from "http-status-codes";
 
 const createClient = catchAsync(async (req: Request, res: Response) => {

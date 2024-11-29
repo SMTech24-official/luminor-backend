@@ -1,7 +1,8 @@
 
 import { calculateTotalPrice } from "../../utilitis/calculateTotalPrice";
 import { IOffer } from "./offer.interface";
-import { Offer } from "./offer.model/offer.model";
+import { Offer } from "./offer.model";
+
 
 const createOffer = async (offer: IOffer) => {
   offer.totalPrice = calculateTotalPrice(offer);

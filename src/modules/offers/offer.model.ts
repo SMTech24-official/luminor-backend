@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { IMilestone, IOffer } from "../offer.interface";
+import { IMilestone, IOffer } from "./offer.interface";
 
 
 

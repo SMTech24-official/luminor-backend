@@ -1,13 +1,13 @@
-import { IOffer } from "../modules/orders/offer.interface";
+import { IOffer } from "../modules/offers/offer.interface";
 import path from "path";
 import fs from "fs";
-import PDFDocument from "pdfkit"; // Assuming you are using pdfkit
+import PDFDocument from "pdfkit"; 
 
 export const generateOfferPDF = async (offer: IOffer): Promise<string> => {
   const doc = new PDFDocument();
   
   const fileName = `offer_${Date.now()}.pdf`;
-  const filePath = path.join(__dirname, "../../uploads", fileName); // Save the file in the uploads directory
+  const filePath = path.join(__dirname, "../../uploads", fileName);
 
   // Pipe the PDF output to a file
   doc.pipe(fs.createWriteStream(filePath));

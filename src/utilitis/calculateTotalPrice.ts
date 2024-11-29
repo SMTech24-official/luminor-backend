@@ -1,5 +1,5 @@
 import { StatusCodes } from "http-status-codes";
-import { IOffer } from "../modules/orders/offer.interface";
+import { IOffer } from "../modules/offers/offer.interface";
 import ApiError from "../errors/handleApiError";
 
 export const calculateTotalPrice = (offer: IOffer): number => {
