@@ -7,6 +7,7 @@ import { RetireProfessionalService } from "./professional.service";
 const clientProfessional = catchAsync(async (req: Request, res: Response) => {
   const data = req.body;
   const file = req.file;
+  console.log(req.body,"check body")
   console.log(req.body, "check data");
   if (file) {
     data.cvOrCoverLetter = {

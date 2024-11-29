@@ -2,7 +2,7 @@ import { z } from "zod";
 import { ENUM_USER_ROLE } from "../../enums/user";
 
 
-const signUpZodSchema = z.object({
+const signUpZodSchema = z.object({ 
     body: z.object({
       name: z.object({
         firstName: z.string({
@@ -30,11 +30,8 @@ const signUpZodSchema = z.object({
       phoneNumber: z
         .string({
           required_error: "Phone Number is Required",
-        })
-        .regex(/^\+880\d{10}$/, {
-          message:
-            "Phone number must start with +880 and be followed by exactly 10 digits",
         }),
+        
       dateOfBirth: z
         .string({
           required_error: "Date of Birth is Required",
@@ -43,16 +40,6 @@ const signUpZodSchema = z.object({
           (value) => !isNaN(Date.parse(value)),
           { message: "Invalid date format" }
         ),
-      businessType: z.string({
-        required_error: "Business Type is Required",
-      }),
-      jobTitle: z.string({
-        required_error: "Job Title is Required",
-      }),
-      companyName: z
-        .string()
-        .optional()
-        .or(z.literal("")),
         linkedinProfile: z
         .string()
         .optional()
@@ -64,6 +51,15 @@ const signUpZodSchema = z.object({
           },
           { message: "Invalid LinkedIn Profile URL" }
         ),
+       industry:z.string({required_error:"industy is required"}),
+      jobTitle: z.string({
+        required_error: "Job Title is Required",
+      }),
+      companyName: z
+        .string()
+        .optional()
+        .or(z.literal("")),
+      
       password: z.string({
         required_error: "Password is Required",
       }),

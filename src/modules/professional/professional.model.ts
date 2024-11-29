@@ -1,13 +1,7 @@
 import mongoose from "mongoose";
 import { IProfessional } from "./professional.interface";
 
-const referenceSchema = new mongoose.Schema(
-  {
-    emailOrPhone: { type: String, required: true }, // Store as string, could be email or phone
-    name: { type: String, required: true }, // Store the name of the reference
-  },
-  { _id: false }
-);
+
 
   
   // Define the main Professional schema
@@ -24,9 +18,14 @@ const referenceSchema = new mongoose.Schema(
       industry: { type: [String], required:true },
     
       linkedinProfile: { type: String },
-      previousPorsition: { type: [String], required: true },
+      previousPositions: { type: [String], required: true },
    
-      references: { type: referenceSchema, required: true },
+      references: [
+        {
+          emailOrPhone: { type: String, required: true },
+          name: { type: String, required: true },
+        },
+      ],
       educationalBackground: { type: String, required: true },
       relevantQualification:{
         type:String,required:true

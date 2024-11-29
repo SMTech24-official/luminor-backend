@@ -15,12 +15,12 @@ export type IProfessional = {
   companyWebsite: string;
   jobTitle: string;
   linkedinProfile?: string;
-  previousPorsition: string[];
+  previousPositions: string[];
   industry: string[];
-  references: {
+  references: Array<{
     emailOrPhone: string;
     name: string;
-  };
+  }>;
   educationalBackground: string;
   relevantQualification:string
   technicalSkill: string;
