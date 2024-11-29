@@ -59,6 +59,7 @@ export type IUpdateClient={
     filePath?: string;
     fileType?: string; 
   };
+
 }
 export interface ICLientFilters {
   query?: string;

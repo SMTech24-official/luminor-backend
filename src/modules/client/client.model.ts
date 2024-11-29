@@ -41,6 +41,7 @@ const clientSchema = new mongoose.Schema<IClient>(
       filePath: { type: String, default: null },
       fileType: { type: String, default: null },
     },
+   
   },
   { timestamps: true }
 );

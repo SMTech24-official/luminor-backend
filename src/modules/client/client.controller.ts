@@ -20,7 +20,7 @@ const createClient = catchAsync(async (req: Request, res: Response) => {
 
   sendResponse(res, {
     success: true,
-    statusCode: StatusCodes.ACCEPTED,
+    statusCode: StatusCodes.OK,
     message: `client  account  created   successfully`,
     data: result,
   });
@@ -38,7 +38,7 @@ const getClients = catchAsync(async (req: Request, res: Response) => {
 
   sendResponse<IClient[]>(res, {
     success: true,
-    statusCode: StatusCodes.ACCEPTED,
+    statusCode: StatusCodes.OK,
 
     message: "Clients  retrived successfully",
     meta: result.meta,
@@ -52,7 +52,7 @@ const getClientById = catchAsync(async (req: Request, res: Response) => {
 
   sendResponse<IClient>(res, {
     success: true,
-    statusCode: StatusCodes.ACCEPTED,
+    statusCode: StatusCodes.OK,
 
     message: "Client   retrived successfully",
     data:result
