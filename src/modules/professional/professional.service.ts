@@ -38,6 +38,51 @@ import ApiError from "../../errors/handleApiError";
     }
   };
   
+  export const updateSingleRetireProfessional = async (
+    id: string,
+    auth: Partial<IProfessional>,
+    retireProfessionalPayload: Partial<IProfessional>
+  ): Promise<IProfessional | null> => {
+    const session = await mongoose.startSession();  // Start a new session for transaction management
+    try {
+      session.startTransaction();
+  
+      // Ensure you're updating the existing client, not creating a new one
+      const updatedRetireProfessional = await RetireProfessional.findByIdAndUpdate(id, retireProfessionalPayload, {
+        new: true,  // return the updated document
+        session,
+      });
+  
+      if (!updatedRetireProfessional) {
+        throw new ApiError(404, "retire professional not found");
+      }
+      // console.log(auth,"check auth");
+      
+  
+      // Update the associated User model (linked by client field)
+      const updatedUser = await User.findByIdAndUpdate(updatedRetireProfessional.retireProfessional, auth, {
+        new: true,  // return the updated document
+        session,
+      });
+  
+      if (!updatedUser) {
+        throw new ApiError(404, "User not found");
+      }
+  
+      // Commit the transaction after both updates are successful
+      await session.commitTransaction();
+      session.endSession();
+  
+      // Return the updated client with populated user data
+      return updatedRetireProfessional.populate("retireProfessional");
+    } catch (error: any) {
+      // In case of error, rollback the transaction
+      await session.abortTransaction();
+      session.endSession();
+      throw new ApiError(400, error.message || "Error updating client");
+    }
+  };
   export const RetireProfessionalService={
-    createProfessional
+    createProfessional,
+    updateSingleRetireProfessional
   }

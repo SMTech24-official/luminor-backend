@@ -12,11 +12,7 @@ const fileSchema = z.object({
 });
 
 // Validation schema for projects
-const projectSchema = z.object({
-  preferedProjects: z.string().nullable(),
-  hourlyRate: z.string().nullable(),
-  workSample: fileSchema.optional(),
-});
+
 
 // Main sign-up validation schema
 const signUpZodSchema = z.object({
@@ -82,7 +78,9 @@ const signUpZodSchema = z.object({
       required_error: "Technical skill is required",
     }),
     cvOrCoverLetter: fileSchema.optional(),
-   
+    softSkills:z.string({
+      required_error:" technical or soft skills required"
+    })
   }),
 });
 

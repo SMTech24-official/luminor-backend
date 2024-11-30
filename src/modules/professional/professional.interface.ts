@@ -16,7 +16,7 @@ export type IProfessional = {
   jobTitle: string;
   linkedinProfile?: string;
   previousPositions: string[];
-  industry: string[];
+
   references: Array<{
     emailOrPhone: string;
     name: string;
@@ -34,9 +34,9 @@ export type IProfessional = {
   bio: string;
 
   description?: string;
-  skills: string;
-  availability: string;
-  projects: [
+  expertise: string[];
+  availability: boolean;
+ 
     preferedProjects: string,
     hourlyRate: string,
     workSample?: {
@@ -44,7 +44,7 @@ export type IProfessional = {
       filePath?: string;
       fileType?: string;
     }
-  ];
+
 };
 
 export type IUpdateClient = {
