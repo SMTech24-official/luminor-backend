@@ -1,6 +1,6 @@
 import mongoose, { SortOrder } from "mongoose";
 
-import { IClient, ICLientFilters } from "./client.interface";
+import { IClient, IFilters } from "./client.interface";
 import { IpaginationOptions } from "../../interfaces/pagination";
 import { IGenericResponse } from "../../interfaces/general";
 import { paginationHelpers } from "../../helpers/paginationHelper";
@@ -45,7 +45,7 @@ export const createClient = async (user:IUser, clientData: IClient) => {
 };
 
 const getClients = async (
-  filters: ICLientFilters,
+  filters: IFilters,
   paginationOptions: IpaginationOptions
 ): Promise<IGenericResponse<IClient[]>> => {
  

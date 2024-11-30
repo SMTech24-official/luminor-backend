@@ -61,7 +61,7 @@ export type IUpdateClient={
   };
 
 }
-export interface ICLientFilters {
+export interface IFilters {
   query?: string;
 
 }
