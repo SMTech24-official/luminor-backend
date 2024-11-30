@@ -1,4 +1,4 @@
-import { Request } from "express";
+import { NextFunction, Request } from "express";
 import multer, { Multer, FileFilterCallback } from "multer";
 import ApiError from "../errors/handleApiError";
 
@@ -6,12 +6,13 @@ const DIR = "./uploads";
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
+    console.log(req.body,"checkz")
     cb(null, DIR);
   },
   filename: (req, file, cb) => {
 
     console.log(file)
-
+    console.log(req.body,"cehck body from multer")
   
     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
     cb(null, `${uniqueSuffix}-${file.originalname}`);
@@ -43,6 +44,7 @@ const fileFilter = (
     cb(error, false); // Reject file
   }
 };
+
 
 export const multerUpload: Multer = multer({
   storage: storage,

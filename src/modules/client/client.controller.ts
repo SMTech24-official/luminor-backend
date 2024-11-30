@@ -62,7 +62,7 @@ const updateSingleClient = catchAsync(async (req: Request, res: Response) => {
   const data = req.body;
   const id=req.params.id
 
-  console.log(req.body)
+  // console.log(req.body)
   const file=req.file
 
 
@@ -74,7 +74,7 @@ const updateSingleClient = catchAsync(async (req: Request, res: Response) => {
       fileType: file.mimetype,
     };}
     const { name,...clientProfile}=data
-
+   
 
 
  const result = await ClientService.updateSingleClient(id,name,clientProfile);
