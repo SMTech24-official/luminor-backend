@@ -156,6 +156,8 @@ export const updateSingleClient = async (
     if (!updatedClient) {
       throw new ApiError(404, "Client not found");
     }
+    // console.log(auth,"check auth");
+    
 
     // Update the associated User model (linked by client field)
     const updatedUser = await User.findByIdAndUpdate(updatedClient.client, auth, {

@@ -11,7 +11,7 @@ name?:{
   phoneNumber:string;
   businessType:string;
   companyName?: string;
-  companyWebsite: string;
+
   jobTitle: string;
   linkedinProfile?: string;
 
@@ -20,7 +20,7 @@ name?:{
   problemAreas?: string;
   location?: string;
   description?: string;
-
+  companyWebsite: string;
   industry?: string[];
   budgetRange?: {
     min: number;

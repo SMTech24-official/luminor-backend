@@ -11,8 +11,8 @@ const storage = multer.diskStorage({
   },
   filename: (req, file, cb) => {
 
-    console.log(file)
-    console.log(req.body,"cehck body from multer")
+   
+    // console.log(req.body,"cehck body from multer")
   
     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
     cb(null, `${uniqueSuffix}-${file.originalname}`);

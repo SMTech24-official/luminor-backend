@@ -75,9 +75,9 @@ const updateSingleClient = catchAsync(async (req: Request, res: Response) => {
     };}
     const { name,...clientProfile}=data
    
+  const auth={name:JSON.parse(name)}
 
-
- const result = await ClientService.updateSingleClient(id,name,clientProfile);
+ const result = await ClientService.updateSingleClient(id,auth,clientProfile);
 
   sendResponse(res, {
     success: true,

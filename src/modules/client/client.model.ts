@@ -19,7 +19,7 @@ const clientSchema = new mongoose.Schema<IClient>(
     },
     businessType: { type: String, required: true },
     companyName: { type: String, default: null },
-    companyWebsite: { type: String, required: true },
+    companyWebsite: { type: String, default: null },
     jobTitle: { type: String, required: true },
     linkedinProfile: { type: String },
     //client profile field

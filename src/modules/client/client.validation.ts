@@ -51,7 +51,7 @@ const signUpZodSchema = z.object({
           },
           { message: "Invalid LinkedIn Profile URL" }
         ),
-       industry:z.string({required_error:"industy is required"}),
+       industry:z.string().optional(),
       jobTitle: z.string({
         required_error: "Job Title is Required",
       }),
