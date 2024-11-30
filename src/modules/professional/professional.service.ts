@@ -98,7 +98,7 @@ import { IFilters } from "../client/client.interface";
   
     const { query, ...filtersData } = filters;
   
-   console.log(filtersData)
+  //  console.log(filtersData)
     const andCondition = [];
     if (query) {
       andCondition.push({
@@ -114,33 +114,14 @@ import { IFilters } from "../client/client.interface";
     andCondition.push(
       ...Object.entries(filtersData).map(([field, value]) => {
         // Handle budget range
-        if (field === "minBudget") {
-          const minBudget = parseInt(value as string);
+       
+         if(field==="industry" ){
+    
+          const industryArray = (value as string).split(',').map((item) => item.trim());
+         console.log(industryArray)
+
           return {
-            "budgetRange.max": { $gte: minBudget }, // The client's max budget must be >= professional's min budget
-          };
-        } else if (field === "maxBudget") {
-          const maxBudget = parseInt(value as string);
-          return {
-            "budgetRange.max": { $gte: maxBudget }, // The client's min budget must be <= professional's max budget
-          };
-        }
-  
-        // Handle project duration range
-        if (field === "projectMin") {
-          const minDuration = parseInt(value as string);
-          return {
-            "projectDurationRange.max": { $gte: minDuration }, // The client's max duration must be >= professional's min duration
-          };
-        } else if (field === "projectMax") {
-          const maxDuration = parseInt(value as string);
-          return {
-            "projectDurationRange.max": { $gte: maxDuration }, // The client's min duration must be <= professional's max duration
-          };
-        }
-        else if(field==="industry"  && Array.isArray(value)){
-          return {
-            "industry":{$in:value}
+            "expertise":{$in:industryArray}
           }
         }
   

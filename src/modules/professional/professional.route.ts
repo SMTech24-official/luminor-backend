@@ -21,4 +21,6 @@ router.post(
 );
 
 router.patch("/profile/:id",multerUpload.single("workSample"),
+
 RetireProfessionalController.updateSingleRetireProfessional)
+router.get("/",RetireProfessionalController.getReitereProfessionals)

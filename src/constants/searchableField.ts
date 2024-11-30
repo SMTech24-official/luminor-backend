@@ -16,5 +16,6 @@ export const filterableField = [
   "industry",
   "servicePreferences",
   "projectMin",
-  "projectMax"
+  "projectMax",
+  "location"
 ];

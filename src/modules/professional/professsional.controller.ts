@@ -3,6 +3,10 @@ import catchAsync from "../../shared/catchAsync";
 import sendResponse from "../../shared/sendResponse";
 import { Request, Response } from "express";
 import { RetireProfessionalService } from "./professional.service";
+import pick from "../../shared/pick";
+import { paginationFileds } from "../../constants/pagination";
+import { filterableField } from "../../constants/searchableField";
+import { IProfessional } from "./professional.interface";
 
 const createProfessional = catchAsync(async (req: Request, res: Response) => {
   const data = req.body;
@@ -70,7 +74,27 @@ const updateSingleRetireProfessional = catchAsync(
   }
 );
 
+const getReitereProfessionals = catchAsync(async (req: Request, res: Response) => {
+  const paginationOptions = pick(req.query, paginationFileds);
+  const filters = pick(req.query, filterableField);
+
+  const result = await RetireProfessionalService.getReitereProfessionals(
+    filters,
+    paginationOptions
+  );
+
+  sendResponse<IProfessional[]>(res, {
+    success: true,
+    statusCode: StatusCodes.OK,
+
+    message: "Retire professional   retrived successfully",
+    meta: result.meta,
+    data: result.data,
+  });
+});
+
 export const RetireProfessionalController = {
   createProfessional,
   updateSingleRetireProfessional,
+  getReitereProfessionals
 };

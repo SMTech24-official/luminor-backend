@@ -94,9 +94,13 @@ const getClients = async (
           "projectDurationRange.max": { $gte: maxDuration }, // The client's min duration must be <= professional's max duration
         };
       }
-      else if(field==="industry"  && Array.isArray(value)){
+      else if(field==="industry" ){
+       console.log(value,"check value from client get clients")
+        const industryArray = (value as string).split(',').map((item) => item.trim());
+       console.log(industryArray)
+
         return {
-          "industry":{$in:value}
+          "industry":{$in:industryArray}
         }
       }
 

@@ -17,6 +17,6 @@ router.post(
   ClientController.createClient
 );
 
-router.get("/",auth(ENUM_USER_ROLE.CLIENT,ENUM_USER_ROLE.ADMIN),  ClientController.getClients)
+router.get("/",  ClientController.getClients)
 router.patch("/profile/:id",  multerUpload.single("projectListing"), auth(ENUM_USER_ROLE.CLIENT),ClientController.updateSingleClient)
 router.get("/:id",ClientController.getClientById)
