@@ -138,8 +138,19 @@ const createProfessional = async (user: IUser, professionalData: IProfessional) 
             "expertise":{$in:skiillTypeArray}
           }
         }
-  
-        // Default regex-based filtering for other fields
+        else if(field==="timeline"){
+          if (value === "shortTerm") {
+           
+            return {
+              "availability": { $lte: 29 },  
+            };
+          } else {
+            return {
+              "availability": { $gte: 30 }, 
+            };
+          }
+        }
+    
         return { [field]: { $regex: value as string, $options: "i" } };
       })
     );
