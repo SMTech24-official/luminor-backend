@@ -11,3 +11,7 @@ router.post(
   OfferController.createOffer
 );
 
+
+router.get("/professional/:id",OfferController.getOfferByProfessional)
+
+router.get("/:id",OfferController.getSingleOffer)
