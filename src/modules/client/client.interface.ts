@@ -22,6 +22,7 @@ name?:{
   description?: string;
   companyWebsite: string;
   servicePreference?: string[];
+  industry: string[];
   budgetRange?: {
     min: number;
     max: number;

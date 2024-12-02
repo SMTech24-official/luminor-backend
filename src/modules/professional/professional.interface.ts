@@ -52,32 +52,7 @@ export type IProfessional = {
   reviews:IReview,
   averageRating:number
 };
-export type IUpdateClient = {
-  name?: {
-    firstName?: string;
-    lastName?: string;
-  };
-  companyName: string;
 
-  problemAreas: string;
-  location: string;
-  description: string;
-  industry: string;
-  servicePreferences: string[];
-  budgetRange: {
-    min: number;
-    max: number;
-  };
-  projectDurationRange: {
-    min: number;
-    max: number;
-  };
-  projectListing?: {
-    fileName?: string;
-    filePath?: string;
-    fileType?: string;
-  };
-};
 export interface IProfessionalFilter {
   query?: string;
 }

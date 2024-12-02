@@ -9,6 +9,7 @@ import { Client } from "./client.model";
 import { User } from "../auth/auth.model";
 import { IUser } from "../auth/auth.interface";
 import ApiError from "../../errors/handleApiError";
+import { getIndustryFromService } from "../../utilitis/serviceMapping";
 
 
 export const createClient = async (user:IUser, clientData: IClient) => {
@@ -150,6 +151,10 @@ export const updateSingleClient = async (
   const session = await mongoose.startSession();  // Start a new session for transaction management
   try {
     session.startTransaction();
+    if (clientPayload.servicePreference) {
+      const industries = getIndustryFromService(clientPayload.servicePreference);
+      clientPayload.industry = industries; 
+    }
 
     // Ensure you're updating the existing client, not creating a new one
     const updatedClient = await Client.findByIdAndUpdate(id, clientPayload, {
