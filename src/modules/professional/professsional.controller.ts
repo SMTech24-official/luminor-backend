@@ -54,9 +54,9 @@ const updateSingleRetireProfessional = catchAsync(
         fileType: req.file.mimetype,
       };
     }
-    const { firstName,lastName, ...retireProfessionalProfile } = req.body;
+    const { name, ...retireProfessionalProfile } = req.body;
 
-    const auth = {firstName,lastName };
+    const auth = {name:JSON.parse(name) };
 
     const result =
       await RetireProfessionalService.updateSingleRetireProfessional(

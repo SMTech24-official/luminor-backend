@@ -119,12 +119,23 @@ const createProfessional = async (user: IUser, professionalData: IProfessional) 
         // Handle budget range
        
          if(field==="industry" ){
-    
-          const industryArray = (value as string).split(',').map((item) => item.trim());
-         console.log(industryArray)
+          console.log(value,"check value from client get clients")
+           // const industryArray = (value as string).split(',').map((item) => item.trim());
+   
+          const parseArray = Array.isArray(value) ? value : JSON.parse(value as string);
+        
+       console.log(parseArray)
+           return {
+             "industry":{$in:parseArray}
+           }
+         }
+         else if(field==="skillType"){
 
+          const skiillTypeArray = Array.isArray(value) ? value : JSON.parse(value as string);
+          console.log(skiillTypeArray)
+  
           return {
-            "expertise":{$in:industryArray}
+            "expertise":{$in:skiillTypeArray}
           }
         }
   

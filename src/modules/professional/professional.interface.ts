@@ -10,8 +10,10 @@ export type IProfessional = {
   //create account field
   retireProfessional: mongoose.Schema.Types.ObjectId;
 
+name:{
   firstName?: string;
   lastName?: string;
+};
 
   dateOfBirth: Date;
   phoneNumber: string;
