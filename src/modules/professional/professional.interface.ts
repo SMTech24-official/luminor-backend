@@ -1,52 +1,57 @@
 import mongoose from "mongoose";
+export type IReview = {
+  rating: number; 
+  feedBack: string; 
+  reviewer: mongoose.Schema.Types.ObjectId; 
+  createdAt: Date; 
+};
 
 export type IProfessional = {
-  //retire professional account
+  //create account field
   retireProfessional: mongoose.Schema.Types.ObjectId;
-  name?: {
-    firstName?: string;
-    lastName?: string;
-  };
+
+  firstName?: string;
+  lastName?: string;
 
   dateOfBirth: Date;
   phoneNumber: string;
-  businessType: string;
-  companyName?: string;
-  companyWebsite: string;
-  jobTitle: string;
-  linkedinProfile?: string;
   previousPositions: string[];
-
   references: Array<{
     emailOrPhone: string;
     name: string;
   }>;
   educationalBackground: string;
-  relevantQualification:string
   technicalSkill: string;
   cvOrCoverLetter?: {
     fileName?: string;
     filePath?: string;
     fileType?: string;
   };
-  //retire professional profile
+  linkedinProfile?: string;
+
+  //retire professional profile field
+
   location?: string;
   bio: string;
-
   description?: string;
   expertise: string[];
-  availability: boolean;
- 
-    preferedProjects: string,
-    hourlyRate: string,
-    workSample?: {
-      fileName?: string;
-      filePath?: string;
-      fileType?: string;
-    }
+  industry: string[];
+  relevantQualification: string;
 
+  businessType: string;
+
+  availability?: string;
+
+  preferedProjects: string;
+  hourlyRate: string;
+  workSample?: {
+    fileName?: string;
+    filePath?: string;
+    fileType?: string;
+  };
+  reviews:IReview,
+  averageRating:number
 };
-
 export type IUpdateClient = {
   name?: {
     firstName?: string;

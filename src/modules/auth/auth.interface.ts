@@ -5,13 +5,12 @@ export type IUser = {
   password: string;
   email: string;
 
-  name: {
-    firstName: string;
-    lastName: string;
-  };
+ name:{
+  firstName: string;
+  lastName: string;
+ },
 
   role: ENUM_USER_ROLE;
-
 };
 
 export type IUserExistReturn = {
@@ -43,4 +42,4 @@ export type UserModel = {
     savedPassword: string
   ): Promise<boolean>;
 } & Model<IUser>;
-export type IUserRole = "client" | "professional";
+

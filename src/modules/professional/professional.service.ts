@@ -9,40 +9,39 @@ import { IGenericResponse } from "../../interfaces/general";
 import { paginationHelpers } from "../../helpers/paginationHelper";
 import { searchableField } from "../../constants/searchableField";
 import { IFilters } from "../client/client.interface";
+import { getIndustryFromService, } from "../../utilitis/serviceMapping";
 
- const createProfessional = async (user:IUser, professionalData: IProfessional) => {
-    const session = await mongoose.startSession();
-    try {
-      session.startTransaction();
-  
 
-      const newUser = await User.create([user], { session });
-      const userId = newUser[0]._id;
-  
 
-      const newProfessionalData = {
-        ...professionalData,
-        retireProfessional: userId,
+const createProfessional = async (user: IUser, professionalData: IProfessional) => {
+  const session = await mongoose.startSession();
+  try {
+    session.startTransaction();
 
-      };
-  
-      const newProfessional = await RetireProfessional.create([newProfessionalData], { session });
-  
-      // Step 3: Commit transaction
-      await session.commitTransaction();
-      session.endSession();
-   
-  
-      return newProfessional[0].populate("retireProfessional")
-      
-    } catch (error:any) {
-      // Rollback transaction in case of an error
-      await session.abortTransaction();
-      session.endSession();
-      throw new ApiError(400,error);
-    }
-  };
-  
+    // Map service preferences to industries
+ 
+
+    const newUser = await User.create([user], { session });
+    const userId = newUser[0]._id;
+
+    const newProfessionalData = {
+      ...professionalData,
+      retireProfessional: userId,
+     // Add the mapped industries here
+    };
+
+    const newProfessional = await RetireProfessional.create([newProfessionalData], { session });
+
+    await session.commitTransaction();
+    session.endSession();
+
+    return newProfessional[0].populate("retireProfessional");
+  } catch (error: any) {
+    await session.abortTransaction();
+    session.endSession();
+    throw new ApiError(400, error);
+  }
+}; 
   export const updateSingleRetireProfessional = async (
     id: string,
     auth: Partial<IProfessional>,
@@ -53,6 +52,10 @@ import { IFilters } from "../client/client.interface";
       session.startTransaction();
   
       // Ensure you're updating the existing client, not creating a new one
+      if (retireProfessionalPayload.expertise) {
+        const industries = getIndustryFromService(retireProfessionalPayload.expertise);
+        retireProfessionalPayload.industry = industries; 
+      }
       const updatedRetireProfessional = await RetireProfessional.findByIdAndUpdate(id, retireProfessionalPayload, {
         new: true,  // return the updated document
         session,
@@ -63,7 +66,7 @@ import { IFilters } from "../client/client.interface";
       }
       // console.log(auth,"check auth");
       
-  
+     
       // Update the associated User model (linked by client field)
       const updatedUser = await User.findByIdAndUpdate(updatedRetireProfessional.retireProfessional, auth, {
         new: true,  // return the updated document

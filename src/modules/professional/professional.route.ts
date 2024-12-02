@@ -11,10 +11,10 @@ const router = express.Router();
 export const RetireProfessionalRoute = router;
 router.post(
   "/signUp",
-  
-  multerUpload.single("cvOrCoverLetter"),
-  parseNestedJSON,
 
+  multerUpload.single("cvOrCoverLetter"),
+
+  parseNestedJSON,
   validateRequest(RetireProfessionalValidation.signUpZodSchema),
 
   RetireProfessionalController.createProfessional

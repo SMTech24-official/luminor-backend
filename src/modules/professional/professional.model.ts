@@ -1,5 +1,8 @@
 import mongoose from "mongoose";
 import { IProfessional } from "./professional.interface";
+import { ENUM_SERVICE_PREFERENCE } from "../../enums/service";
+import { ENUM_INDUSTRY_TYPE } from "../../enums/client";
+
 
 // Define the main Professional schema
 const RetireProfessionalSchema = new mongoose.Schema<IProfessional>(
@@ -39,8 +42,9 @@ const RetireProfessionalSchema = new mongoose.Schema<IProfessional>(
     location: { type: String, default: null },
     bio: { type: String, default: null },
     description: { type: String, default: null },
-    expertise: { type: [String], required: true },
-    availability: { type: Boolean, default:false },
+    expertise: { type: [String],enum:ENUM_SERVICE_PREFERENCE, default: [] },
+    industry:{type:[String], enum:ENUM_INDUSTRY_TYPE,defaul:[]},
+    availability: { type: String, default:null },
 
     preferedProjects: { type: String, default: null },
     hourlyRate: { type: String, default: null },
@@ -49,7 +53,23 @@ const RetireProfessionalSchema = new mongoose.Schema<IProfessional>(
       filePath: { type: String, default: null },
       fileType: { type: String, default: null },
     },
+    reviews: [
+      {
+        user: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "User", 
+          required: true,
+        },
+        rating: { type: Number, required: true, min: 1, max: 5 },
+        feedBack: { type: String, required: true },
+        createdAt: { type: Date, default: Date.now },
+      },
+    ],
+
+
+    averageRating: { type: Number, default: 0 },
   },
+  
 
   { timestamps: true }
 );
@@ -58,3 +78,4 @@ export const RetireProfessional = mongoose.model(
   "RetireProfessional",
   RetireProfessionalSchema
 );
+
