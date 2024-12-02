@@ -10,7 +10,7 @@ export type IMilestone = {
 export type IOffer = {
   projectName: string;
   description: string;
-  agreementType: "Flat Fee" | "Hourly Fee" | "Milestone";
+  agreementType: "Flat_Fee" | "Hourly_Fee" | "Milestone";
   flatFee?: {
     revision: number;
     delivery: number;
@@ -22,7 +22,7 @@ export type IOffer = {
     pricePerHour: number;
   };
   orderAgreementPDF: string; // PDF file path or URL
-  milestones: IMilestone[]; // Array of milestone objects
+  milestones?: IMilestone[]; // Array of milestone objects
   totalPrice: number;
   professionalId: ObjectId; // Refers to the RetireProfessional model
   clientId: ObjectId; // Refers to the Client model

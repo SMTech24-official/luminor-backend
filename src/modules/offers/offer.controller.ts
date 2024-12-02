@@ -4,10 +4,11 @@ import sendResponse from "../../shared/sendResponse";
 import { StatusCodes } from "http-status-codes";
 import { OfferService } from "./offer.service";
 import { generateOfferPDF } from "../../utilitis/generateOfferPdf";
+import { calculateTotalPrice } from "../../utilitis/calculateTotalPrice";
 const createOffer = catchAsync(async (req: Request, res: Response) => {
     const data = req.body;
   
-    
+    data.totalPrice = calculateTotalPrice(data);
     const offerPDFPath = await generateOfferPDF(data);
   
 

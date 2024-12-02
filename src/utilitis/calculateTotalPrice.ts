@@ -4,21 +4,21 @@ import ApiError from "../errors/handleApiError";
 
 export const calculateTotalPrice = (offer: IOffer): number => {
     let totalPrice = 0;
-  
-    switch (offer.agreementType) {
-      case 'Flat Fee':
-        totalPrice = offer.flatFee ? offer.flatFee.price : 0;
-        break;
-      case 'Hourly Fee':
-        totalPrice = offer.hourlyFee
-          ? offer.hourlyFee.pricePerHour * offer.hourlyFee.delivery
-          : 0;
-        break;
-      case 'Milestone':
-        totalPrice = offer.milestones.reduce((total, milestone) => total + milestone.price, 0);
-        break;
-      default:
-        throw new ApiError(StatusCodes.BAD_REQUEST, 'Invalid agreement type');
+    if(offer.agreementType==="Flat_Fee"){
+      totalPrice = offer.flatFee ? offer.flatFee.price : 0;
+    }
+    else if(offer.agreementType==="Hourly_Fee"){
+
+      totalPrice = offer.hourlyFee
+      ? offer.hourlyFee.pricePerHour * offer.hourlyFee.delivery
+      : 0;
+    }
+    else if(offer.agreementType==="Milestone" && offer.milestones){
+      totalPrice =  offer.milestones.reduce((total, milestone) => total + milestone.price, 0);
+    }
+    
+    else{
+      throw new ApiError(StatusCodes.BAD_REQUEST,"untype offer metho")
     }
   
     return totalPrice;

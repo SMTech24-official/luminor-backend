@@ -4,11 +4,11 @@ import { IMilestone, IOffer } from "./offer.interface";
 
 
 const milestoneSchema = new mongoose.Schema<IMilestone>({
-  title: { type: String, required: true },
-  description: { type: String, required: true },
-  price: { type: Number, required: true },
-  revision: { type: Number, default: 0 },
-  delivery: { type: Number, required: true },
+  title: { type: String},
+  description: { type: String },
+  price: { type: Number},
+  revision: { type: Number },
+  delivery: { type: Number },
 });
 
 const offerSchema = new mongoose.Schema<IOffer>({
