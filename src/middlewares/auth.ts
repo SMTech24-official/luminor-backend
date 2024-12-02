@@ -25,10 +25,16 @@ export const auth =
       // console.log(verifiedUser,"check verify user")
 
       req.user = verifiedUser; // role  , _id
+      console.log(req.user,"from auth to check user")
 
-      if (requiredRoles.length && !requiredRoles.includes(verifiedUser.role)) {
+      if (requiredRoles.length && !requiredRoles.includes(verifiedUser.role) ) {
         throw new ApiError(StatusCodes.FORBIDDEN, "Forbidden");
       }
+       else if(req.params.id!==req.user._id){
+        console.log("check wrong header ");
+        
+        throw new ApiError( StatusCodes.UNAUTHORIZED,"you are not the owner of this account")
+       }
 
       next();
     } catch (error) {

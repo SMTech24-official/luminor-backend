@@ -11,7 +11,7 @@ const createToken = (
 };
 
 const verifyToken = (token: string, secret: Secret): JwtPayload => {
-  console.log(token)
+
   return jwt.verify(token, secret) as JwtPayload;
 };
 

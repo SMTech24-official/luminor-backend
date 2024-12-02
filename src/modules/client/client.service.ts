@@ -74,12 +74,12 @@ const getClients = async (
       if (field === "minBudget") {
         const minBudget = parseInt(value as string);
         return {
-          "budgetRange.max": { $gte: minBudget }, // The client's max budget must be >= professional's min budget
+          "budgetRange.max": { $gte: minBudget }, 
         };
       } else if (field === "maxBudget") {
         const maxBudget = parseInt(value as string);
         return {
-          "budgetRange.max": { $gte: maxBudget }, // The client's min budget must be <= professional's max budget
+          "budgetRange.max": { $gte: maxBudget }, 
         };
       }
 
@@ -87,25 +87,42 @@ const getClients = async (
       if (field === "projectMin") {
         const minDuration = parseInt(value as string);
         return {
-          "projectDurationRange.max": { $gte: minDuration }, // The client's max duration must be >= professional's min duration
+          "projectDurationRange.max": { $gte: minDuration }, 
         };
       } else if (field === "projectMax") {
         const maxDuration = parseInt(value as string);
         return {
-          "projectDurationRange.max": { $gte: maxDuration }, // The client's min duration must be <= professional's max duration
+          "projectDurationRange.max": { $gte: maxDuration }, 
         };
       }
       else if(field==="industry" ){
        console.log(value,"check value from client get clients")
-        const industryArray = (value as string).split(',').map((item) => item.trim());
-       console.log(industryArray)
+        // const industryArray = (value as string).split(',').map((item) => item.trim());
+
+       const parseArray = Array.isArray(value) ? value : JSON.parse(value as string);
+     
 
         return {
-          "industry":{$in:industryArray}
+          "industry":{$in:parseArray}
+        }
+      }
+      else if(field==="skillType"){
+
+        const skiillTypeArray = Array.isArray(value) ? value : JSON.parse(value as string);
+        console.log(skiillTypeArray)
+
+        return {
+          "servicePreference":{$in:skiillTypeArray}
+        }
+      }
+      else if(field==="timeline"){
+        console.log(value,"in time line")
+        return{
+          "projectDurationRange":value==="shortTerm"?{$lte:30}:{$gte:30}
         }
       }
 
-      // Default regex-based filtering for other fields
+
       return { [field]: { $regex: value as string, $options: "i" } };
     })
   );
@@ -157,7 +174,7 @@ export const updateSingleClient = async (
     }
 
     // Ensure you're updating the existing client, not creating a new one
-    const updatedClient = await Client.findByIdAndUpdate(id, clientPayload, {
+    const updatedClient = await Client.findOneAndUpdate({client:id}, clientPayload, {
       new: true,  // return the updated document
       session,
     });
@@ -169,7 +186,7 @@ export const updateSingleClient = async (
     
 
     // Update the associated User model (linked by client field)
-    const updatedUser = await User.findByIdAndUpdate(updatedClient.client, auth, {
+    const updatedUser = await User.findByIdAndUpdate(id, auth, {
       new: true,  // return the updated document
       session,
     });

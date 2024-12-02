@@ -30,7 +30,7 @@ const createClient = catchAsync(async (req: Request, res: Response) => {
 const getClients = catchAsync(async (req: Request, res: Response) => {
   const paginationOptions = pick(req.query, paginationFileds);
   const filters = pick(req.query, filterableField);
-   console.log(req.query,"check query")
+  //  console.log(req.query,"check query")
   const result = await ClientService.getClients(
     filters,
     paginationOptions
@@ -66,7 +66,7 @@ const updateSingleClient = catchAsync(async (req: Request, res: Response) => {
   const file=req.file
 
 
-  
+   console.log(req.user,"check user")
   if (file) {
     data.projectListing = {
       fileName: file.filename,

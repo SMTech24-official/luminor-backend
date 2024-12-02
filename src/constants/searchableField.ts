@@ -17,5 +17,7 @@ export const filterableField = [
   "servicePreferences",
   "projectMin",
   "projectMax",
-  "location"
+  "location",
+  "skillType",
+  "timeline"
 ];

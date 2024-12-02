@@ -9,6 +9,7 @@ import {
 	
 } from 'http-status-codes';
 import { jwtHelpers } from "../../helpers/jwtHelpers";
+import { Client } from "../client/client.model";
 const loginUser = async (
     payload: ILoginUser
   ): Promise<ILoginUserResponse | null> => {
@@ -26,9 +27,12 @@ const loginUser = async (
     ) {
       throw new ApiError(StatusCodes.UNAUTHORIZED, "Password is incorrect");
     }
-  
+    
+
+ 
    
     const { _id, email: userEmail, role } = isUserExist;
+    console.log(_id,"check use id for mahi")
     const accessToken = jwtHelpers.createToken(
       { _id, userEmail, role },
       config.jwt.secret as Secret,

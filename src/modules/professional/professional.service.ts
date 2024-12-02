@@ -56,7 +56,7 @@ const createProfessional = async (user: IUser, professionalData: IProfessional) 
         const industries = getIndustryFromService(retireProfessionalPayload.expertise);
         retireProfessionalPayload.industry = industries; 
       }
-      const updatedRetireProfessional = await RetireProfessional.findByIdAndUpdate(id, retireProfessionalPayload, {
+      const updatedRetireProfessional = await RetireProfessional.findOneAndUpdate({retireProfessional:id}, retireProfessionalPayload, {
         new: true,  // return the updated document
         session,
       });
@@ -68,7 +68,7 @@ const createProfessional = async (user: IUser, professionalData: IProfessional) 
       
      
       // Update the associated User model (linked by client field)
-      const updatedUser = await User.findByIdAndUpdate(updatedRetireProfessional.retireProfessional, auth, {
+      const updatedUser = await User.findByIdAndUpdate(id, auth, {
         new: true,  // return the updated document
         session,
       });
