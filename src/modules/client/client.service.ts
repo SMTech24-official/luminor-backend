@@ -116,9 +116,15 @@ const getClients = async (
         }
       }
       else if(field==="timeline"){
-        console.log(value,"in time line")
-        return{
-          "projectDurationRange":value==="shortTerm"?{$lte:30}:{$gte:30}
+        if (value === "shortTerm") {
+          console.log("for shorterm")
+          return {
+            "projectDurationRange.max": { $lte: 29 },  // Projects with duration less than or equal to 30
+          };
+        } else {
+          return {
+            "projectDurationRange.max": { $gte: 30 },  // Projects with duration greater than or equal to 30
+          };
         }
       }
 

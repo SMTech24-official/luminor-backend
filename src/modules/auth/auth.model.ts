@@ -3,7 +3,7 @@ import { IUser, IUserExistReturn, UserModel } from "./auth.interface";
 import { ENUM_USER_ROLE } from "../../enums/user";
 import config from "../../config";
 import bcrypt from "bcrypt"
-import { UserRole } from "./auth.const";
+
 
 const userSchema =
   new mongoose.Schema<IUser>({
