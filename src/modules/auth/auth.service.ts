@@ -9,7 +9,7 @@ import {
 	
 } from 'http-status-codes';
 import { jwtHelpers } from "../../helpers/jwtHelpers";
-import { Client } from "../client/client.model";
+
 const loginUser = async (
     payload: ILoginUser
   ): Promise<ILoginUserResponse | null> => {
@@ -41,6 +41,7 @@ const loginUser = async (
    
     return {
       accessToken,
+      user:isUserExist
 
     };
   };

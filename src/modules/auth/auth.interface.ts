@@ -19,6 +19,10 @@ export type IUserExistReturn = {
 
   password: string;
   role: ENUM_USER_ROLE;
+  name:{
+    firstName:string,
+    lastName:string
+  }
 };
 
 export type ILoginUser = {
@@ -28,6 +32,7 @@ export type ILoginUser = {
 export type ILoginUserResponse = {
   refreshToken?: string;
   accessToken: string;
+  user:IUser
 };
 export type IRefreshTokenResponse = {
   accessToken: string;
@@ -36,7 +41,7 @@ export type IRefreshTokenResponse = {
 export type UserModel = {
   isUserExist(
     email: string
-  ): Promise<Pick<IUserExistReturn, "email" | "password" | "_id" | "role">>;
+  ): Promise<Pick<IUserExistReturn, "email" | "password" | "_id" | "role"|"name">>;
   isPasswordMatched(
     givenPassword: string,
     savedPassword: string

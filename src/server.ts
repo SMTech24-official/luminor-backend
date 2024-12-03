@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import config from "./config";
 import { createServer } from "http";
 import app from "./app";
+import { Server } from "socket.io";
 
 const options = {
 
@@ -10,6 +11,7 @@ const options = {
 };
 
 const httpServer = createServer(app);
+
 
 async function bootstrap() {
   try {

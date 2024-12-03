@@ -43,6 +43,11 @@ const postReviews = async (id: string, review: IReview) => {
   };
 
 
+  export const getReviews=()=>{
+
+
+    
+  }
 
 export const ReviewsService={
     postReviews
