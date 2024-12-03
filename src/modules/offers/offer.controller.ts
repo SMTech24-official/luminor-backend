@@ -23,10 +23,10 @@ const createOffer = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-const getOfferByProfessional = catchAsync(async (req: Request, res: Response) => {
+const getOffersByProfessional = catchAsync(async (req: Request, res: Response) => {
   const id = req.params.id;
 
-  const result = await OfferService.getOfferByProfessional(id);
+  const result = await OfferService.getOffersByProfessional(id);
 
   sendResponse(res, {
     success: true,
@@ -51,6 +51,6 @@ const getSingleOffer = catchAsync(async (req: Request, res: Response) => {
 
 export const OfferController = {
   createOffer,
-  getOfferByProfessional,
+  getOffersByProfessional,
   getSingleOffer
 };

@@ -12,6 +12,6 @@ router.post(
 );
 
 
-router.get("/professional/:id",OfferController.getOfferByProfessional)
+router.get("/professional/:id",OfferController.getOffersByProfessional)
 
 router.get("/:id",OfferController.getSingleOffer)

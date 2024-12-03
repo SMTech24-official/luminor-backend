@@ -57,7 +57,7 @@ const RetireProfessionalSchema = new mongoose.Schema<IProfessional>(
       {
         user: {
           type: mongoose.Schema.Types.ObjectId,
-          ref: "User", 
+          ref: "Client", 
           required: true,
         },
         rating: { type: Number, required: true, min: 1, max: 5 },

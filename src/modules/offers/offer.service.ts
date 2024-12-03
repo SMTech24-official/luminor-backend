@@ -11,7 +11,7 @@ const createOffer = async (offer: IOffer) => {
 
   return newOffer;
 };
-const getOfferByProfessional=async (id:string) => {
+const getOffersByProfessional=async (id:string) => {
 
 
   const offer = await Offer.find({clientId:id});
@@ -28,6 +28,6 @@ const getSingleOffer=async(id:string)=>{
 }
 export const OfferService = {
   createOffer,
-  getOfferByProfessional,
+  getOffersByProfessional,
   getSingleOffer
 };

@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 export type IReview = {
   rating: number; 
   feedBack: string; 
-  reviewer: mongoose.Schema.Types.ObjectId; 
+  user: mongoose.Schema.Types.ObjectId; 
   createdAt: Date; 
 };
 
