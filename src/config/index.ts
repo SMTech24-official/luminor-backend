@@ -9,6 +9,7 @@ export default {
   port: process.env.PORT,
   database_url: process.env.DATABASE_URL,
   bcrypt_salt_round: process.env.bcrypt_salt_round,
+  front_end_url:process.env.FRONT_END_URL,
 
   jwt: {
     secret: process.env.JWT_SECRET,

@@ -6,6 +6,8 @@ import { AuthRoute } from "../modules/auth/auth.route";
 import { OfferRoute } from "../modules/offers/offer.route";
 import { RetireProfessionalRoute } from "../modules/professional/professional.route";
 import { ReviewRoute } from "../modules/reviews/reviews.route";
+import { MessageRoutes } from "../modules/messages/messages.route";
+import { NotificationRoutes } from "../modules/notification/notification.route";
 
 const router = express.Router();
 
@@ -29,7 +31,15 @@ const moduleRoutes = [
   {
     path:"/review",
     route:ReviewRoute
-  }
+  },
+  {
+    path: "/messages",
+    route: MessageRoutes,
+  },
+  {
+    path: "/notification",
+    route: NotificationRoutes,
+  },
 
 ];
 
