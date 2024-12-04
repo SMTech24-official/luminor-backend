@@ -55,7 +55,7 @@ const getClients = async (
 
   const { query, ...filtersData } = filters;
 
- console.log(filtersData)
+//  console.log(filtersData)
   const andCondition = [];
   if (query) {
     andCondition.push({
@@ -96,7 +96,7 @@ const getClients = async (
         };
       }
       else if(field==="industry" ){
-       console.log(value,"check value from client get clients")
+      //  console.log(value,"check value from client get clients")
         // const industryArray = (value as string).split(',').map((item) => item.trim());
 
        const parseArray = Array.isArray(value) ? value : JSON.parse(value as string);
@@ -109,7 +109,7 @@ const getClients = async (
       else if(field==="skillType"){
 
         const skiillTypeArray = Array.isArray(value) ? value : JSON.parse(value as string);
-        console.log(skiillTypeArray)
+        // console.log(skiillTypeArray)
 
         return {
           "servicePreference":{$in:skiillTypeArray}

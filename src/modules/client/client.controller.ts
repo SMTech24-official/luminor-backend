@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { query, Request, Response } from "express";
 import catchAsync from "../../shared/catchAsync";
 import sendResponse from "../../shared/sendResponse";
 import pick from "../../shared/pick";
@@ -29,6 +29,7 @@ const createClient = catchAsync(async (req: Request, res: Response) => {
 
 const getClients = catchAsync(async (req: Request, res: Response) => {
   const paginationOptions = pick(req.query, paginationFileds);
+  console.log(req.query,"querty check from controller")
   const filters = pick(req.query, filterableField);
   //  console.log(req.query,"check query")
   const result = await ClientService.getClients(
@@ -36,6 +37,7 @@ const getClients = catchAsync(async (req: Request, res: Response) => {
     paginationOptions
   );
 
+  console.log(filters,"filters")
   sendResponse<IClient[]>(res, {
     success: true,
     statusCode: StatusCodes.OK,

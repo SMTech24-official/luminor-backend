@@ -19,11 +19,11 @@ const createMessage = catchAsync(async (req: Request, res: Response) => {
   });
 });
 const getMessages = catchAsync(async (req: Request, res: Response) => {
-  const { senderId, recipientId } = req.query;
+  const { user1, user2} = req.query;
 
   const messages = await MessageService.getMessages(
-    senderId as string,
-    recipientId as string
+    user1 as string,
+    user2 as string
   );
 
   sendResponse<IMessage[]>(res, {

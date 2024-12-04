@@ -13,11 +13,8 @@ import { ENUM_NOTIFICATION_STATUS, ENUM_NOTIFICATION_TYPE } from "../../enums/no
     __v: number;
   };
   export type INotificationType =
-    | "privateMessage"
-    | "joinTeamStatusUpdate"
-    | "joinTeamRequestStatus"
-    | "updateCreateTeam"
-    | "deleteCreateTeam";
+    "privateMessage"|
+    "offer"
   
   export type INotificationStatus = "seen" | "unseen";
   
