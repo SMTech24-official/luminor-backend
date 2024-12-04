@@ -4,7 +4,7 @@ import { RetireProfessionalController } from "./professsional.controller";
 import { multerUpload } from "../../middlewares/multer";
 import validateRequest from "../../middlewares/validateRequest";
 import { RetireProfessionalValidation } from "./professional.validation";
-import { Request,NextFunction } from "express";
+
 import { parseNestedJSON } from "../../middlewares/parseJson";
 import auth from "../../middlewares/auth";
 import { ENUM_USER_ROLE } from "../../enums/user";
@@ -22,7 +22,10 @@ router.post(
   RetireProfessionalController.createProfessional
 );
 
-router.patch("/profile/:id",multerUpload.single("workSample"),
-auth(ENUM_USER_ROLE.RETIREPROFESSIONAL),
-RetireProfessionalController.updateSingleRetireProfessional)
-router.get("/",RetireProfessionalController.getReitereProfessionals)
+router.patch(
+  "/profile/:id",
+  multerUpload.single("workSample"),
+  auth(ENUM_USER_ROLE.RETIREPROFESSIONAL),
+  RetireProfessionalController.updateSingleRetireProfessional
+);
+router.get("/", RetireProfessionalController.getReitereProfessionals);

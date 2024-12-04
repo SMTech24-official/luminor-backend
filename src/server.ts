@@ -9,8 +9,6 @@ import { ENUM_NOTIFICATION_STATUS } from "./enums/notificationStatus";
 import { NotificationCreateResponse } from "./modules/notification/notification.interface";
 
 const options = {
-
-
   autoIndex: true,
 };
 
@@ -24,12 +22,17 @@ const io = new Server(httpServer, {
   pingTimeout: 60000,
   upgradeTimeout: 30000,
 });
+
+// Store socket IDs for users
 const users: { [key: string]: string } = {};
+
 io.on("connection", (socket) => {
+  // Register the user with their email and socket ID
   socket.on("register", (email: string) => {
     users[email] = socket.id;
   });
 
+  // Private messaging between users
   socket.on("privateMessage", async ({ toEmail, message, timestamp }) => {
     const toSocketId = users[toEmail];
     const senderEmail = Object.keys(users).find(
@@ -41,7 +44,6 @@ io.on("connection", (socket) => {
     }
 
     try {
-      // Save the message to the database regardless of recipient's connection status
       const savedMessage = await Message.create({
         sender: senderEmail,
         message: message,
@@ -58,6 +60,7 @@ io.on("connection", (socket) => {
     } catch (error) {}
   });
 
+  // Notification event
   socket.on(
     "notification",
     async ({ toEmail, message, timestamp, _id, type }) => {
@@ -71,41 +74,56 @@ io.on("connection", (socket) => {
       }
 
       try {
-       const notification = await Notification.create({
-  recipient: toEmail,
-  sender: senderEmail,
-  message: message,
-  status: ENUM_NOTIFICATION_STATUS.UNSEEN,
-  type: type,
-});
+        const notification = await Notification.create({
+          recipient: toEmail,
+          sender: senderEmail,
+          message: message,
+          status: ENUM_NOTIFICATION_STATUS.UNSEEN,
+          type: type,
+        });
 
-// Use .toObject() to get a plain object
-const notificationData = notification.toObject();
+        const notificationData = notification.toObject();
 
-const notificationResponse: NotificationCreateResponse = {
-  success: true,
-  statusCode: 200,
-  message: "Notification saved successfully",
-  data: notificationData, // Plain object
-};
+        const notificationResponse: NotificationCreateResponse = {
+          success: true,
+          statusCode: 200,
+          message: "Notification saved successfully",
+          data: notificationData,
+        };
 
-const notificationId = notificationData._id;
-if (toSocketId) {
-  socket.to(toSocketId).emit("notification", {
-    from: senderEmail,
-    message,
-    timestamp,
-    _id: notificationId,
-    type: type,
-  });
-}
+        const notificationId = notificationData._id;
+        if (toSocketId) {
+          socket.to(toSocketId).emit("notification", {
+            from: senderEmail,
+            message,
+            timestamp,
+            _id: notificationId,
+            type: type,
+          });
+        }
       } catch (error) {
         socket.emit("notificationError", "Failed to create notification");
       }
     }
   );
-  
 
+  // WebRTC Signaling: Handling offer, answer, and ICE candidates
+  socket.on("sendOffer", (offer: any, toEmail: string) => {
+    const toSocketId = users[toEmail];
+    if (toSocketId) {
+      socket.to(toSocketId).emit("receiveOffer", offer, socket.id);
+    }
+  });
+
+  socket.on("sendAnswer", (answer: any, toSocketId: string) => {
+    socket.to(toSocketId).emit("receiveAnswer", answer);
+  });
+
+  socket.on("sendCandidate", (candidate: any, toSocketId: string) => {
+    socket.to(toSocketId).emit("receiveCandidate", candidate);
+  });
+
+  // Handle disconnection of users
   socket.on("disconnect", (reason) => {
     for (const email in users) {
       if (users[email] === socket.id) {
@@ -122,7 +140,7 @@ async function bootstrap() {
   try {
     // Connect to MongoDB
     await mongoose.connect(config.database_url as string, options);
-    console.log(config.database_url,"check data base url")
+    console.log(config.database_url, "check data base url");
     console.log("Connected to MongoDB successfully.");
 
     // Start the server
