@@ -31,12 +31,7 @@ const RetireProfessionalSchema = new mongoose.Schema<IProfessional>(
       required: true,
     },
     technicalSkill: { type: String, required: true },
-    cvOrCoverLetter: {
-      fileName: { type: String, default: null },
-      filePath: { type: String, default: null },
-      fileType: { type: String, default: null },
-    },
-
+    cvOrCoverLetter: { type: String, default: null },
     // Retired professional profile (optional)
 
     location: { type: String, default: null },
@@ -48,11 +43,7 @@ const RetireProfessionalSchema = new mongoose.Schema<IProfessional>(
 
     preferedProjects: { type: String, default: null },
     hourlyRate: { type: String, default: null },
-    workSample: {
-      fileName: { type: String, default: null },
-      filePath: { type: String, default: null },
-      fileType: { type: String, default: null },
-    },
+    workSample:{ type: String, default: null },
     reviews: [
       {
         user: {

@@ -7,20 +7,20 @@ import pick from "../../shared/pick";
 import { paginationFileds } from "../../constants/pagination";
 import { filterableField } from "../../constants/searchableField";
 import { IProfessional } from "./professional.interface";
+import ApiError from "../../errors/handleApiError";
+import { uploadFileToSpace } from "../../utilitis/uploadTos3";
 
 const createProfessional = catchAsync(async (req: Request, res: Response) => {
   const data = req.body;
   const file = req.file;
-  console.log(req.body, "check body");
+  // console.log(req.body, "check body");
+  console.log(file,"check file")
 
-  if (file) {
-    data.cvOrCoverLetter = {
-      fileName: file.filename,
-      filePath: file.path,
-      fileType: file.mimetype,
-    };
+  if (!file) {
+     throw new ApiError(400,"file not found")
   }
-
+  const fileUrl = await uploadFileToSpace(file, "retire-professional"); 
+  console.log(fileUrl,"check url")
   const { name, email, role, password, ...others } = data;
 
   const user = {
@@ -29,9 +29,13 @@ const createProfessional = catchAsync(async (req: Request, res: Response) => {
     role,
     password,
   };
+  const professionalData = {
+    ...others,
+    cvOrCoverLetter: fileUrl, // Save the file URL in the database
+  };
   const result = await RetireProfessionalService.createProfessional(
     user,
-    others
+    professionalData
   );
 
   sendResponse(res, {
@@ -45,24 +49,28 @@ const updateSingleRetireProfessional = catchAsync(
   async (req: Request, res: Response) => {
 
 
-    // console.log(req.body)
-
-    if (req.file) {
-      req.body.workSample = {
-        fileName: req.file.filename,
-        filePath: req.file.path,
-        fileType: req.file.mimetype,
-      };
+    const file = req.file;
+    // console.log(req.body, "check body");
+    console.log(file,"check file")
+  
+    if (!file) {
+       throw new ApiError(400,"file not found")
     }
+    const fileUrl = await uploadFileToSpace(file, "retire-professional"); 
+
     const { name, ...retireProfessionalProfile } = req.body;
-
+    
     const auth = {name:JSON.parse(name) };
-
+    const { workSample, ...others } = retireProfessionalProfile;
+    const updatedProfile = {
+      ...others,
+      workSample: fileUrl,
+    };
     const result =
       await RetireProfessionalService.updateSingleRetireProfessional(
         req.params.id,
         auth,
-        retireProfessionalProfile
+        updatedProfile
       );
 
     sendResponse(res, {

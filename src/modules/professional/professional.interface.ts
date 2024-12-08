@@ -24,11 +24,7 @@ name:{
   }>;
   educationalBackground: string;
   technicalSkill: string;
-  cvOrCoverLetter?: {
-    fileName?: string;
-    filePath?: string;
-    fileType?: string;
-  };
+  cvOrCoverLetter?:string;
   linkedinProfile?: string;
 
   //retire professional profile field
@@ -46,12 +42,8 @@ name:{
 
   preferedProjects: string;
   hourlyRate: string;
-  workSample?: {
-    fileName?: string;
-    filePath?: string;
-    fileType?: string;
-  };
-  reviews:IReview,
+  workSample?:string;
+  reviews:IReview;
   averageRating:number
 };
 
