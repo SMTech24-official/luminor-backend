@@ -7,6 +7,8 @@ import { filterableField } from "../../constants/searchableField";
 import { IClient } from "./client.interface";
 import { ClientService } from "./client.service";
 import { StatusCodes } from "http-status-codes";
+import ApiError from "../../errors/handleApiError";
+import { uploadFileToSpace } from "../../utilitis/uploadTos3";
 
 const createClient = catchAsync(async (req: Request, res: Response) => {
   const data = req.body;
@@ -65,16 +67,20 @@ const updateSingleClient = catchAsync(async (req: Request, res: Response) => {
   const id=req.params.id
 
   // console.log(req.body)
-  const file=req.file
 
+  const file = req.file;
+  // console.log(req.body, "check body");
+  console.log(file,"check file")
+
+  if (!file) {
+     throw new ApiError(400,"file not found")
+  }
+  const fileUrl = await uploadFileToSpace(file, "client"); 
 
    console.log(req.user,"check user")
   if (file) {
-    data.projectListing = {
-      fileName: file.filename,
-      filePath: file.path,
-      fileType: file.mimetype,
-    };}
+    data.projectListing=fileUrl
+   }
     const { name,...clientProfile}=data
    
   const auth={name:JSON.parse(name)}

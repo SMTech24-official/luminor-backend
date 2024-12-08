@@ -39,11 +39,7 @@ const clientSchema = new mongoose.Schema<IClient>(
       min: { type: Number, default: null },
       max: { type: Number, default: null },
     },
-    projectListing: {
-      fileName: { type: String, default: null },
-      filePath: { type: String, default: null },
-      fileType: { type: String, default: null },
-    },
+    projectListing: {type:String}
    
   },
   { timestamps: true }

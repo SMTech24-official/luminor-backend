@@ -55,11 +55,7 @@ export type IUpdateClient={
     min:number
     max:number
   };
-  projectListing?: {
-    fileName?: string; 
-    filePath?: string;
-    fileType?: string; 
-  };
+  projectListing?: string
 
 }
 export interface IFilters {
