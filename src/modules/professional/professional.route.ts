@@ -5,9 +5,10 @@ import { multerUpload } from "../../middlewares/multer";
 import validateRequest from "../../middlewares/validateRequest";
 import { RetireProfessionalValidation } from "./professional.validation";
 
-import { parseNestedJSON } from "../../middlewares/parseJson";
+
 import auth from "../../middlewares/auth";
 import { ENUM_USER_ROLE } from "../../enums/user";
+import { parseNestedJSON } from "../../middlewares/parseJson";
 const router = express.Router();
 
 export const RetireProfessionalRoute = router;

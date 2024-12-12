@@ -12,36 +12,50 @@ import ApiError from "../../errors/handleApiError";
 import { getIndustryFromService } from "../../utilitis/serviceMapping";
 
 
-export const createClient = async (user:IUser, clientData: IClient) => {
+ const createClient = async (user: IUser, clientData: IClient) => {
+
+  const isUserExist=await User.findOne({email:user.email})
+  if(isUserExist){
+    throw new ApiError(400,"User Already Exist")
+  }
+
   const session = await mongoose.startSession();
   try {
+    // console.log("Transaction started");
+
+  
     session.startTransaction();
 
-   //Create a User account
+    // Create a User account
     const newUser = await User.create([user], { session });
-    const userId = newUser[0]._id;
+    console.log("User created:", newUser[0]._id);
 
-    //Create a Client account linked to the User
-    const newClientData = {
-      ...clientData,
-      client: userId,
-       // Link User ID to the Client
-    };
-
+    // Create a Client account linked to the User
+    const newClientData = { ...clientData, client: newUser[0]._id };
     const newClient = await Client.create([newClientData], { session });
+    // console.log("Client created:", newClient[0]._id);
 
-    // Step 3: Commit transaction
+    // Commit the transaction
     await session.commitTransaction();
-    session.endSession();
- 
+    // console.log("Transaction committed");
 
-    return newClient[0].populate("client")
-    
-  } catch (error:any) {
-    // Rollback transaction in case of an error
+    return (await newClient[0].populate("client")).toObject();
+  } catch (error: any) {
+    // console.error("Transaction failed:", error);
+
+    // Rollback transaction
     await session.abortTransaction();
     session.endSession();
-    throw new ApiError(400,error);
+
+    // Handle duplicate key error
+    if (error.code === 11000) {
+      throw new ApiError(400, "Duplicate email not allowed");
+    }
+
+    throw new ApiError(400, error.message || "An error occurred");
+  } finally {
+    session.endSession();
+    // console.log("Session ended");
   }
 };
 
@@ -166,7 +180,7 @@ const getClients = async (
     };
   }
 };
-export const updateSingleClient = async (
+ const updateSingleClient = async (
   id: string,
   auth: Partial<IClient>,
   clientPayload: Partial<IClient>

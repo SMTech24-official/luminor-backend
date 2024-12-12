@@ -40,6 +40,9 @@ const signUpZodSchema = z.object({
     phoneNumber: z.string({
       required_error: "Phone Number is required",
     }),
+    password:z.string({
+       required_error:"password is required"
+    }).min(6,"at least 6 digit"),
     dateOfBirth: z
       .string({
         required_error: "Date of Birth is required",

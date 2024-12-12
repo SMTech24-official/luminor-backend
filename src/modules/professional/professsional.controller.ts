@@ -19,6 +19,7 @@ const createProfessional = catchAsync(async (req: Request, res: Response) => {
   if (!file) {
      throw new ApiError(400,"file not found")
   }
+  
   const fileUrl = await uploadFileToSpace(file, "retire-professional"); 
   console.log(fileUrl,"check url")
   const { name, email, role, password, ...others } = data;

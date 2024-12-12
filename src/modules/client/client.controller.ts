@@ -12,34 +12,30 @@ import { uploadFileToSpace } from "../../utilitis/uploadTos3";
 
 const createClient = catchAsync(async (req: Request, res: Response) => {
   const data = req.body;
-  
-    const {name,email,role,password,...others}=data
 
-  const result = await ClientService.createClient({
-    name, email, role,password
-   
-  },others);
+  const { name, email, role, password, ...others } = data;
+
+  const result = await ClientService.createClient(
+    { name, email, role, password },
+    others
+  );
 
   sendResponse(res, {
     success: true,
     statusCode: StatusCodes.OK,
-    message: `client  account  created   successfully`,
+    message: `Client account created successfully`,
     data: result,
   });
 });
 
-
 const getClients = catchAsync(async (req: Request, res: Response) => {
   const paginationOptions = pick(req.query, paginationFileds);
-  console.log(req.query,"querty check from controller")
+  console.log(req.query, "querty check from controller");
   const filters = pick(req.query, filterableField);
   //  console.log(req.query,"check query")
-  const result = await ClientService.getClients(
-    filters,
-    paginationOptions
-  );
+  const result = await ClientService.getClients(filters, paginationOptions);
 
-  console.log(filters,"filters")
+  console.log(filters, "filters");
   sendResponse<IClient[]>(res, {
     success: true,
     statusCode: StatusCodes.OK,
@@ -50,42 +46,46 @@ const getClients = catchAsync(async (req: Request, res: Response) => {
   });
 });
 const getClientById = catchAsync(async (req: Request, res: Response) => {
-    const id=req.params.id 
-    
-    const result =await ClientService.getClientById(id)
+  const id = req.params.id;
+
+  const result = await ClientService.getClientById(id);
 
   sendResponse<IClient>(res, {
     success: true,
     statusCode: StatusCodes.OK,
 
     message: "Client   retrived successfully",
-    data:result
+    data: result,
   });
 });
 const updateSingleClient = catchAsync(async (req: Request, res: Response) => {
   const data = req.body;
-  const id=req.params.id
+  const id = req.params.id;
 
   // console.log(req.body)
 
   const file = req.file;
   // console.log(req.body, "check body");
-  console.log(file,"check file")
+  console.log(file, "check file");
 
   if (!file) {
-     throw new ApiError(400,"file not found")
+    throw new ApiError(400, "file not found");
   }
-  const fileUrl = await uploadFileToSpace(file, "client"); 
+  const fileUrl = await uploadFileToSpace(file, "client");
 
-   console.log(req.user,"check user")
+  console.log(req.user, "check user");
   if (file) {
-    data.projectListing=fileUrl
-   }
-    const { name,...clientProfile}=data
-   
-  const auth={name:JSON.parse(name)}
+    data.projectListing = fileUrl;
+  }
+  const { name, ...clientProfile } = data;
 
- const result = await ClientService.updateSingleClient(id,auth,clientProfile);
+  const auth = { name: JSON.parse(name) };
+
+  const result = await ClientService.updateSingleClient(
+    id,
+    auth,
+    clientProfile
+  );
 
   sendResponse(res, {
     success: true,
@@ -95,4 +95,9 @@ const updateSingleClient = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-export const ClientController = { createClient, getClients,updateSingleClient ,getClientById};
+export const ClientController = {
+  createClient,
+  getClients,
+  updateSingleClient,
+  getClientById,
+};

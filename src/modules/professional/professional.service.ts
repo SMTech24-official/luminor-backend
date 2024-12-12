@@ -14,6 +14,11 @@ import { getIndustryFromService, } from "../../utilitis/serviceMapping";
 
 
 const createProfessional = async (user: IUser, professionalData: IProfessional) => {
+  const isUserExist=await User.findOne({email:user.email})
+  if(isUserExist){
+    throw new ApiError(400,"User Already Exist")
+  }
+
   const session = await mongoose.startSession();
   try {
     session.startTransaction();
@@ -91,6 +96,7 @@ const createProfessional = async (user: IUser, professionalData: IProfessional) 
     }
     
   };
+  
   const getReitereProfessionals = async (
     filters: IFilters,
     paginationOptions: IpaginationOptions

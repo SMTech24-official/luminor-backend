@@ -25,8 +25,8 @@ const userSchema =
         required:true,
         enum: ENUM_USER_ROLE, 
       },
-    email: { type: String, required: true },
-    password:{type:String,required:true}
+    email: { type: String, required: true,unique:true },
+    password:{type:String,required:true,select:false}
     
   });
   userSchema.statics.isUserExist = async function (
