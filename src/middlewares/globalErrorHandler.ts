@@ -1,6 +1,6 @@
 import { ErrorRequestHandler } from "express";
 
-import { MongoError } from "mongodb";
+import { MongoError, MongoServerError } from "mongodb";
 import { ZodError } from "zod";
 
 import config from "../config";
@@ -27,7 +27,7 @@ const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
     statusCode = simplifiedError?.statusCode;
     message = simplifiedError?.message;
     errorMessages = simplifiedError?.errorMessages;
-  } else if (err instanceof MongoError && err.code === 11000) {
+  } else if (err instanceof MongoServerError && err.code === 11000) {
     const simplifiedError = duplicateError(err);
     statusCode = simplifiedError?.statusCode;
     message = simplifiedError?.message;

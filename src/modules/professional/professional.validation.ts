@@ -1,8 +1,8 @@
 import { z } from "zod";
 import { ENUM_USER_ROLE } from "../../enums/user";
+import { INDUSTRIES } from "../../enums/service";
 
 // Validation schema for reference objects
-
 
 // Validation schema for CV or cover letter objects
 const fileSchema = z.object({
@@ -10,9 +10,6 @@ const fileSchema = z.object({
   filePath: z.string().nullable(),
   fileType: z.string().nullable(),
 });
-
-// Validation schema for projects
-
 
 // Main sign-up validation schema
 const signUpZodSchema = z.object({
@@ -34,29 +31,32 @@ const signUpZodSchema = z.object({
       .string({
         required_error: "Role is required",
       })
-      .refine((value) => (Object.values(ENUM_USER_ROLE) as string[]).includes(value), {
-        message: "Invalid role",
-      }),
+      .refine(
+        (value) => (Object.values(ENUM_USER_ROLE) as string[]).includes(value),
+        {
+          message: "Invalid role",
+        }
+      ),
     phoneNumber: z.string({
       required_error: "Phone Number is required",
     }),
-    password:z.string({
-       required_error:"password is required"
-    }).min(6,"at least 6 digit"),
+    password: z
+      .string({
+        required_error: "password is required",
+      })
+      .min(6, "at least 6 digit"),
     dateOfBirth: z
       .string({
         required_error: "Date of Birth is required",
       })
       .refine((value) => !isNaN(Date.parse(value)), {
         message: "Invalid date format",
-      }), 
-      linkedinProfile: z.string().optional(),
-    
-   
-    previousPositions: z
-      .array(z.string()),
-      
-      references: z
+      }),
+    linkedinProfile: z.string().optional(),
+
+    previousPositions: z.array(z.string()),
+
+    references: z
       .array(
         z.object({
           emailOrPhone: z.string({
@@ -80,10 +80,15 @@ const signUpZodSchema = z.object({
     technicalSkill: z.string({
       required_error: "Technical skill is required",
     }),
+    industry: z
+      .array(
+        z.enum(
+          Object.values(INDUSTRIES) as [keyof typeof INDUSTRIES, ...string[]]
+        ),
+        { required_error: "Industry is required" }
+      )
+      .nonempty("At least one industry must be selected"),
     cvOrCoverLetter: fileSchema.optional(),
-    softSkills:z.string({
-      required_error:" technical or soft skills required"
-    })
   }),
 });
 

@@ -5,10 +5,9 @@ import { multerUpload } from "../../middlewares/multer";
 import validateRequest from "../../middlewares/validateRequest";
 import { RetireProfessionalValidation } from "./professional.validation";
 
-
 import auth from "../../middlewares/auth";
 import { ENUM_USER_ROLE } from "../../enums/user";
-import { parseNestedJSON } from "../../middlewares/parseJson";
+import { parseBodyData } from "../../middlewares/parseJson";
 const router = express.Router();
 
 export const RetireProfessionalRoute = router;
@@ -16,9 +15,8 @@ router.post(
   "/signUp",
 
   multerUpload.single("cvOrCoverLetter"),
-
-  parseNestedJSON,
-  validateRequest(RetireProfessionalValidation.signUpZodSchema),
+  parseBodyData,
+  // validateRequest(RetireProfessionalValidation.signUpZodSchema),
 
   RetireProfessionalController.createProfessional
 );

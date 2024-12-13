@@ -11,18 +11,20 @@ import ApiError from "../../errors/handleApiError";
 import { uploadFileToSpace } from "../../utilitis/uploadTos3";
 
 const createProfessional = catchAsync(async (req: Request, res: Response) => {
-  const data = req.body;
+  // const { data } = req.body;
   const file = req.file;
-  // console.log(req.body, "check body");
-  console.log(file,"check file")
+  // // console.log(req.body, "check body");
+  // console.log(file, "check file");
 
-  if (!file) {
-     throw new ApiError(400,"file not found")
+  // if (!file) {
+  //   throw new ApiError(400, "file not found");
+  // }
+  let fileUrl: string | null = null;
+  if (file) {
+    fileUrl = await uploadFileToSpace(file, "retire-professional");
   }
-  
-  const fileUrl = await uploadFileToSpace(file, "retire-professional"); 
-  console.log(fileUrl,"check url")
-  const { name, email, role, password, ...others } = data;
+
+  const { name, email, role, password, ...others } = req.body;
 
   const user = {
     name,
@@ -48,20 +50,17 @@ const createProfessional = catchAsync(async (req: Request, res: Response) => {
 });
 const updateSingleRetireProfessional = catchAsync(
   async (req: Request, res: Response) => {
-
-
     const file = req.file;
     // console.log(req.body, "check body");
-    console.log(file,"check file")
-  
-    if (!file) {
-       throw new ApiError(400,"file not found")
-    }
-    const fileUrl = await uploadFileToSpace(file, "retire-professional"); 
 
-    const { name, ...retireProfessionalProfile } = req.body;
-    
-    const auth = {name:JSON.parse(name) };
+    if (!file) {
+      throw new ApiError(400, "file not found");
+    }
+    const fileUrl = await uploadFileToSpace(file, "retire-professional");
+
+    const { name, ...retireProfessionalProfile } = req.body.data;
+
+    const auth = { name: JSON.parse(name) };
     const { workSample, ...others } = retireProfessionalProfile;
     const updatedProfile = {
       ...others,
@@ -83,27 +82,29 @@ const updateSingleRetireProfessional = catchAsync(
   }
 );
 
-const getReitereProfessionals = catchAsync(async (req: Request, res: Response) => {
-  const paginationOptions = pick(req.query, paginationFileds);
-  const filters = pick(req.query, filterableField);
+const getReitereProfessionals = catchAsync(
+  async (req: Request, res: Response) => {
+    const paginationOptions = pick(req.query, paginationFileds);
+    const filters = pick(req.query, filterableField);
 
-  const result = await RetireProfessionalService.getReitereProfessionals(
-    filters,
-    paginationOptions
-  );
+    const result = await RetireProfessionalService.getReitereProfessionals(
+      filters,
+      paginationOptions
+    );
 
-  sendResponse<IProfessional[]>(res, {
-    success: true,
-    statusCode: StatusCodes.OK,
+    sendResponse<IProfessional[]>(res, {
+      success: true,
+      statusCode: StatusCodes.OK,
 
-    message: "Retire professional   retrived successfully",
-    meta: result.meta,
-    data: result.data,
-  });
-});
+      message: "Retire professional   retrived successfully",
+      meta: result.meta,
+      data: result.data,
+    });
+  }
+);
 
 export const RetireProfessionalController = {
   createProfessional,
   updateSingleRetireProfessional,
-  getReitereProfessionals
+  getReitereProfessionals,
 };
