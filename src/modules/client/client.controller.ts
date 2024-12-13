@@ -19,7 +19,7 @@ const createClient = catchAsync(async (req: Request, res: Response) => {
     { name, email, role, password },
     others
   );
-
+  console.log(data, "check data");
   sendResponse(res, {
     success: true,
     statusCode: StatusCodes.OK,
