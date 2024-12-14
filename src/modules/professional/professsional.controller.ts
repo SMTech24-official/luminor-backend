@@ -22,6 +22,7 @@ const createProfessional = catchAsync(async (req: Request, res: Response) => {
   
   const fileUrl = await uploadFileToSpace(file, "retire-professional"); 
   console.log(fileUrl,"check url")
+  console.log(req.body,"check body")
   const { name, email, role, password, ...others } = data;
 
   const user = {
