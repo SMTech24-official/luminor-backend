@@ -11,19 +11,16 @@ import { IUser } from "../auth/auth.interface";
 import ApiError from "../../errors/handleApiError";
 import { getIndustryFromService } from "../../utilitis/serviceMapping";
 
-
- const createClient = async (user: IUser, clientData: IClient) => {
-
-  const isUserExist=await User.findOne({email:user.email})
-  if(isUserExist){
-    throw new ApiError(400,"User Already Exist")
+const createClient = async (user: IUser, clientData: IClient) => {
+  const isUserExist = await User.findOne({ email: user.email });
+  if (isUserExist) {
+    throw new ApiError(400, "User Already Exist");
   }
 
   const session = await mongoose.startSession();
   try {
     // console.log("Transaction started");
 
-  
     session.startTransaction();
 
     // Create a User account
@@ -63,13 +60,12 @@ const getClients = async (
   filters: IFilters,
   paginationOptions: IpaginationOptions
 ): Promise<IGenericResponse<IClient[]>> => {
- 
   const { skip, limit, page, sortBy, sortOrder } =
     paginationHelpers.calculatePagination(paginationOptions);
 
   const { query, ...filtersData } = filters;
 
-//  console.log(filtersData)
+  //  console.log(filtersData)
   const andCondition = [];
   if (query) {
     andCondition.push({
@@ -82,71 +78,69 @@ const getClients = async (
     });
   }
   if (Object.keys(filtersData).length) {
-  andCondition.push(
-    ...Object.entries(filtersData).map(([field, value]) => {
-      // Handle budget range
-      if (field === "minBudget") {
-        const minBudget = parseInt(value as string);
-        return {
-          "budgetRange.max": { $gte: minBudget }, 
-        };
-      } else if (field === "maxBudget") {
-        const maxBudget = parseInt(value as string);
-        return {
-          "budgetRange.max": { $gte: maxBudget }, 
-        };
-      }
-
-      // Handle project duration range
-      if (field === "projectMin") {
-        const minDuration = parseInt(value as string);
-        return {
-          "projectDurationRange.max": { $gte: minDuration }, 
-        };
-      } else if (field === "projectMax") {
-        const maxDuration = parseInt(value as string);
-        return {
-          "projectDurationRange.max": { $gte: maxDuration }, 
-        };
-      }
-      else if(field==="industry" ){
-      //  console.log(value,"check value from client get clients")
-        // const industryArray = (value as string).split(',').map((item) => item.trim());
-
-       const parseArray = Array.isArray(value) ? value : JSON.parse(value as string);
-     
-
-        return {
-          "industry":{$in:parseArray}
-        }
-      }
-      else if(field==="skillType"){
-
-        const skiillTypeArray = Array.isArray(value) ? value : JSON.parse(value as string);
-        // console.log(skiillTypeArray)
-
-        return {
-          "servicePreference":{$in:skiillTypeArray}
-        }
-      }
-      else if(field==="timeline"){
-        if (value === "shortTerm") {
-          console.log("for shorterm")
+    andCondition.push(
+      ...Object.entries(filtersData).map(([field, value]) => {
+        // Handle budget range
+        if (field === "minBudget") {
+          const minBudget = parseInt(value as string);
           return {
-            "projectDurationRange.max": { $lte: 29 },  // Projects with duration less than or equal to 30
+            "budgetRange.max": { $gte: minBudget },
           };
-        } else {
+        } else if (field === "maxBudget") {
+          const maxBudget = parseInt(value as string);
           return {
-            "projectDurationRange.max": { $gte: 30 },  // Projects with duration greater than or equal to 30
+            "budgetRange.max": { $gte: maxBudget },
           };
         }
-      }
 
+        // Handle project duration range
+        if (field === "projectMin") {
+          const minDuration = parseInt(value as string);
+          return {
+            "projectDurationRange.max": { $gte: minDuration },
+          };
+        } else if (field === "projectMax") {
+          const maxDuration = parseInt(value as string);
+          return {
+            "projectDurationRange.max": { $gte: maxDuration },
+          };
+        } else if (field === "industry") {
+          //  console.log(value,"check value from client get clients")
+          // const industryArray = (value as string).split(',').map((item) => item.trim());
 
-      return { [field]: { $regex: value as string, $options: "i" } };
-    })
-  );
-}
+          const parseArray = Array.isArray(value)
+            ? value
+            : JSON.parse(value as string);
+
+          return {
+            industry: { $in: parseArray },
+          };
+        } else if (field === "skillType") {
+          const skiillTypeArray = Array.isArray(value)
+            ? value
+            : JSON.parse(value as string);
+          // console.log(skiillTypeArray)
+
+          return {
+            servicePreference: { $in: skiillTypeArray },
+          };
+        } else if (field === "timeline") {
+          if (value === "shortTerm") {
+            console.log("for shorterm");
+            return {
+              "projectDurationRange.max": { $lte: 29 }, // Projects with duration less than or equal to 30
+            };
+          } else {
+            return {
+              "projectDurationRange.max": { $gte: 30 }, // Projects with duration greater than or equal to 30
+            };
+          }
+        }
+
+        return { [field]: { $regex: value as string, $options: "i" } };
+      })
+    );
+  }
 
   const sortCondition: { [key: string]: SortOrder } = {};
   if (sortBy && sortOrder) {
@@ -180,34 +174,39 @@ const getClients = async (
     };
   }
 };
- const updateSingleClient = async (
+const updateSingleClient = async (
   id: string,
   auth: Partial<IClient>,
   clientPayload: Partial<IClient>
 ): Promise<IClient | null> => {
-  const session = await mongoose.startSession();  // Start a new session for transaction management
+  const session = await mongoose.startSession(); // Start a new session for transaction management
   try {
     session.startTransaction();
     if (clientPayload.servicePreference) {
-      const industries = getIndustryFromService(clientPayload.servicePreference);
-      clientPayload.industry = industries; 
+      const industries = getIndustryFromService(
+        clientPayload.servicePreference
+      );
+      clientPayload.industry = industries;
     }
 
     // Ensure you're updating the existing client, not creating a new one
-    const updatedClient = await Client.findOneAndUpdate({client:id}, clientPayload, {
-      new: true,  // return the updated document
-      session,
-    });
+    const updatedClient = await Client.findOneAndUpdate(
+      { client: id },
+      clientPayload,
+      {
+        new: true, // return the updated document
+        session,
+      }
+    );
 
     if (!updatedClient) {
       throw new ApiError(404, "Client not found");
     }
     // console.log(auth,"check auth");
-    
 
     // Update the associated User model (linked by client field)
     const updatedUser = await User.findByIdAndUpdate(id, auth, {
-      new: true,  // return the updated document
+      new: true, // return the updated document
       session,
     });
 
@@ -229,15 +228,13 @@ const getClients = async (
   }
 };
 
- const getClientById=async(id:string):Promise<IClient |null >=>{
-
-
-   const result=await Client.findById(id)
-   return result
-}
+const getClientById = async (id: string): Promise<IClient | null> => {
+  const result = await Client.findById(id);
+  return result;
+};
 export const ClientService = {
   createClient,
   getClients,
   updateSingleClient,
-  getClientById
+  getClientById,
 };

@@ -1,7 +1,7 @@
-import { MongoError } from "mongodb";
+import { MongoServerError } from "mongodb";
 import { IGenericErrorMessage } from "../interfaces/error";
 
-const duplicateError = (error: MongoError) => {
+const duplicateError = (error: MongoServerError) => {
   const errors: IGenericErrorMessage[] = [
     {
       path: "",

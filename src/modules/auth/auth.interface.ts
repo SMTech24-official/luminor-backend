@@ -11,6 +11,12 @@ export type IUser = {
  },
 
   role: ENUM_USER_ROLE;
+  googleId?:string;
+  facebookId?:string
+  otp?:string;
+  otpExpiry?:Date,
+  identifier?:string
+
 };
 
 export type IUserExistReturn = {

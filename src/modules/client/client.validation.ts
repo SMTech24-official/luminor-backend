@@ -25,12 +25,9 @@ const signUpZodSchema = z.object({
       .string({
         required_error: "Role is Required",
       })
-      .refine(
-        (value) => {
-          return (Object.values(ENUM_USER_ROLE) as string[]).includes(value);
-        },
-        { message: "Invalid role" }
-      ),
+      .refine((value) => value === ENUM_USER_ROLE.CLIENT, {
+        message: "Invalid role",
+      }),
     phoneNumber: z.string({
       required_error: "Phone Number is Required",
     }),
@@ -53,13 +50,11 @@ const signUpZodSchema = z.object({
         },
         { message: "Invalid LinkedIn Profile URL" }
       ),
-    industry: z.string().optional(),
+    businessType: z.string().optional(),
     jobTitle: z.string({
       required_error: "Job Title is Required",
     }),
     companyName: z.string().optional().or(z.literal("")),
-
-   
   }),
 });
 

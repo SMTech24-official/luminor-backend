@@ -1,4 +1,8 @@
-import { ObjectCannedACL, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import {
+  ObjectCannedACL,
+  PutObjectCommand,
+  S3Client,
+} from "@aws-sdk/client-s3";
 import fs from "fs";
 import config from "../config";
 
@@ -13,9 +17,14 @@ const s3 = new S3Client({
 });
 
 // Function to upload a file to DigitalOcean Space
-export const uploadFileToSpace = async (file: Express.Multer.File, folder: string) => {
+export const uploadFileToSpace = async (
+  file: Express.Multer.File,
+  folder: string
+) => {
   if (!process.env.DO_SPACE_BUCKET) {
-    throw new Error("DO_SPACE_BUCKET is not defined in the environment variables.");
+    throw new Error(
+      "DO_SPACE_BUCKET is not defined in the environment variables."
+    );
   }
 
   const params = {
@@ -25,13 +34,16 @@ export const uploadFileToSpace = async (file: Express.Multer.File, folder: strin
     ContentType: file.mimetype,
     ACL: "public-read" as ObjectCannedACL, // Make the object publicly accessible
   };
-  console.log(params,"check params")
+  console.log(params, "check params");
 
   try {
-    const result = await s3.send(new PutObjectCommand(params)); 
-    console.log(result,"check result")
-    return    `https://${config.s3.do_space_bucket}.${(config.s3.do_space_endpoint || "nyc3.digitaloceanspaces.com").replace('https://', '')}/${params.Key}`;
+    const result = await s3.send(new PutObjectCommand(params));
+    // console.log(result,"check result")
+    return `https://${config.s3.do_space_bucket}.${(
+      config.s3.do_space_endpoint || "nyc3.digitaloceanspaces.com"
+    ).replace("https://", "")}/${params.Key}`;
   } catch (error) {
     console.error("Error uploading file:", error);
     throw error;
-  }}
+  }
+};
