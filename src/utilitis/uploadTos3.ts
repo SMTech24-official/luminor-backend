@@ -34,7 +34,7 @@ export const uploadFileToSpace = async (
     ContentType: file.mimetype,
     ACL: "public-read" as ObjectCannedACL, // Make the object publicly accessible
   };
-  console.log(params, "check params");
+  // console.log(params, "check params");
 
   try {
     const result = await s3.send(new PutObjectCommand(params));

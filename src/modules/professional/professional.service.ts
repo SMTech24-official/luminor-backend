@@ -11,11 +11,13 @@ import { paginationHelpers } from "../../helpers/paginationHelper";
 import { searchableField } from "../../constants/searchableField";
 import { IFilters } from "../client/client.interface";
 import { getIndustryFromService } from "../../utilitis/serviceMapping";
-import { IGenericErrorMessage } from "../../interfaces/error";
+import { uploadFileToSpace } from "../../utilitis/uploadTos3";
+
 
 const createProfessional = async (
   user: IUser,
-  professionalData: IProfessional
+  professionalData: IProfessional,
+  file:Express.Multer.File
 ) => {
   const session = await mongoose.startSession();
   try {
@@ -25,10 +27,16 @@ const createProfessional = async (
 
     const newUser = await User.create([user], { session });
     const userId = newUser[0]._id;
+    let fileUrl
+    if (file) {
+      fileUrl = await uploadFileToSpace(file, "retire-professional");
+    }
+  
 
     const newProfessionalData = {
       ...professionalData,
       retireProfessional: userId,
+      cvOrCoverLetter:fileUrl
       // Add the mapped industries here
     };
 

@@ -11,12 +11,9 @@ import ApiError from "../../errors/handleApiError";
 import { uploadFileToSpace } from "../../utilitis/uploadTos3";
 
 const createProfessional = catchAsync(async (req: Request, res: Response) => {
-  const file = req.file;
+  const file = req.file  as unknown as Express.Multer.File;
   let fileUrl;
 
-  if (file) {
-    fileUrl = await uploadFileToSpace(file, "retire-professional");
-  }
 
   console.log(fileUrl, "check url");
   const { name, email, role, password, ...others } = req.body;
@@ -29,11 +26,13 @@ const createProfessional = catchAsync(async (req: Request, res: Response) => {
   };
   const professionalData = {
     ...others,
-    cvOrCoverLetter: fileUrl, // Save the file URL in the database
+    // cvOrCoverLetter: fileUrl, // Save the file URL in the database
   };
   const result = await RetireProfessionalService.createProfessional(
     user,
-    professionalData
+    professionalData,
+    file
+
   );
 
   sendResponse(res, {
