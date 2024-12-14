@@ -45,16 +45,17 @@ const createProfessional = catchAsync(async (req: Request, res: Response) => {
 const updateSingleRetireProfessional = catchAsync(
   async (req: Request, res: Response) => {
     const file = req.file;
-    // console.log(req.body, "check body");
+    console.log(req.body, "check body");
+    let fileUrl
 
-    if (!file) {
-      throw new ApiError(400, "file not found");
+    if (file) {
+       fileUrl = await uploadFileToSpace(file, "retire-professional");
     }
-    const fileUrl = await uploadFileToSpace(file, "retire-professional");
 
-    const { name, ...retireProfessionalProfile } = req.body.data;
 
-    const auth = { name: JSON.parse(name) };
+    const { name, ...retireProfessionalProfile } = req.body;
+
+    const auth = { name };
     const { workSample, ...others } = retireProfessionalProfile;
     const updatedProfile = {
       ...others,
@@ -69,7 +70,7 @@ const updateSingleRetireProfessional = catchAsync(
 
     sendResponse(res, {
       success: true,
-      statusCode: StatusCodes.ACCEPTED,
+      statusCode: StatusCodes.OK,
       message: `retire professional  account  updated    successfully`,
       data: result,
     });

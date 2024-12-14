@@ -62,24 +62,22 @@ const updateSingleClient = catchAsync(async (req: Request, res: Response) => {
   const data = req.body;
   const id = req.params.id;
 
-  // console.log(req.body)
+  console.log(req.body)
 
   const file = req.file;
   // console.log(req.body, "check body");
-  console.log(file, "check file");
-
-  if (!file) {
-    throw new ApiError(400, "file not found");
-  }
-  const fileUrl = await uploadFileToSpace(file, "client");
-
-  console.log(req.user, "check user");
+  // console.log(file, "check file");
+  let fileUrl;
   if (file) {
+    fileUrl = await uploadFileToSpace(file, "client");
     data.projectListing = fileUrl;
   }
+
+  // console.log(req.user, "check user");
+
   const { name, ...clientProfile } = data;
 
-  const auth = { name: JSON.parse(name) };
+  const auth = { name };
 
   const result = await ClientService.updateSingleClient(
     id,
@@ -89,7 +87,7 @@ const updateSingleClient = catchAsync(async (req: Request, res: Response) => {
 
   sendResponse(res, {
     success: true,
-    statusCode: StatusCodes.ACCEPTED,
+    statusCode: StatusCodes.OK,
     message: `client  account  updated    successfully`,
     data: result,
   });

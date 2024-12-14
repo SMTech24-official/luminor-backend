@@ -23,6 +23,8 @@ router.post(
 router.patch(
   "/profile/:id",
   multerUpload.single("workSample"),
+  
+  parseBodyData,
   auth(ENUM_USER_ROLE.RETIREPROFESSIONAL),
   RetireProfessionalController.updateSingleRetireProfessional
 );

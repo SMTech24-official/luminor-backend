@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import { IClient } from "./client.interface";
-import { ENUM_SERVICE_PREFERENCE } from "../../enums/service";
-import { ENUM_INDUSTRY_TYPE } from "../../enums/client";
+
+import { ENUM_SERVICE_PREFERENCE, INDUSTRIES } from "../../enums/service";
 
 const clientSchema = new mongoose.Schema<IClient>(
   {
@@ -26,11 +26,24 @@ const clientSchema = new mongoose.Schema<IClient>(
     linkedinProfile: { type: String },
     //client profile field
     problemAreas: { type: String, default: null },
-    location: { type: String, default: null },
+    location: {
+      lang: {
+        type: String,
+       default:null
+      },
+      lat: {
+        type: String,
+        default:null
+      },
+    },
     description: { type: String, default: null },
 
-    servicePreference: { type: [String],enum:ENUM_SERVICE_PREFERENCE, default: [] },
-    industry:{type:[String], enum:ENUM_INDUSTRY_TYPE,defaul:[]},
+    servicePreference: {
+      type: [String],
+      enum: ENUM_SERVICE_PREFERENCE,
+      default: [],
+    },
+    industry: { type: [String], defaul: [] },
     budgetRange: {
       min: { type: Number, default: null },
       max: { type: Number, default: null },
@@ -39,8 +52,7 @@ const clientSchema = new mongoose.Schema<IClient>(
       min: { type: Number, default: null },
       max: { type: Number, default: null },
     },
-    projectListing: {type:String}
-   
+    projectListing: { type: String, default: null },
   },
   { timestamps: true }
 );

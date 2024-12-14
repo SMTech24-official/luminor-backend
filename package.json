@@ -15,10 +15,12 @@
   "dependencies": {
     "@aws-sdk/client-s3": "^3.705.0",
     "aws-sdk": "^2.1692.0",
+    "axios": "^1.7.9",
     "bcrypt": "^5.1.1",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
     "express": "^4.21.1",
     "http-status-codes": "^2.3.0",
     "jsonwebtoken": "^9.0.2",

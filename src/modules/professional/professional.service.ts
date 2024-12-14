@@ -67,6 +67,12 @@ export const updateSingleRetireProfessional = async (
   try {
     session.startTransaction();
 
+
+      const professionalAccount=await User.findById(id)
+      if (!professionalAccount) {
+        throw new ApiError(404, "Professional account not found");
+      }
+
     // Ensure you're updating the existing client, not creating a new one
     if (retireProfessionalPayload.expertise) {
       const industries = getIndustryFromService(
@@ -75,7 +81,7 @@ export const updateSingleRetireProfessional = async (
       retireProfessionalPayload.industry = industries;
     }
     const updatedRetireProfessional = await RetireProfessional.findOneAndUpdate(
-      { retireProfessional: id },
+      { retireProfessional: professionalAccount._id },
       retireProfessionalPayload,
       {
         new: true, // return the updated document
@@ -103,6 +109,7 @@ export const updateSingleRetireProfessional = async (
     session.endSession();
 
     // Return the updated client with populated user data
+
     return updatedRetireProfessional.populate("retireProfessional");
   } catch (error: any) {
     // In case of error, rollback the transaction

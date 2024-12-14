@@ -126,7 +126,7 @@ const getClients = async (
           };
         } else if (field === "timeline") {
           if (value === "shortTerm") {
-            console.log("for shorterm");
+            // console.log("for shorterm");
             return {
               "projectDurationRange.max": { $lte: 29 }, // Projects with duration less than or equal to 30
             };
@@ -182,6 +182,12 @@ const updateSingleClient = async (
   const session = await mongoose.startSession(); // Start a new session for transaction management
   try {
     session.startTransaction();
+    const clientAccount=await User.findById(id)
+    console.log(clientAccount,"check client account")
+    if (!clientAccount) {
+      throw new ApiError(404, "Client account not found");
+    }
+
     if (clientPayload.servicePreference) {
       const industries = getIndustryFromService(
         clientPayload.servicePreference
@@ -191,10 +197,10 @@ const updateSingleClient = async (
 
     // Ensure you're updating the existing client, not creating a new one
     const updatedClient = await Client.findOneAndUpdate(
-      { client: id },
+      { client: clientAccount._id },
       clientPayload,
       {
-        new: true, // return the updated document
+        new: true, 
         session,
       }
     );

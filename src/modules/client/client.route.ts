@@ -5,6 +5,7 @@ import auth from "../../middlewares/auth";
 import { ENUM_USER_ROLE } from "../../enums/user";
 import validateRequest from "../../middlewares/validateRequest";
 import { ClientValidation } from "./client.validation";
+import { parseBodyData } from "../../middlewares/parseJson";
 
 
 const router = express.Router();
@@ -18,5 +19,5 @@ router.post(
 );
 
 router.get("/",  ClientController.getClients)
-router.patch("/profile/:id",  multerUpload.single("projectListing"), auth(ENUM_USER_ROLE.CLIENT),ClientController.updateSingleClient)
+router.patch("/profile/:id",  multerUpload.single("projectListing"),parseBodyData, auth(ENUM_USER_ROLE.CLIENT),ClientController.updateSingleClient)
 router.get("/:id",ClientController.getClientById)

@@ -43,7 +43,10 @@ export type IUpdateClient={
   companyName:string
   
   problemAreas: string;
-  location: string;
+  location: {
+    lang:string,
+    lat:string
+  };
   description: string;
   industry: string;
   servicePreferences: string[];
