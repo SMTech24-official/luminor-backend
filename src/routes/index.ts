@@ -8,6 +8,7 @@ import { RetireProfessionalRoute } from "../modules/professional/professional.ro
 import { ReviewRoute } from "../modules/reviews/reviews.route";
 import { MessageRoutes } from "../modules/messages/messages.route";
 import { NotificationRoutes } from "../modules/notification/notification.route";
+import { StripeRoutes } from "../modules/stipe/stripe.route";
 
 const router = express.Router();
 
@@ -39,6 +40,10 @@ const moduleRoutes = [
   {
     path: "/notification",
     route: NotificationRoutes,
+  },
+  {
+    path: "/stripe",
+    route: StripeRoutes,
   },
 
 ];

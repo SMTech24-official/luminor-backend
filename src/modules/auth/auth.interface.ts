@@ -15,7 +15,8 @@ export type IUser = {
   facebookId?:string
   otp?:string;
   otpExpiry?:Date,
-  identifier?:string
+  identifier?:string,
+  customerId:string
 
 };
 

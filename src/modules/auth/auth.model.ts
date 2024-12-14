@@ -23,6 +23,9 @@ const userSchema = new mongoose.Schema<IUser>({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true, select: false },
   googleId:{type:String},
+  customerId:{
+    type:String
+  },
   facebookId:{type:String},
   otp        :{type:String},
   otpExpiry :{type:Date},

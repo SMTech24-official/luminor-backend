@@ -1,6 +1,7 @@
 import express from "express";
-import passport from "../../config/passportSetup";
+
 import { SocialLoginController } from "./socialLogin.controller";
+import passport from "passport";
 
 const router = express.Router();
 

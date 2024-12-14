@@ -10,6 +10,7 @@ export default {
   database_url: process.env.DATABASE_URL,
   bcrypt_salt_round: process.env.bcrypt_salt_round,
   front_end_url: process.env.FRONT_END_URL,
+  stripe_key: process.env.STRIPE_SECRET_KEY,
 
   jwt: {
     secret: process.env.JWT_SECRET,
