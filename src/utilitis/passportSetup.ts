@@ -1,13 +1,9 @@
-import express from "express";
-
-import { SocialLoginController } from "./socialLogin.controller";
 import passport from "passport";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
-import config from "../../config";
+import dotenv from "dotenv";
+import config from "../config";
 
-
-
-
+dotenv.config();
 
 // passport.use(
 //   new GoogleStrategy(
@@ -35,30 +31,4 @@ console.log("data");
 passport.serializeUser((user, done) => done(null, user));
 passport.deserializeUser((obj, done) => done(null, obj as any));
 
-
-const router = express.Router();
-
-router.get(
-  "/auth/google",
-  passport.authenticate("google", { scope: ["profile", "email"] })
-);
-
-router.get(
-  "/google/callback",
-  passport.authenticate("google", { failureRedirect: "/" }),
-  SocialLoginController.googleCallback
-);
-
-router.get(
-  "/auth/facebook",
-  passport.authenticate("facebook", {
-    scope: ["email", "public_profile"],
-  })
-);
-router.get(
-  "/api/auth/facebook/callback",
-  passport.authenticate("facebook", { failureRedirect: "/" }),
-  SocialLoginController.facebookCallback
-);
-
-export const socialLoginRoutes = router;
+export default passport;

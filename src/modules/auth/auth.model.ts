@@ -43,10 +43,10 @@ userSchema.statics.isPasswordMatched = async function (
   return await bcrypt.compare(givenPassword, savedPassword);
 };
 userSchema.pre("save", async function (next) {
-  this.password = await bcrypt.hash(
-    this.password,
-    Number(config.bcrypt_salt_round)
-  );
+  if (!this.isModified("password") || !this.password) {
+    return next();
+  }
+  this.password = await bcrypt.hash(this.password, Number(config.bcrypt_salt_round));
   next();
 });
 

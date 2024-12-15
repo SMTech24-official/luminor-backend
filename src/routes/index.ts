@@ -9,6 +9,7 @@ import { ReviewRoute } from "../modules/reviews/reviews.route";
 import { MessageRoutes } from "../modules/messages/messages.route";
 import { NotificationRoutes } from "../modules/notification/notification.route";
 import { StripeRoutes } from "../modules/stipe/stripe.route";
+import { socialLoginRoutes } from "../modules/socialLogin/socialLogin.route";
 
 const router = express.Router();
 
@@ -45,7 +46,7 @@ const moduleRoutes = [
     path: "/stripe",
     route: StripeRoutes,
   },
-
+  
 ];
 
 moduleRoutes.forEach((route) => router.use(route.path, route.route));

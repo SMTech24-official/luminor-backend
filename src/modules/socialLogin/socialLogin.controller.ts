@@ -18,9 +18,9 @@ const googleLogin = catchAsync(
   }
 );
 
-export const googleCallback = async (req: Request, res: Response) => {
+ const googleCallback = async (req: Request, res: Response) => {
   const token = await SocialLoginService.googleLoginIntoDb(req.user);
-  res.redirect(`http://localhost:3001/?token=${token}`);
+  res.redirect(`http://localhost:5000/?token=${token}`);
 };
 
 // login all user form db facebookCallback
