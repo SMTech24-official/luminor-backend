@@ -1,5 +1,5 @@
 import mongoose, { SortOrder } from "mongoose";
-import { MongoError, MongoServerError } from "mongodb";
+import { MongoError } from "mongodb";
 import { IUser } from "../auth/auth.interface";
 import { IProfessional } from "./professional.interface";
 import { User } from "../auth/auth.model";

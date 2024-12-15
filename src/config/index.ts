@@ -40,5 +40,8 @@ export default {
     email: process.env.EMAIL,
     app_pass: process.env.APP_PASS,
   },
-
+  paypal: {
+    paypalClientId: process.env.PAYPAL_CLIENT_ID,
+    paypalSecretId: process.env.PAYPAL_SECRET_ID,
+  },
 };

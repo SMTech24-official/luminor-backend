@@ -43,7 +43,7 @@ name:{
   preferedProjects: string;
   hourlyRate: string;
   workSample?:string;
-  reviews:IReview;
+  reviews?:IReview;
   averageRating:number
 };
 

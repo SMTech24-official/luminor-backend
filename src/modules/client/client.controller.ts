@@ -7,7 +7,7 @@ import { filterableField } from "../../constants/searchableField";
 import { IClient } from "./client.interface";
 import { ClientService } from "./client.service";
 import { StatusCodes } from "http-status-codes";
-import ApiError from "../../errors/handleApiError";
+
 import { uploadFileToSpace } from "../../utilitis/uploadTos3";
 
 const createClient = catchAsync(async (req: Request, res: Response) => {
