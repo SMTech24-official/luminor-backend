@@ -9,6 +9,7 @@ import { filterableField } from "../../constants/searchableField";
 import { IProfessional } from "./professional.interface";
 import ApiError from "../../errors/handleApiError";
 import { uploadFileToSpace } from "../../utilitis/uploadTos3";
+import { IUser } from "../auth/auth.interface";
 
 const createProfessional = catchAsync(async (req: Request, res: Response) => {
   const file = req.file  as unknown as Express.Multer.File;
@@ -23,6 +24,7 @@ const createProfessional = catchAsync(async (req: Request, res: Response) => {
     email,
     role,
     password,
+    
   };
   const professionalData = {
     ...others,

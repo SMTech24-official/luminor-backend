@@ -16,7 +16,7 @@ export type IUser = {
   otp?:string;
   otpExpiry?:Date,
   identifier?:string,
-  customerId:string
+  customerId?:string
 
 };
 

@@ -22,11 +22,12 @@ const userSchema = new mongoose.Schema<IUser>({
   },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true, select: false },
-  googleId:{type:String},
+  googleId:{type:String,default:null},
   customerId:{
-    type:String
+    type:String,
+    default:null
   },
-  facebookId:{type:String},
+  facebookId:{type:String,defaul:null},
   otp        :{type:String},
   otpExpiry :{type:Date},
   identifier :{type:String}

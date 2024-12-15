@@ -35,7 +35,7 @@ app.get("/", (req: Request, res: Response) => {
     message: "Demos Server is Running",
   });
 });
-console.log(config.sosial_login.google);
+
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(socialLoginRoutes);

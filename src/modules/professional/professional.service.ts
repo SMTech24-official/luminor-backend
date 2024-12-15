@@ -12,6 +12,9 @@ import { searchableField } from "../../constants/searchableField";
 import { IFilters } from "../client/client.interface";
 import { getIndustryFromService } from "../../utilitis/serviceMapping";
 import { uploadFileToSpace } from "../../utilitis/uploadTos3";
+import { jwtHelpers } from "../../helpers/jwtHelpers";
+import { Secret } from "jsonwebtoken";
+import config from "../../config";
 
 
 const createProfessional = async (
@@ -40,15 +43,24 @@ const createProfessional = async (
       // Add the mapped industries here
     };
 
-    const newProfessional = await RetireProfessional.create(
+    await RetireProfessional.create(
       [newProfessionalData],
       { session }
     );
 
     await session.commitTransaction();
     session.endSession();
-
-    return newProfessional[0].populate("retireProfessional");
+  const accessToken = jwtHelpers.createToken(
+    {
+      id: newUser[0]._id,
+      email: newUser[0].email,
+      role: newUser[0].role,
+    },
+    config.jwt.secret as Secret,
+    config.jwt.expires_in as string
+  );
+  return accessToken
+    // return newProfessional[0].populate("retireProfessional");
   } catch (error: any) {
     await session.abortTransaction();
     session.endSession();
