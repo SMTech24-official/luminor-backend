@@ -46,7 +46,7 @@ const signUpZodSchema = z.object({
       .refine(
         (value) => {
           if (!value) return true;
-          return value.startsWith("https://linkedin.com");
+          return value.startsWith("https://www.linkedin.com") ||  value?.startsWith("https://linkedin.com");
         },
         { message: "Invalid LinkedIn Profile URL" }
       ),
