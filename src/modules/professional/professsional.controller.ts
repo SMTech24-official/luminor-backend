@@ -83,6 +83,7 @@ const getReitereProfessionals = catchAsync(
   async (req: Request, res: Response) => {
     const paginationOptions = pick(req.query, paginationFileds);
     const filters = pick(req.query, filterableField);
+    // console.log(filters)
 
     const result = await RetireProfessionalService.getReitereProfessionals(
       filters,

@@ -138,10 +138,11 @@ const getReitereProfessionals = async (
   const { skip, limit, page, sortBy, sortOrder } =
     paginationHelpers.calculatePagination(paginationOptions);
 
-  const { query, ...filtersData } = filters;
+  const { query, location, ...filtersData } = filters; // Extract location filter
 
-  //  console.log(filtersData)
   const andCondition = [];
+
+  // Handle text search
   if (query) {
     andCondition.push({
       $or: searchableField.map((field) => ({
@@ -152,81 +153,92 @@ const getReitereProfessionals = async (
       })),
     });
   }
+
+  // Handle other filters
   if (Object.keys(filtersData).length) {
     andCondition.push(
       ...Object.entries(filtersData).map(([field, value]) => {
-        // Handle budget range
-
         if (field === "industry") {
-          // console.log(value,"check value from client get clients")
-          // const industryArray = (value as string).split(',').map((item) => item.trim());
-
           const parseArray = Array.isArray(value)
             ? value
             : JSON.parse(value as string);
 
-          //  console.log(parseArray)
           return {
             industry: { $in: parseArray },
           };
         } else if (field === "skillType") {
-          const skiillTypeArray = Array.isArray(value)
+          const skillTypeArray = Array.isArray(value)
             ? value
             : JSON.parse(value as string);
-          // console.log(skiillTypeArray)
 
           return {
-            expertise: { $in: skiillTypeArray },
+            expertise: { $in: skillTypeArray },
           };
         } else if (field === "timeline") {
-          if (value === "shortTerm") {
-            return {
-              availability: { $lte: 29 },
-            };
-          } else {
-            return {
-              availability: { $gte: 30 },
-            };
-          }
+          return value === "shortTerm"
+            ? { availability: { $lte: 29 } }
+            : { availability: { $gte: 30 } };
         }
-
         return { [field]: { $regex: value as string, $options: "i" } };
       })
     );
   }
 
+  // Handle location filter using $geoNear
+  const aggregationPipeline: any[] = [];
+  if (location) {
+    const [ longitude, latitude, minDistance, maxDistance ] = JSON.parse(location as string);
+
+    // console.log(longitude,latitude,minDistance,maxDistance)
+
+    aggregationPipeline.push({
+      $geoNear: {
+        near: {
+          type: "Point",
+          coordinates: [longitude, latitude], 
+        },
+        distanceField: "distance",
+        spherical: true,
+        maxDistance: maxDistance ,
+        minDistance:minDistance 
+      },
+    });
+  }
+
+  // Add match conditions if there are any filters
+  if (andCondition.length > 0) {
+    aggregationPipeline.push({
+      $match: { $and: andCondition },
+    });
+  }
+
+  // Handle sorting, skipping, and limiting
   const sortCondition: { [key: string]: SortOrder } = {};
   if (sortBy && sortOrder) {
-    sortCondition[sortBy] = sortOrder;
+    sortCondition[sortBy] = sortOrder === "desc" ? -1 : 1;
   }
-  const whereConditions = andCondition.length > 0 ? { $and: andCondition } : {};
-  const result = await RetireProfessional.find(whereConditions)
-    .sort(sortCondition)
-    .skip(skip)
-    .limit(limit)
-    .populate("retireProfessional");
+  aggregationPipeline.push(
+    { $sort: sortCondition },
+    { $skip: skip },
+    { $limit: limit }
+  );
 
+  // Execute the aggregation pipeline
+  const result = await RetireProfessional.aggregate(aggregationPipeline).exec();
+
+  // Get total document count
   const count = await RetireProfessional.countDocuments();
-  if (andCondition.length > 0) {
-    return {
-      meta: {
-        page,
-        limit,
-        count,
-      },
-      data: result,
-    };
-  } else {
-    return {
-      meta: {
-        page,
-        limit,
-        count,
-      },
-      data: result,
-    };
-  }
+
+  return {
+    meta: {
+      page,
+      limit,
+      count,
+    },
+    data: result,
+  };
 };
+
 
 export const RetireProfessionalService = {
   createProfessional,

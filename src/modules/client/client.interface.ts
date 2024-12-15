@@ -18,7 +18,10 @@ name?:{
   //client profile
 
   problemAreas?: string;
-  location?: string;
+  location?: {
+    type:string,
+    coordinates:[number]
+  };
   description?: string;
   companyWebsite: string;
   servicePreference?: string[];
@@ -63,5 +66,6 @@ export type IUpdateClient={
 }
 export interface IFilters {
   query?: string;
+  location:string
 
 }

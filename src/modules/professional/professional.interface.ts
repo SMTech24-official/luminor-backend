@@ -29,7 +29,10 @@ name:{
 
   //retire professional profile field
 
-  location?: string;
+  location?: {
+    type:string,
+    coordinates:[number]
+  };
   bio: string;
   description?: string;
   expertise: string[];

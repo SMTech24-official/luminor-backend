@@ -27,14 +27,16 @@ const clientSchema = new mongoose.Schema<IClient>(
     //client profile field
     problemAreas: { type: String, default: null },
     location: {
-      lang: {
+      type: {
         type: String,
-       default:null
+        enum: ['Point'], 
+
+      
       },
-      lat: {
-        type: String,
-        default:null
-      },
+      coordinates: {
+        type: [Number],
+     
+      }
     },
     description: { type: String, default: null },
 
@@ -56,5 +58,7 @@ const clientSchema = new mongoose.Schema<IClient>(
   },
   { timestamps: true }
 );
+clientSchema.index({ location: '2dsphere' });
+
 
 export const Client = mongoose.model("Client", clientSchema);
