@@ -10,6 +10,7 @@ import { MessageRoutes } from "../modules/messages/messages.route";
 import { NotificationRoutes } from "../modules/notification/notification.route";
 import { StripeRoutes } from "../modules/stipe/stripe.route";
 import { socialLoginRoutes } from "../modules/socialLogin/socialLogin.route";
+import { paypalRoute } from "../modules/paypal/paypal.route";
 
 const router = express.Router();
 
@@ -45,7 +46,11 @@ const moduleRoutes = [
   {
     path: "/stripe",
     route: StripeRoutes,
-  },
+},
+{
+  path:"/paypal",
+  route:paypalRoute
+}
   
 ];
 
