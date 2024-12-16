@@ -22,15 +22,16 @@ const userSchema = new mongoose.Schema<IUser>({
   },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true, select: false },
-  googleId:{type:String,default:null},
-  customerId:{
-    type:String,
-    default:null
+  googleId: { type: String, default: null },
+  facebookId: { type: String, defaul: null },
+  customerId: {
+    type: String,
+    default: null,
   },
-  facebookId:{type:String,defaul:null},
-  otp        :{type:String},
-  otpExpiry :{type:Date},
-  identifier :{type:String}
+
+  otp: { type: String },
+  otpExpiry: { type: Date },
+  identifier: { type: String },
 });
 userSchema.statics.isUserExist = async function (
   email: string
@@ -47,7 +48,10 @@ userSchema.pre("save", async function (next) {
   if (!this.isModified("password") || !this.password) {
     return next();
   }
-  this.password = await bcrypt.hash(this.password, Number(config.bcrypt_salt_round));
+  this.password = await bcrypt.hash(
+    this.password,
+    Number(config.bcrypt_salt_round)
+  );
   next();
 });
 

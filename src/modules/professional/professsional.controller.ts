@@ -12,9 +12,8 @@ import { uploadFileToSpace } from "../../utilitis/uploadTos3";
 import { IUser } from "../auth/auth.interface";
 
 const createProfessional = catchAsync(async (req: Request, res: Response) => {
-  const file = req.file  as unknown as Express.Multer.File;
+  const file = req.file as unknown as Express.Multer.File;
   let fileUrl;
-
 
   console.log(fileUrl, "check url");
   const { name, email, role, password, ...others } = req.body;
@@ -24,7 +23,6 @@ const createProfessional = catchAsync(async (req: Request, res: Response) => {
     email,
     role,
     password,
-    
   };
   const professionalData = {
     ...others,
@@ -34,7 +32,6 @@ const createProfessional = catchAsync(async (req: Request, res: Response) => {
     user,
     professionalData,
     file
-
   );
 
   sendResponse(res, {
@@ -48,12 +45,11 @@ const updateSingleRetireProfessional = catchAsync(
   async (req: Request, res: Response) => {
     const file = req.file;
     console.log(req.body, "check body");
-    let fileUrl
+    let fileUrl;
 
     if (file) {
-       fileUrl = await uploadFileToSpace(file, "retire-professional");
+      fileUrl = await uploadFileToSpace(file, "retire-professional");
     }
-
 
     const { name, ...retireProfessionalProfile } = req.body;
 
@@ -79,13 +75,13 @@ const updateSingleRetireProfessional = catchAsync(
   }
 );
 
-const getReitereProfessionals = catchAsync(
+const getRetireProfessionals = catchAsync(
   async (req: Request, res: Response) => {
     const paginationOptions = pick(req.query, paginationFileds);
     const filters = pick(req.query, filterableField);
     // console.log(filters)
 
-    const result = await RetireProfessionalService.getReitereProfessionals(
+    const result = await RetireProfessionalService.getRetireProfessionals(
       filters,
       paginationOptions
     );
@@ -104,5 +100,5 @@ const getReitereProfessionals = catchAsync(
 export const RetireProfessionalController = {
   createProfessional,
   updateSingleRetireProfessional,
-  getReitereProfessionals,
+  getRetireProfessionals,
 };

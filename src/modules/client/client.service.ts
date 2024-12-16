@@ -1,6 +1,6 @@
 import mongoose, { SortOrder } from "mongoose";
 
-import { IClient, IFilters } from "./client.interface";
+import { IClient } from "./client.interface";
 import { IpaginationOptions } from "../../interfaces/pagination";
 import { IGenericResponse } from "../../interfaces/general";
 import { paginationHelpers } from "../../helpers/paginationHelper";
@@ -13,6 +13,7 @@ import { getIndustryFromService } from "../../utilitis/serviceMapping";
 import { jwtHelpers } from "../../helpers/jwtHelpers";
 import config from "../../config";
 import { Secret } from "jsonwebtoken";
+import { IFilters } from "../../interfaces/filter";
 
 const createClient = async (user: IUser, clientData: IClient) => {
   const isUserExist = await User.findOne({ email: user.email });
@@ -38,18 +39,17 @@ const createClient = async (user: IUser, clientData: IClient) => {
     // Commit the transaction
     await session.commitTransaction();
     // console.log("Transaction committed");
-  const accessToken = jwtHelpers.createToken(
-    {
-      id: newUser[0]._id,
-      email: newUser[0].email,
-      role: newUser[0].role,
-    },
-    config.jwt.secret as Secret,
-    config.jwt.expires_in as string
-  );
-  return accessToken
+    const accessToken = jwtHelpers.createToken(
+      {
+        id: newUser[0]._id,
+        email: newUser[0].email,
+        role: newUser[0].role,
+      },
+      config.jwt.secret as Secret,
+      config.jwt.expires_in as string
+    );
+    return accessToken;
     // return (await newClient[0].populate("client")).toObject();
-    
   } catch (error: any) {
     // console.error("Transaction failed:", error);
 
@@ -195,8 +195,8 @@ const updateSingleClient = async (
   const session = await mongoose.startSession(); // Start a new session for transaction management
   try {
     session.startTransaction();
-    const clientAccount=await User.findById(id)
-    console.log(clientAccount,"check client account")
+    const clientAccount = await User.findById(id);
+    console.log(clientAccount, "check client account");
     if (!clientAccount) {
       throw new ApiError(404, "Client account not found");
     }
@@ -213,7 +213,7 @@ const updateSingleClient = async (
       { client: clientAccount._id },
       clientPayload,
       {
-        new: true, 
+        new: true,
         session,
       }
     );

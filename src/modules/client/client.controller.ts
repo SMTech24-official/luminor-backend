@@ -1,4 +1,4 @@
-import { query, Request, Response } from "express";
+import { Request, Response } from "express";
 import catchAsync from "../../shared/catchAsync";
 import sendResponse from "../../shared/sendResponse";
 import pick from "../../shared/pick";
@@ -9,6 +9,9 @@ import { ClientService } from "./client.service";
 import { StatusCodes } from "http-status-codes";
 
 import { uploadFileToSpace } from "../../utilitis/uploadTos3";
+import { jwtHelpers } from "../../helpers/jwtHelpers";
+import config from "../../config";
+import { Secret } from "jsonwebtoken";
 
 const createClient = catchAsync(async (req: Request, res: Response) => {
   const data = req.body;
@@ -19,6 +22,7 @@ const createClient = catchAsync(async (req: Request, res: Response) => {
     { name, email, role, password },
     others
   );
+  console.log(jwtHelpers.verifyToken(result, config.jwt.secret as Secret));
   console.log(data, "check data");
   sendResponse(res, {
     success: true,
@@ -62,7 +66,7 @@ const updateSingleClient = catchAsync(async (req: Request, res: Response) => {
   const data = req.body;
   const id = req.params.id;
 
-  console.log(req.body)
+  console.log(req.body);
 
   const file = req.file;
   // console.log(req.body, "check body");
@@ -70,7 +74,7 @@ const updateSingleClient = catchAsync(async (req: Request, res: Response) => {
   let fileUrl;
   if (file) {
     fileUrl = await uploadFileToSpace(file, "client");
-    data.projectListing = fileUrl;
+    data.projectUrl = fileUrl;
   }
 
   // console.log(req.user, "check user");

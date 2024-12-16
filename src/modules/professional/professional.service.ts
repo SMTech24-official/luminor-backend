@@ -9,18 +9,18 @@ import { IpaginationOptions } from "../../interfaces/pagination";
 import { IGenericResponse } from "../../interfaces/general";
 import { paginationHelpers } from "../../helpers/paginationHelper";
 import { searchableField } from "../../constants/searchableField";
-import { IFilters } from "../client/client.interface";
+
 import { getIndustryFromService } from "../../utilitis/serviceMapping";
 import { uploadFileToSpace } from "../../utilitis/uploadTos3";
 import { jwtHelpers } from "../../helpers/jwtHelpers";
 import { Secret } from "jsonwebtoken";
 import config from "../../config";
-
+import { IFilters } from "../../interfaces/filter";
 
 const createProfessional = async (
   user: IUser,
   professionalData: IProfessional,
-  file:Express.Multer.File
+  file: Express.Multer.File
 ) => {
   const session = await mongoose.startSession();
   try {
@@ -30,36 +30,32 @@ const createProfessional = async (
 
     const newUser = await User.create([user], { session });
     const userId = newUser[0]._id;
-    let fileUrl
+    let fileUrl;
     if (file) {
       fileUrl = await uploadFileToSpace(file, "retire-professional");
     }
-  
 
     const newProfessionalData = {
       ...professionalData,
       retireProfessional: userId,
-      cvOrCoverLetter:fileUrl
+      cvOrCoverLetter: fileUrl,
       // Add the mapped industries here
     };
 
-    await RetireProfessional.create(
-      [newProfessionalData],
-      { session }
-    );
+    await RetireProfessional.create([newProfessionalData], { session });
 
     await session.commitTransaction();
     session.endSession();
-  const accessToken = jwtHelpers.createToken(
-    {
-      id: newUser[0]._id,
-      email: newUser[0].email,
-      role: newUser[0].role,
-    },
-    config.jwt.secret as Secret,
-    config.jwt.expires_in as string
-  );
-  return accessToken
+    const accessToken = jwtHelpers.createToken(
+      {
+        id: newUser[0]._id,
+        email: newUser[0].email,
+        role: newUser[0].role,
+      },
+      config.jwt.secret as Secret,
+      config.jwt.expires_in as string
+    );
+    return accessToken;
     // return newProfessional[0].populate("retireProfessional");
   } catch (error: any) {
     await session.abortTransaction();
@@ -79,11 +75,10 @@ export const updateSingleRetireProfessional = async (
   try {
     session.startTransaction();
 
-
-      const professionalAccount=await User.findById(id)
-      if (!professionalAccount) {
-        throw new ApiError(404, "Professional account not found");
-      }
+    const professionalAccount = await User.findById(id);
+    if (!professionalAccount) {
+      throw new ApiError(404, "Professional account not found");
+    }
 
     // Ensure you're updating the existing client, not creating a new one
     if (retireProfessionalPayload.expertise) {
@@ -131,7 +126,7 @@ export const updateSingleRetireProfessional = async (
   }
 };
 
-const getReitereProfessionals = async (
+const getRetireProfessionals = async (
   filters: IFilters,
   paginationOptions: IpaginationOptions
 ): Promise<IGenericResponse<IProfessional[]>> => {
@@ -187,7 +182,9 @@ const getReitereProfessionals = async (
   // Handle location filter using $geoNear
   const aggregationPipeline: any[] = [];
   if (location) {
-    const [ longitude, latitude, minDistance, maxDistance ] = JSON.parse(location as string);
+    const [longitude, latitude, minDistance, maxDistance] = JSON.parse(
+      location as string
+    );
 
     // console.log(longitude,latitude,minDistance,maxDistance)
 
@@ -195,12 +192,12 @@ const getReitereProfessionals = async (
       $geoNear: {
         near: {
           type: "Point",
-          coordinates: [longitude, latitude], 
+          coordinates: [longitude, latitude],
         },
         distanceField: "distance",
         spherical: true,
-        maxDistance: maxDistance ,
-        minDistance:minDistance 
+        maxDistance: maxDistance,
+        minDistance: minDistance,
       },
     });
   }
@@ -239,9 +236,8 @@ const getReitereProfessionals = async (
   };
 };
 
-
 export const RetireProfessionalService = {
   createProfessional,
   updateSingleRetireProfessional,
-  getReitereProfessionals,
+  getRetireProfessionals,
 };

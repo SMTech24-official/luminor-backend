@@ -1,15 +1,15 @@
 import mongoose from "mongoose";
 
 export type IClient = {
-  client: mongoose.Schema.Types.ObjectId
-name?:{
-  firstName?:string,
-  lastName?:string
-}
+  client: mongoose.Schema.Types.ObjectId;
+  name?: {
+    firstName?: string;
+    lastName?: string;
+  };
 
-  dateOfBirth:Date;
-  phoneNumber:string;
-  businessType:string;
+  dateOfBirth: Date;
+  phoneNumber: string;
+  businessType: string;
   companyName?: string;
 
   jobTitle: string;
@@ -19,8 +19,8 @@ name?:{
 
   problemAreas?: string;
   location?: {
-    type:string,
-    coordinates:[number]
+    type: string;
+    coordinates: [number];
   };
   description?: string;
   companyWebsite: string;
@@ -31,24 +31,21 @@ name?:{
     max: number;
   };
   projectDurationRange?: number;
-  projectListing?: {
-    fileName?: string; 
-    filePath?: string;
-    fileType?: string; 
-  };
+  projectListing?: string;
+  projectUrl?: string;
 };
 
-export type IUpdateClient={
-  name?:{
-    firstName?:string,
-    lastName?:string
-  },
-  companyName:string
-  
+export type IUpdateClient = {
+  name?: {
+    firstName?: string;
+    lastName?: string;
+  };
+  companyName: string;
+
   problemAreas: string;
   location: {
-    lang:string,
-    lat:string
+    lang: string;
+    lat: string;
   };
   description: string;
   industry: string;
@@ -58,14 +55,8 @@ export type IUpdateClient={
     max: number;
   };
   projectDurationRange: {
-    min:number
-    max:number
+    min: number;
+    max: number;
   };
-  projectListing?: string
-
-}
-export interface IFilters {
-  query?: string;
-  location:string
-
-}
+  projectListing?: string;
+};

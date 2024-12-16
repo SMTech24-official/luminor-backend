@@ -29,14 +29,11 @@ const clientSchema = new mongoose.Schema<IClient>(
     location: {
       type: {
         type: String,
-        enum: ['Point'], 
-
-      
+        enum: ["Point"],
       },
       coordinates: {
         type: [Number],
-     
-      }
+      },
     },
     description: { type: String, default: null },
 
@@ -55,10 +52,13 @@ const clientSchema = new mongoose.Schema<IClient>(
       max: { type: Number, default: null },
     },
     projectListing: { type: String, default: null },
+    projectUrl: {
+      type: String,
+      default: null,
+    },
   },
   { timestamps: true }
 );
-clientSchema.index({ location: '2dsphere' });
-
+clientSchema.index({ location: "2dsphere" });
 
 export const Client = mongoose.model("Client", clientSchema);
