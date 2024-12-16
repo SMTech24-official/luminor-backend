@@ -6,15 +6,18 @@ import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import config from "../../config";
 import { Strategy as FacebookStrategy } from "passport-facebook";
 
-passport.use(new GoogleStrategy({
-  clientID:config.sosial_login.google.client_id as string,
-  clientSecret: config.sosial_login.google.client_secret as string,
-  callbackURL: config.sosial_login.google.redirect_uri as string
-},
-function(accessToken, refreshToken, profile, cb) {
-console.log("data");
-}
-));
+passport.use(
+  new GoogleStrategy(
+    {
+      clientID: config.sosial_login.google.client_id as string,
+      clientSecret: config.sosial_login.google.client_secret as string,
+      callbackURL: config.sosial_login.google.redirect_uri as string,
+    },
+    function (accessToken, refreshToken, profile, cb) {
+      console.log("data");
+    }
+  )
+);
 passport.use(
   new FacebookStrategy(
     {
@@ -30,7 +33,6 @@ passport.use(
 );
 passport.serializeUser((user, done) => done(null, user));
 passport.deserializeUser((obj, done) => done(null, obj as any));
-
 
 const router = express.Router();
 
@@ -52,7 +54,7 @@ router.get(
   })
 );
 router.get(
-  "/api/auth/facebook/callback",
+  "/facebook/callback",
   passport.authenticate("facebook", { failureRedirect: "/" }),
   SocialLoginController.facebookCallback
 );
