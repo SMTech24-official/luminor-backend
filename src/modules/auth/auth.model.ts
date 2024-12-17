@@ -21,7 +21,7 @@ const userSchema = new mongoose.Schema<IUser>({
     enum: ENUM_USER_ROLE,
   },
   email: { type: String, required: true, unique: true },
-  password: { type: String, required: true},
+  password: { type: String, required: true,select:false},
   googleId: { type: String, default: null },
   facebookId: { type: String, defaul: null },
   customerId: {
@@ -36,7 +36,7 @@ const userSchema = new mongoose.Schema<IUser>({
 userSchema.statics.isUserExist = async function (
   email: string
 ): Promise<IUserExistReturn | null> {
-  return await User.findOne({ email });
+  return await User.findOne({ email }).select("+password");
 };
 userSchema.statics.isPasswordMatched = async function (
   givenPassword: string,
