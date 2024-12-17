@@ -76,7 +76,7 @@ const loginUser = async (payload: ILoginUser) => {
       "Failed to update OTP"
     );
   }
-  return randomOtp;
+  return ;
 
   // const accessToken = jwtHelpers.createToken(
   //   { _id, userEmail, role },
@@ -117,8 +117,8 @@ const enterOtp = async (payload: { otp: string; identifier: string }) => {
     { _id: userData.id }, // Filter object
     {
       $set: {
-        otp: null,
-        otpExpiry: null,
+        otp: undefined,
+        otpExpiry: undefined,
       },
     } // Update object
   );
