@@ -10,6 +10,7 @@ import { jwtHelpers } from "../../helpers/jwtHelpers";
 
 const loginUser = async (payload: ILoginUser) => {
   const { email, password } = payload;
+  console.log(password,"check password")
 
   const isUserExist = await User.isUserExist(email);
 
@@ -123,6 +124,10 @@ const enterOtp = async (payload: { otp: string; identifier: string }) => {
   );
   const result = {
     accessToken,
+    user:{
+      email: userData.email,
+      role: userData.role,
+    }
   };
 
   return result;

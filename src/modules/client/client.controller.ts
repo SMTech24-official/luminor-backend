@@ -22,8 +22,8 @@ const createClient = catchAsync(async (req: Request, res: Response) => {
     { name, email, role, password },
     others
   );
-  console.log(jwtHelpers.verifyToken(result, config.jwt.secret as Secret));
-  console.log(data, "check data");
+  // console.log(jwtHelpers.verifyToken(result, config.jwt.secret as Secret));
+  // console.log(data, "check data");
   sendResponse(res, {
     success: true,
     statusCode: StatusCodes.OK,

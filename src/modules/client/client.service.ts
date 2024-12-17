@@ -67,7 +67,7 @@ const createClient = async (user: IUser, clientData: IClient) => {
     session.endSession();
     // console.log("Session ended");
   }
-};
+};;
 
 const getClients = async (
   filters: IFilters,

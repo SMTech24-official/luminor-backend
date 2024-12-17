@@ -21,7 +21,7 @@ const userSchema = new mongoose.Schema<IUser>({
     enum: ENUM_USER_ROLE,
   },
   email: { type: String, required: true, unique: true },
-  password: { type: String, required: true, select: false },
+  password: { type: String, required: true},
   googleId: { type: String, default: null },
   facebookId: { type: String, defaul: null },
   customerId: {
