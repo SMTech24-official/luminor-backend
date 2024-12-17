@@ -127,6 +127,8 @@ const enterOtp = async (payload: { otp: string; identifier: string }) => {
     user:{
       email: userData.email,
       role: userData.role,
+      userId:userData._id,
+      name:userData.name
     }
   };
 
