@@ -17,14 +17,11 @@ const RetireProfessionalSchema = new mongoose.Schema<IProfessional>(
     location: {
       type: {
         type: String,
-        enum: ['Point'], 
-
-      
+        enum: ["Point"],
       },
       coordinates: {
         type: [Number],
-     
-      }
+      },
     },
 
     linkedinProfile: { type: String },
@@ -45,7 +42,7 @@ const RetireProfessionalSchema = new mongoose.Schema<IProfessional>(
     cvOrCoverLetter: { type: String, default: null },
     // Retired professional profile (optional)
 
-    // location: { type: String, default: null },
+    profileUrl: { type: String, default: null },
     bio: { type: String, default: null },
     description: { type: String, default: null },
     expertise: { type: [String], enum: ENUM_SERVICE_PREFERENCE, default: [] },
@@ -73,7 +70,7 @@ const RetireProfessionalSchema = new mongoose.Schema<IProfessional>(
 
   { timestamps: true }
 );
-RetireProfessionalSchema.index({ location: '2dsphere' });
+RetireProfessionalSchema.index({ location: "2dsphere" });
 export const RetireProfessional = mongoose.model(
   "RetireProfessional",
   RetireProfessionalSchema

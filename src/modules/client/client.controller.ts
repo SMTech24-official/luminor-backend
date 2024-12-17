@@ -66,27 +66,50 @@ const updateSingleClient = catchAsync(async (req: Request, res: Response) => {
   const data = req.body;
   const id = req.params.id;
 
-  console.log(req.body);
+  // console.log(req.body);
+  const files = req.files as Express.Multer.File[]; // Get all files uploaded
+  const fileMap: { [key: string]: Express.Multer.File } = {};
+  files.forEach((file) => {
+    fileMap[file.fieldname] = file;
+  });
 
-  const file = req.file;
+  let projectUrl;
+  let profileImageUrl;
   // console.log(req.body, "check body");
   // console.log(file, "check file");
-  let fileUrl;
-  if (file) {
-    fileUrl = await uploadFileToSpace(file, "client");
-    data.projectUrl = fileUrl;
+
+  if (fileMap["projectUrl"]) {
+    projectUrl = await uploadFileToSpace(
+      fileMap["projectUrl"],
+      "project-samples"
+    );
+  }
+
+  if (fileMap["profileUrl"]) {
+    profileImageUrl = await uploadFileToSpace(
+      fileMap["profileUrl"],
+      "profileUrl"
+    );
   }
 
   // console.log(req.user, "check user");
 
   const { name, ...clientProfile } = data;
+  const { workSample, profileImage, ...others } = clientProfile;
+
+  // Include uploaded file URLs in the update payload
+  const updatedProfile = {
+    ...others,
+    projectUrl: projectUrl,
+    profileUrl: profileImageUrl,
+  };
 
   const auth = { name };
 
   const result = await ClientService.updateSingleClient(
     id,
     auth,
-    clientProfile
+    updatedProfile
   );
 
   sendResponse(res, {

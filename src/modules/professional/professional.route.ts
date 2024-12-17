@@ -23,7 +23,7 @@ router.post(
 
 router.patch(
   "/profile/:id",
-  multerUpload.single("workSample"),
+  multerUpload.any(),
 
   parseBodyData,
   auth(ENUM_USER_ROLE.RETIREPROFESSIONAL),

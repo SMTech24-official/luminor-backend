@@ -20,7 +20,7 @@ router.post(
 router.get("/", ClientController.getClients);
 router.patch(
   "/profile/:id",
-  multerUpload.single("projectUrl"),
+  multerUpload.any(),
   parseBodyData,
   auth(ENUM_USER_ROLE.CLIENT),
   ClientController.updateSingleClient

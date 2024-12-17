@@ -10,7 +10,7 @@ import { jwtHelpers } from "../../helpers/jwtHelpers";
 
 const loginUser = async (payload: ILoginUser) => {
   const { email, password } = payload;
-  console.log(password,"check password")
+  console.log(password, "check password");
 
   const isUserExist = await User.isUserExist(email);
 
@@ -76,7 +76,7 @@ const loginUser = async (payload: ILoginUser) => {
       "Failed to update OTP"
     );
   }
-  return ;
+  return randomOtp;
 
   // const accessToken = jwtHelpers.createToken(
   //   { _id, userEmail, role },
@@ -124,12 +124,12 @@ const enterOtp = async (payload: { otp: string; identifier: string }) => {
   );
   const result = {
     accessToken,
-    user:{
+    user: {
       email: userData.email,
       role: userData.role,
-      userId:userData._id,
-      name:userData.name
-    }
+      userId: userData._id,
+      name: userData.name,
+    },
   };
 
   return result;

@@ -43,22 +43,46 @@ const createProfessional = catchAsync(async (req: Request, res: Response) => {
 });
 const updateSingleRetireProfessional = catchAsync(
   async (req: Request, res: Response) => {
-    const file = req.file;
-    console.log(req.body, "check body");
-    let fileUrl;
+    const files = req.files as Express.Multer.File[]; // Get all files uploaded
+    const fileMap: { [key: string]: Express.Multer.File } = {};
 
-    if (file) {
-      fileUrl = await uploadFileToSpace(file, "retire-professional");
+    // Map files to their respective fields by matching `fieldname`
+    files.forEach((file) => {
+      fileMap[file.fieldname] = file;
+    });
+
+    // Process each file if it exists
+    let workSampleUrl;
+    let profileImageUrl;
+
+    if (fileMap["workSample"]) {
+      workSampleUrl = await uploadFileToSpace(
+        fileMap["workSample"],
+        "work-samples"
+      );
     }
 
+    if (fileMap["profileUrl"]) {
+      profileImageUrl = await uploadFileToSpace(
+        fileMap["profileUrl"],
+        "profileUrl"
+      );
+    }
+
+    // Parse and update body fields
     const { name, ...retireProfessionalProfile } = req.body;
 
     const auth = { name };
-    const { workSample, ...others } = retireProfessionalProfile;
+    const { workSample, profileImage, ...others } = retireProfessionalProfile;
+
+    // Include uploaded file URLs in the update payload
     const updatedProfile = {
       ...others,
-      workSample: fileUrl,
+      workSample: workSampleUrl,
+      profileUrl: profileImageUrl,
     };
+
+    // Call service to update
     const result =
       await RetireProfessionalService.updateSingleRetireProfessional(
         req.params.id,
@@ -69,7 +93,7 @@ const updateSingleRetireProfessional = catchAsync(
     sendResponse(res, {
       success: true,
       statusCode: StatusCodes.OK,
-      message: `retire professional  account  updated    successfully`,
+      message: `Retire professional account updated successfully`,
       data: result,
     });
   }

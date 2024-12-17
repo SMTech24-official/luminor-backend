@@ -16,7 +16,7 @@ export type IClient = {
   linkedinProfile?: string;
 
   //client profile
-
+  profileUrl?: string;
   problemAreas?: string;
   location?: {
     type: string;
@@ -35,28 +35,28 @@ export type IClient = {
   projectUrl?: string;
 };
 
-export type IUpdateClient = {
-  name?: {
-    firstName?: string;
-    lastName?: string;
-  };
-  companyName: string;
+// export type IUpdateClient = {
+//   name?: {
+//     firstName?: string;
+//     lastName?: string;
+//   };
+//   companyName: string;
 
-  problemAreas: string;
-  location: {
-    lang: string;
-    lat: string;
-  };
-  description: string;
-  industry: string;
-  servicePreferences: string[];
-  budgetRange: {
-    min: number;
-    max: number;
-  };
-  projectDurationRange: {
-    min: number;
-    max: number;
-  };
-  projectListing?: string;
-};
+//   problemAreas: string;
+//   location: {
+//     lang: string;
+//     lat: string;
+//   };
+//   description: string;
+//   industry: string;
+//   servicePreferences: string[];
+//   budgetRange: {
+//     min: number;
+//     max: number;
+//   };
+//   projectDurationRange: {
+//     min: number;
+//     max: number;
+//   };
+//   projectListing?: string;
+// };

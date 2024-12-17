@@ -1,19 +1,19 @@
 import mongoose from "mongoose";
 export type IReview = {
-  rating: number; 
-  feedBack: string; 
-  user: mongoose.Schema.Types.ObjectId; 
-  createdAt: Date; 
+  rating: number;
+  feedBack: string;
+  user: mongoose.Schema.Types.ObjectId;
+  createdAt: Date;
 };
 
 export type IProfessional = {
   //create account field
   retireProfessional: mongoose.Schema.Types.ObjectId;
 
-name:{
-  firstName?: string;
-  lastName?: string;
-};
+  name: {
+    firstName?: string;
+    lastName?: string;
+  };
 
   dateOfBirth: Date;
   phoneNumber: string;
@@ -24,15 +24,16 @@ name:{
   }>;
   educationalBackground: string;
   technicalSkill: string;
-  cvOrCoverLetter?:string;
+  cvOrCoverLetter?: string;
   linkedinProfile?: string;
+  location?: {
+    type: string;
+    coordinates: [number];
+  };
 
   //retire professional profile field
 
-  location?: {
-    type:string,
-    coordinates:[number]
-  };
+  profileUrl?: string;
   bio: string;
   description?: string;
   expertise: string[];
@@ -45,9 +46,9 @@ name:{
 
   preferedProjects: string;
   hourlyRate: string;
-  workSample?:string;
-  reviews?:IReview;
-  averageRating:number
+  workSample?: string;
+  reviews?: IReview;
+  averageRating: number;
 };
 
 export interface IProfessionalFilter {
