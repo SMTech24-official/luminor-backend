@@ -77,9 +77,11 @@ const signUpZodSchema = z.object({
     relevantQualification: z.string({
       required_error: "Relevant qualification is required",
     }),
-    technicalSkill: z.string({
-      required_error: "Technical skill is required",
-    }),
+    technicalSkill: z
+    .array(z.string(), {
+      required_error: "Technical skills are required",
+    })
+    .nonempty("At least one technical skill must be provided"),
     industry: z
       .array(
         z.enum(

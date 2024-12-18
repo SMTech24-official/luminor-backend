@@ -38,7 +38,7 @@ const RetireProfessionalSchema = new mongoose.Schema<IProfessional>(
       type: String,
       required: true,
     },
-    technicalSkill: { type: String, required: true },
+    technicalSkill: { type: [String], required: true },
     cvOrCoverLetter: { type: String, default: null },
     // Retired professional profile (optional)
 

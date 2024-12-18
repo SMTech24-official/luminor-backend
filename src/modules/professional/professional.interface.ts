@@ -23,7 +23,7 @@ export type IProfessional = {
     name: string;
   }>;
   educationalBackground: string;
-  technicalSkill: string;
+  technicalSkill: string[];
   cvOrCoverLetter?: string;
   linkedinProfile?: string;
   location?: {
