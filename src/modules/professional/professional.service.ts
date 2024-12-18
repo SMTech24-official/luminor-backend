@@ -186,8 +186,6 @@ const getRetireProfessionals = async (
       location as string
     );
 
-    // console.log(longitude,latitude,minDistance,maxDistance)
-
     aggregationPipeline.push({
       $geoNear: {
         near: {
@@ -208,6 +206,24 @@ const getRetireProfessionals = async (
       $match: { $and: andCondition },
     });
   }
+
+  // Add a $lookup stage for population
+  aggregationPipeline.push({
+    $lookup: {
+      from: "users", // Replace with the related collection's name
+      localField: "retireProfessional", // Field in RetireProfessional
+      foreignField: "_id", // Matching field in the related collection
+      as: "userDetails", // Populated field name
+    },
+  });
+
+  // Optionally unwind the array if you want a single object
+  aggregationPipeline.push({
+    $unwind: {
+      path: "$userDetails",
+      preserveNullAndEmptyArrays: true, // Include results with no match
+    },
+  });
 
   // Handle sorting, skipping, and limiting
   const sortCondition: { [key: string]: SortOrder } = {};
