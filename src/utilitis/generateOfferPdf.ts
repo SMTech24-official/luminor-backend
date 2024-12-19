@@ -1,18 +1,17 @@
-import { IOffer } from "../modules/offers/offer.interface";
-import path from "path";
+import PDFDocument from "pdfkit";
+import { uploadFileToSpace } from "./uploadTos3";
 import fs from "fs";
-import PDFDocument from "pdfkit"; 
+import { IOffer } from "../modules/offers/offer.interface";
 
 export const generateOfferPDF = async (offer: IOffer): Promise<string> => {
   const doc = new PDFDocument();
-  
-  const fileName = `offer_${Date.now()}.pdf`;
-  const filePath = path.join(__dirname, "../../uploads", fileName);
+  const buffers: Uint8Array[] = [];
 
-  // Pipe the PDF output to a file
-  doc.pipe(fs.createWriteStream(filePath));
+  // Collect data into buffers
+  doc.on("data", buffers.push.bind(buffers));
+  doc.on("end", async () => console.log("PDF generation complete"));
 
-
+  // Generate PDF content
   doc.fontSize(16).text(`Offer for Project: ${offer.projectName}`, { align: "left" });
   doc.text(`Description: ${offer.description}`, { align: "left" });
   doc.text(`Agreement Type: ${offer.agreementType}`, { align: "left" });
@@ -24,13 +23,29 @@ export const generateOfferPDF = async (offer: IOffer): Promise<string> => {
     doc.text(`Hourly Rate: ${offer.hourlyFee?.pricePerHour}`, { align: "left" });
   } else if (offer.agreementType === "Milestone") {
     doc.text(`Milestones:`, { align: "left" });
-    offer.milestones && offer.milestones.forEach((milestone, index) => {
-      doc.text(`Milestone ${index + 1}: ${milestone.title} - $${milestone.price}`, { align: "left" });
-    });
+    offer.milestones &&
+      offer.milestones.forEach((milestone: { title: any; price: any; }, index: number) => {
+        doc.text(`Milestone ${index + 1}: ${milestone.title} - $${milestone.price}`, { align: "left" });
+      });
   }
-
-  
+ 
   doc.end();
 
-  return filePath;
+  const pdfBuffer = Buffer.concat(buffers);
+
+  // Write locally for testing (optional)
+  fs.writeFileSync("test.pdf", pdfBuffer);
+
+  // Upload to DigitalOcean Spaces
+  const fileName = `offer_${Date.now()}.pdf`;
+  const uploadedURL = await uploadFileToSpace(
+    {
+      buffer: pdfBuffer,
+      originalname: fileName,
+      mimetype: "application/pdf",
+    },
+    "offers"
+  );
+
+  return uploadedURL;
 };

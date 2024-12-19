@@ -5,11 +5,14 @@ import { StatusCodes } from "http-status-codes";
 import { OfferService } from "./offer.service";
 import { generateOfferPDF } from "../../utilitis/generateOfferPdf";
 import { calculateTotalPrice } from "../../utilitis/calculateTotalPrice";
+
 const createOffer = catchAsync(async (req: Request, res: Response) => {
   const data = req.body;
 
   data.totalPrice = calculateTotalPrice(data);
   const offerPDFPath = await generateOfferPDF(data);
+
+  console.log(offerPDFPath, "check offerpdf path");
 
   data.orderAgreementPDF = offerPDFPath;
 
@@ -23,22 +26,24 @@ const createOffer = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-const getOffersByProfessional = catchAsync(async (req: Request, res: Response) => {
-  const id = req.params.id;
+const getOffersByProfessional = catchAsync(
+  async (req: Request, res: Response) => {
+    const id = req.params.id;
 
-  const result = await OfferService.getOffersByProfessional(id);
+    const result = await OfferService.getOffersByProfessional(id);
 
-  sendResponse(res, {
-    success: true,
-    statusCode: StatusCodes.OK,
-    message: `Retire Professional Offers get successfully`,
-    data: result,
-  });
-});
+    sendResponse(res, {
+      success: true,
+      statusCode: StatusCodes.OK,
+      message: `Retire Professional Offers get successfully`,
+      data: result,
+    });
+  }
+);
 
 const getSingleOffer = catchAsync(async (req: Request, res: Response) => {
   const id = req.params.id;
-  console.log(id,"check params")
+  console.log(id, "check params");
   const result = await OfferService.getSingleOffer(id);
 
   sendResponse(res, {
@@ -52,5 +57,5 @@ const getSingleOffer = catchAsync(async (req: Request, res: Response) => {
 export const OfferController = {
   createOffer,
   getOffersByProfessional,
-  getSingleOffer
+  getSingleOffer,
 };
