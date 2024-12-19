@@ -46,7 +46,7 @@ const RetireProfessionalSchema = new mongoose.Schema<IProfessional>(
     bio: { type: String, default: null },
     description: { type: String, default: null },
     expertise: { type: [String], enum: ENUM_SERVICE_PREFERENCE, default: [] },
-    industry: { type: [String], enum: INDUSTRIES, defaul: [] },
+    industry: { type: String, enum: INDUSTRIES, defaul: null },
     availability: { type: String, default: null },
 
     preferedProjects: { type: String, default: null },

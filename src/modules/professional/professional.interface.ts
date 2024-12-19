@@ -37,7 +37,7 @@ export type IProfessional = {
   bio: string;
   description?: string;
   expertise: string[];
-  industry: string[];
+  industry: string;
   relevantQualification: string;
 
   businessType: string;

@@ -82,14 +82,9 @@ const signUpZodSchema = z.object({
       required_error: "Technical skills are required",
     })
     .nonempty("At least one technical skill must be provided"),
-    industry: z
-      .array(
-        z.enum(
-          Object.values(INDUSTRIES) as [keyof typeof INDUSTRIES, ...string[]]
-        ),
-        { required_error: "Industry is required" }
-      )
-      .nonempty("At least one industry must be selected"),
+    industry: z.string({
+      required_error: "industry is required",
+    }),
     cvOrCoverLetter: fileSchema.optional(),
   }),
 });
