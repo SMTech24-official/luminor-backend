@@ -10,14 +10,8 @@ export const searchableField = [
 
 export const filterableField = [
   "query",
-  "location",
-  "minBudget",
-  "maxBudget",
-  "industry",
-  "servicePreferences",
-  "projectMin",
-  "projectMax",
-  "location",
-  "skillType",
-  "timeline"
+ "type",
+ "brand",
+ "price",
+ "misc"
 ];

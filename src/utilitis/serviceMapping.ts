@@ -11,4 +11,5 @@
 
   export const getIndustryFromService = (servicePreferences: string[]): string[] => {
     return servicePreferences.map(service => industryMapping[service] || 'Other');
+
   };

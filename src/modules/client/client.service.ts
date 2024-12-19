@@ -48,7 +48,7 @@ const createClient = async (user: IUser, clientData: IClient) => {
       config.jwt.secret as Secret,
       config.jwt.expires_in as string
     );
-    return accessToken;
+    return {accessToken,user:newUser,clientData:clientData};
     // return (await newClient[0].populate("client")).toObject();
   } catch (error: any) {
     // console.error("Transaction failed:", error);

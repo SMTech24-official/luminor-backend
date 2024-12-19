@@ -55,7 +55,11 @@ const createProfessional = async (
       config.jwt.secret as Secret,
       config.jwt.expires_in as string
     );
-    return accessToken;
+    return {
+      accessToken,
+      user: newUser,
+      retireProfessinal: newProfessionalData,
+    };
     // return newProfessional[0].populate("retireProfessional");
   } catch (error: any) {
     await session.abortTransaction();
