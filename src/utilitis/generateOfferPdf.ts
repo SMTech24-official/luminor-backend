@@ -1,19 +1,28 @@
 import PDFDocument from "pdfkit";
-
 import fs from "fs";
-import { IOffer } from "../modules/offers/offer.interface";
+import path from "path";
 import { uploadFileToSpace } from "./uploadTos3";
+import { IOffer } from "../modules/offers/offer.interface";
 
-export const generateOfferPDF = async (offer: IOffer): Promise<string> => {
+export const generateOfferPDF = async (offer: IOffer) => {
   try {
+    // Define the local file path
+    const fileName = `offer_${Date.now()}.pdf`;
+    const filePath = path.join(__dirname, "..", "uploads", fileName);
+
+    // Create the uploads folder if it doesn't exist
+    if (!fs.existsSync(path.dirname(filePath))) {
+      fs.mkdirSync(path.dirname(filePath), { recursive: true });
+    }
+
+    // Initialize PDFKit
     const doc = new PDFDocument();
-    const buffers: Uint8Array[] = [];
 
-    // Event listener for PDF data chunks
-    doc.on("data", buffers.push.bind(buffers));
-    doc.on("end", () => console.log("PDF generation complete"));
+    // Write the PDF to the local file system
+    const writeStream = fs.createWriteStream(filePath);
+    doc.pipe(writeStream);
 
-    // Adding data to PDF
+    // Add content to the PDF
     doc
       .fontSize(16)
       .text(`Offer for Project: ${offer.projectName}`, { align: "left" });
@@ -29,38 +38,40 @@ export const generateOfferPDF = async (offer: IOffer): Promise<string> => {
       });
     } else if (offer.agreementType === "Milestone") {
       doc.text(`Milestones:`, { align: "left" });
-      offer.milestones &&
-        offer.milestones.forEach(
-          (milestone: { title: any; price: any }, index: number) => {
-            doc.text(
-              `Milestone ${index + 1}: ${milestone.title} - $${
-                milestone.price
-              }`,
-              { align: "left" }
-            );
-          }
-        );
+      offer.milestones?.forEach(
+        (milestone: { title: any; price: any }, index: number) => {
+          doc.text(
+            `Milestone ${index + 1}: ${milestone.title} - $${milestone.price}`,
+            { align: "left" }
+          );
+        }
+      );
     }
 
-    doc.end(); // Finalize the PDF generation
+    doc.end();
 
-    // Buffer concatenation
-    const pdfBuffer = Buffer.concat(buffers);
-    console.log("Buffer length:", pdfBuffer.length);
+    // Wait for the file to be completely written
+    await new Promise((resolve, reject) => {
+      writeStream.on("finish", resolve);
+      writeStream.on("error", reject);
+    });
 
-    // Write locally for debugging (optional)
-    fs.writeFileSync("test.pdf", pdfBuffer);
+    console.log("PDF generated locally:", filePath);
 
-    // Upload to DigitalOcean Spaces
-    const fileName = `offer_${Date.now()}.pdf`;
+    // Upload the file to DigitalOcean Spaces
     const uploadedURL = await uploadFileToSpace(
       {
-        buffer: pdfBuffer,
+        buffer: fs.readFileSync(filePath),
         originalname: fileName,
         mimetype: "application/pdf",
       },
       "offers"
     );
+
+    console.log("PDF uploaded to DigitalOcean Spaces:", uploadedURL);
+
+    // Optionally delete the local file after uploading
+    fs.unlinkSync(filePath);
 
     return uploadedURL;
   } catch (error) {
