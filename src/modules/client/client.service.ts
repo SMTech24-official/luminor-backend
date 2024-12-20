@@ -29,7 +29,7 @@ const createClient = async (user: IUser, clientData: IClient) => {
 
     // Create a User account
     const newUser = await User.create([user], { session });
-    console.log("User created:", newUser[0]._id);
+    // console.log("User created:", newUser[0]._id);
 
     // Create a Client account linked to the User
     const newClientData = { ...clientData, client: newUser[0]._id };
@@ -48,7 +48,7 @@ const createClient = async (user: IUser, clientData: IClient) => {
       config.jwt.secret as Secret,
       config.jwt.expires_in as string
     );
-    return {accessToken,user:newUser,clientData:clientData};
+    return { accessToken, user: newUser, clientData: clientData };
     // return (await newClient[0].populate("client")).toObject();
   } catch (error: any) {
     // console.error("Transaction failed:", error);
@@ -67,7 +67,7 @@ const createClient = async (user: IUser, clientData: IClient) => {
     session.endSession();
     // console.log("Session ended");
   }
-};;
+};
 
 const getClients = async (
   filters: IFilters,
@@ -124,7 +124,7 @@ const getClients = async (
           const parseArray = Array.isArray(value)
             ? value
             : JSON.parse(value as string);
-
+          console.log(parseArray, "check parse arrya");
           return {
             industry: { $in: parseArray },
           };
@@ -132,7 +132,7 @@ const getClients = async (
           const skiillTypeArray = Array.isArray(value)
             ? value
             : JSON.parse(value as string);
-          // console.log(skiillTypeArray)
+          // console.log(skiillTypeArray);
 
           return {
             servicePreference: { $in: skiillTypeArray },
@@ -196,7 +196,7 @@ const updateSingleClient = async (
   try {
     session.startTransaction();
     const clientAccount = await User.findById(id);
-    console.log(clientAccount, "check client account");
+    // console.log(clientAccount, "check client account");
     if (!clientAccount) {
       throw new ApiError(404, "Client account not found");
     }

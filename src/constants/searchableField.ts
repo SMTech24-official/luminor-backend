@@ -1,17 +1,24 @@
 export const searchableField = [
-  "businessType",
-  "companyName",
-  "jobTitle",
-  "location",
   "industry",
+  "minBudget",
+  "maxBudget",
+  "projectMin",
+  "projectMax",
+  "skilltype",
+  "timeLine",
+  "location",
   "servicePreferences",
   "projectDurationRange",
 ];
 
 export const filterableField = [
   "query",
- "type",
- "brand",
- "price",
- "misc"
+  "industry",
+  "minBudget",
+  "maxBudget",
+  "projectMin",
+  "projectMax",
+  "skilltype",
+  "timeLine",
+  "location",
 ];

@@ -39,11 +39,11 @@ const clientSchema = new mongoose.Schema<IClient>(
     description: { type: String, default: null },
 
     servicePreference: {
-      type: [String],
+      type: String,
       enum: ENUM_SERVICE_PREFERENCE,
-      default: [],
+      default: null,
     },
-    industry: { type: [String], defaul: [] },
+    industry: { type: String, defaul: null },
     budgetRange: {
       min: { type: Number, default: null },
       max: { type: Number, default: null },

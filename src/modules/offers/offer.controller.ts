@@ -3,8 +3,9 @@ import catchAsync from "../../shared/catchAsync";
 import sendResponse from "../../shared/sendResponse";
 import { StatusCodes } from "http-status-codes";
 import { OfferService } from "./offer.service";
-import { generateOfferPDF } from "../../utilitis/generateOfferPdf";
+
 import { calculateTotalPrice } from "../../utilitis/calculateTotalPrice";
+import { generateOfferPDF } from "../../utilitis/generateOfferPdf";
 
 const createOffer = catchAsync(async (req: Request, res: Response) => {
   const data = req.body;

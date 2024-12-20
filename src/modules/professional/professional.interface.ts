@@ -36,7 +36,7 @@ export type IProfessional = {
   profileUrl?: string;
   bio: string;
   description?: string;
-  expertise: string[];
+  expertise: string;
   industry: string;
   relevantQualification: string;
 
