@@ -4,9 +4,7 @@ import sendResponse from "../../shared/sendResponse";
 import { AuthService } from "./auth.service";
 import config from "../../config";
 import { StatusCodes } from "http-status-codes";
-import { User } from "./auth.model";
-import ApiError from "../../errors/handleApiError";
-import { jwtHelpers } from "../../helpers/jwtHelpers";
+
 import { Secret } from "jsonwebtoken";
 
 const loginUser = catchAsync(async (req: Request, res: Response) => {

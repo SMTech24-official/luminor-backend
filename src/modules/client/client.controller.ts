@@ -65,16 +65,20 @@ const getClientById = catchAsync(async (req: Request, res: Response) => {
 const updateSingleClient = catchAsync(async (req: Request, res: Response) => {
   const data = req.body;
   const id = req.params.id;
-
+  let projectUrl;
+  let profileImageUrl;
+  const { name, ...clientProfile } = data;
+  const { workSample, profileImage, ...others } = clientProfile;
+  let updatedProfile={...others}
   // console.log(req.body);
   const files = req.files as Express.Multer.File[]; // Get all files uploaded
   const fileMap: { [key: string]: Express.Multer.File } = {};
+ if(files.length){
   files.forEach((file) => {
     fileMap[file.fieldname] = file;
   });
 
-  let projectUrl;
-  let profileImageUrl;
+
   // console.log(req.body, "check body");
   // console.log(file, "check file");
 
@@ -91,19 +95,21 @@ const updateSingleClient = catchAsync(async (req: Request, res: Response) => {
       "profileUrl"
     );
   }
-
-  // console.log(req.user, "check user");
-
-  const { name, ...clientProfile } = data;
-  const { workSample, profileImage, ...others } = clientProfile;
-
-  // Include uploaded file URLs in the update payload
-  const updatedProfile = {
+   updatedProfile = {
     ...others,
     projectUrl: projectUrl,
     profileUrl: profileImageUrl,
   };
 
+ }
+
+
+  // console.log(req.user, "check user");
+
+ 
+
+  // Include uploaded file URLs in the update payload
+ 
   const auth = { name };
 
   const result = await ClientService.updateSingleClient(

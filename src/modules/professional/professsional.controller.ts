@@ -45,43 +45,47 @@ const updateSingleRetireProfessional = catchAsync(
   async (req: Request, res: Response) => {
     const files = req.files as Express.Multer.File[]; // Get all files uploaded
     const fileMap: { [key: string]: Express.Multer.File } = {};
-
-    // Map files to their respective fields by matching `fieldname`
-    files.forEach((file) => {
-      fileMap[file.fieldname] = file;
-    });
-
-    // Process each file if it exists
-    let workSampleUrl;
-    let profileImageUrl;
-
-    if (fileMap["workSample"]) {
-      workSampleUrl = await uploadFileToSpace(
-        fileMap["workSample"],
-        "work-samples"
-      );
-    }
-
-    if (fileMap["profileUrl"]) {
-      profileImageUrl = await uploadFileToSpace(
-        fileMap["profileUrl"],
-        "profileUrl"
-      );
-    }
-
-    // Parse and update body fields
+    let workSampleUrl ;
+    let profileImageUrl ;
     const { name, ...retireProfessionalProfile } = req.body;
 
     const auth = { name };
     const { workSample, profileImage, ...others } = retireProfessionalProfile;
+    let updatedProfile={...others}
+
+    // Map files to their respective fields by matching `fieldname`
+    if (files.length) {
+      files.forEach((file) => {
+        fileMap[file.fieldname] = file;
+      });
+
+      // Process each file if it exists
+
+      if (fileMap["workSample"]) {
+        workSampleUrl = await uploadFileToSpace(
+          fileMap["workSample"],
+          "work-samples"
+        );
+      }
+
+      if (fileMap["profileUrl"]) {
+        profileImageUrl = await uploadFileToSpace(
+          fileMap["profileUrl"],
+          "profileUrl"
+        );
+      }
+      updatedProfile = {
+        ...others,
+        workSample: workSampleUrl,
+        profileUrl: profileImageUrl,
+      };
+  
+    }
+   
+    // Parse and update body fields
 
     // Include uploaded file URLs in the update payload
-    const updatedProfile = {
-      ...others,
-      workSample: workSampleUrl,
-      profileUrl: profileImageUrl,
-    };
-
+   
     // Call service to update
     const result =
       await RetireProfessionalService.updateSingleRetireProfessional(

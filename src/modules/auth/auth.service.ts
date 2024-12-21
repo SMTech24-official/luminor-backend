@@ -91,9 +91,14 @@ const loginUser = async (payload: ILoginUser) => {
   // };
 };
 const enterOtp = async (payload: { otp: string; identifier: string }) => {
+  console.log(payload,"check payload")
+
+  
   const userData = await User.findOne({
     otp: payload.otp,
   });
+
+  console.log(userData,"check userdaTA")  
 
   if (!userData) {
     throw new ApiError(404, "Your otp is incorrect");
