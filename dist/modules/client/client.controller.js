@@ -73,27 +73,30 @@ const getClientById = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, 
 const updateSingleClient = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const data = req.body;
     const id = req.params.id;
+    let projectUrl;
+    let profileImageUrl;
+    const { name } = data, clientProfile = __rest(data, ["name"]);
+    const { workSample, profileImage } = clientProfile, others = __rest(clientProfile, ["workSample", "profileImage"]);
+    let updatedProfile = Object.assign({}, others);
     // console.log(req.body);
     const files = req.files; // Get all files uploaded
     const fileMap = {};
-    files.forEach((file) => {
-        fileMap[file.fieldname] = file;
-    });
-    let projectUrl;
-    let profileImageUrl;
-    // console.log(req.body, "check body");
-    // console.log(file, "check file");
-    if (fileMap["projectUrl"]) {
-        projectUrl = yield (0, uploadTos3_1.uploadFileToSpace)(fileMap["projectUrl"], "project-samples");
-    }
-    if (fileMap["profileUrl"]) {
-        profileImageUrl = yield (0, uploadTos3_1.uploadFileToSpace)(fileMap["profileUrl"], "profileUrl");
+    if (files.length) {
+        files.forEach((file) => {
+            fileMap[file.fieldname] = file;
+        });
+        // console.log(req.body, "check body");
+        // console.log(file, "check file");
+        if (fileMap["projectUrl"]) {
+            projectUrl = yield (0, uploadTos3_1.uploadFileToSpace)(fileMap["projectUrl"], "project-samples");
+        }
+        if (fileMap["profileUrl"]) {
+            profileImageUrl = yield (0, uploadTos3_1.uploadFileToSpace)(fileMap["profileUrl"], "profileUrl");
+        }
+        updatedProfile = Object.assign(Object.assign({}, others), { projectUrl: projectUrl, profileUrl: profileImageUrl });
     }
     // console.log(req.user, "check user");
-    const { name } = data, clientProfile = __rest(data, ["name"]);
-    const { workSample, profileImage } = clientProfile, others = __rest(clientProfile, ["workSample", "profileImage"]);
     // Include uploaded file URLs in the update payload
-    const updatedProfile = Object.assign(Object.assign({}, others), { projectUrl: projectUrl, profileUrl: profileImageUrl });
     const auth = { name };
     const result = yield client_service_1.ClientService.updateSingleClient(id, auth, updatedProfile);
     (0, sendResponse_1.default)(res, {

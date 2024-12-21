@@ -55,25 +55,28 @@ const createProfessional = (0, catchAsync_1.default)((req, res) => __awaiter(voi
 const updateSingleRetireProfessional = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const files = req.files; // Get all files uploaded
     const fileMap = {};
-    // Map files to their respective fields by matching `fieldname`
-    files.forEach((file) => {
-        fileMap[file.fieldname] = file;
-    });
-    // Process each file if it exists
     let workSampleUrl;
     let profileImageUrl;
-    if (fileMap["workSample"]) {
-        workSampleUrl = yield (0, uploadTos3_1.uploadFileToSpace)(fileMap["workSample"], "work-samples");
-    }
-    if (fileMap["profileUrl"]) {
-        profileImageUrl = yield (0, uploadTos3_1.uploadFileToSpace)(fileMap["profileUrl"], "profileUrl");
-    }
-    // Parse and update body fields
     const _a = req.body, { name } = _a, retireProfessionalProfile = __rest(_a, ["name"]);
     const auth = { name };
     const { workSample, profileImage } = retireProfessionalProfile, others = __rest(retireProfessionalProfile, ["workSample", "profileImage"]);
+    let updatedProfile = Object.assign({}, others);
+    // Map files to their respective fields by matching `fieldname`
+    if (files.length) {
+        files.forEach((file) => {
+            fileMap[file.fieldname] = file;
+        });
+        // Process each file if it exists
+        if (fileMap["workSample"]) {
+            workSampleUrl = yield (0, uploadTos3_1.uploadFileToSpace)(fileMap["workSample"], "work-samples");
+        }
+        if (fileMap["profileUrl"]) {
+            profileImageUrl = yield (0, uploadTos3_1.uploadFileToSpace)(fileMap["profileUrl"], "profileUrl");
+        }
+        updatedProfile = Object.assign(Object.assign({}, others), { workSample: workSampleUrl, profileUrl: profileImageUrl });
+    }
+    // Parse and update body fields
     // Include uploaded file URLs in the update payload
-    const updatedProfile = Object.assign(Object.assign({}, others), { workSample: workSampleUrl, profileUrl: profileImageUrl });
     // Call service to update
     const result = yield professional_service_1.RetireProfessionalService.updateSingleRetireProfessional(req.params.id, auth, updatedProfile);
     (0, sendResponse_1.default)(res, {

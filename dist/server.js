@@ -128,7 +128,7 @@ function bootstrap() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             // Connect to MongoDB
-            yield mongoose_1.default.connect(config_1.default.database_url, options);
+            yield mongoose_1.default.connect("mongodb+srv://luminor:BYcHOYLQI2eiZ9IU@cluster0.v0ciw.mongodb.net/luminor?retryWrites=true&w=majority&appName=Cluster0", options);
             console.log(config_1.default.database_url, "check data base url");
             console.log("Connected to MongoDB successfully.");
             // Start the server

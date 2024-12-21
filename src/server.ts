@@ -139,7 +139,7 @@ io.on("connection", (socket) => {
 async function bootstrap() {
   try {
     // Connect to MongoDB
-    await mongoose.connect("mongodb+srv://luminor:BYcHOYLQI2eiZ9IU@cluster0.v0ciw.mongodb.net/luminor?retryWrites=true&w=majority&appName=Cluster0", options);
+    await mongoose.connect("mongodb+srv://luminor:BYcHOYLQI2eiZ9IU@cluster0.v0ciw.mongodb.net/luminor?retryWrites=true&w=majority&appName=Cluster0" as string, options);
     console.log(config.database_url, "check data base url");
     console.log("Connected to MongoDB successfully.");
 

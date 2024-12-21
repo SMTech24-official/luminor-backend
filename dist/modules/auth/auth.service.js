@@ -85,9 +85,11 @@ const loginUser = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     // };
 });
 const enterOtp = (payload) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log(payload, "check payload");
     const userData = yield auth_model_1.User.findOne({
         otp: payload.otp,
     });
+    console.log(userData, "check userdaTA");
     if (!userData) {
         throw new handleApiError_1.default(404, "Your otp is incorrect");
     }
