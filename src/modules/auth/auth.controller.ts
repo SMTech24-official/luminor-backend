@@ -5,7 +5,7 @@ import { AuthService } from "./auth.service";
 import config from "../../config";
 import { StatusCodes } from "http-status-codes";
 
-import { Secret } from "jsonwebtoken";
+
 
 const loginUser = catchAsync(async (req: Request, res: Response) => {
   const { ...loginData } = req.body;
