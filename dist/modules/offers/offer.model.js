@@ -6,11 +6,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Offer = void 0;
 const mongoose_1 = __importDefault(require("mongoose"));
 const milestoneSchema = new mongoose_1.default.Schema({
-    title: { type: String, required: true },
-    description: { type: String, required: true },
-    price: { type: Number, required: true },
-    revision: { type: Number, default: 0 },
-    delivery: { type: Number, required: true },
+    title: { type: String },
+    description: { type: String },
+    price: { type: Number },
+    revision: { type: Number },
+    delivery: { type: Number },
 });
 const offerSchema = new mongoose_1.default.Schema({
     projectName: { type: String, required: true },

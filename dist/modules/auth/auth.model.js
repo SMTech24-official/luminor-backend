@@ -56,12 +56,21 @@ const userSchema = new mongoose_1.default.Schema({
         required: true,
         enum: user_1.ENUM_USER_ROLE,
     },
-    email: { type: String, required: true },
-    password: { type: String, required: true }
+    email: { type: String, required: true, unique: true },
+    password: { type: String, required: true, select: false },
+    googleId: { type: String, default: null },
+    facebookId: { type: String, defaul: null },
+    customerId: {
+        type: String,
+        default: null,
+    },
+    otp: { type: String },
+    otpExpiry: { type: Date },
+    identifier: { type: String },
 });
 userSchema.statics.isUserExist = function (email) {
     return __awaiter(this, void 0, void 0, function* () {
-        return yield exports.User.findOne({ email });
+        return yield exports.User.findOne({ email }).select("+password");
     });
 };
 userSchema.statics.isPasswordMatched = function (givenPassword, savedPassword) {
@@ -71,8 +80,12 @@ userSchema.statics.isPasswordMatched = function (givenPassword, savedPassword) {
 };
 userSchema.pre("save", function (next) {
     return __awaiter(this, void 0, void 0, function* () {
+        if (!this.isModified("password") || !this.password) {
+            return next();
+        }
         this.password = yield bcrypt_1.default.hash(this.password, Number(config_1.default.bcrypt_salt_round));
         next();
     });
 });
 exports.User = (0, mongoose_1.model)("User", userSchema);
+// userSchema.set("autoIndex", true);

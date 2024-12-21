@@ -1,24 +1,19 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.parseNestedJSON = void 0;
-const isJSONString = (str) => {
-    return ((str.startsWith("{") && str.endsWith("}")) || // Check for JSON object
-        (str.startsWith("[") && str.endsWith("]")) // Check for JSON array
-    );
-};
-const parseNestedJSON = (req, res, next) => {
-    console.log(req.body, "from parse nested json");
-    for (const key in req.body) {
-        if (typeof req.body[key] === "string" && isJSONString(req.body[key])) {
-            try {
-                req.body[key] = JSON.parse(req.body[key]); // Parse JSON strings
-            }
-            catch (err) {
-                console.error(`Error parsing JSON for key "${key}": ${err.message}`);
-                // Retain original string value if parsing fails
-            }
+exports.parseBodyData = void 0;
+const parseBodyData = (req, res, next) => {
+    try {
+        if (req.body.data) {
+            req.body = JSON.parse(req.body.data); // Parse the nested JSON
         }
+        next(); // Proceed to the next middleware
     }
-    next(); // Ensure the next middleware is called
+    catch (error) {
+        console.error("Error parsing JSON:", error.message);
+        res.status(400).json({
+            success: false,
+            message: "Invalid JSON format in body data",
+        });
+    }
 };
-exports.parseNestedJSON = parseNestedJSON;
+exports.parseBodyData = parseBodyData;

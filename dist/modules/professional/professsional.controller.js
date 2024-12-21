@@ -31,25 +31,20 @@ const professional_service_1 = require("./professional.service");
 const pick_1 = __importDefault(require("../../shared/pick"));
 const pagination_1 = require("../../constants/pagination");
 const searchableField_1 = require("../../constants/searchableField");
+const uploadTos3_1 = require("../../utilitis/uploadTos3");
 const createProfessional = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const data = req.body;
     const file = req.file;
-    console.log(req.body, "check body");
-    if (file) {
-        data.cvOrCoverLetter = {
-            fileName: file.filename,
-            filePath: file.path,
-            fileType: file.mimetype,
-        };
-    }
-    const { name, email, role, password } = data, others = __rest(data, ["name", "email", "role", "password"]);
+    let fileUrl;
+    console.log(fileUrl, "check url");
+    const _a = req.body, { name, email, role, password } = _a, others = __rest(_a, ["name", "email", "role", "password"]);
     const user = {
         name,
         email,
         role,
         password,
     };
-    const result = yield professional_service_1.RetireProfessionalService.createProfessional(user, others);
+    const professionalData = Object.assign({}, others);
+    const result = yield professional_service_1.RetireProfessionalService.createProfessional(user, professionalData, file);
     (0, sendResponse_1.default)(res, {
         success: true,
         statusCode: http_status_codes_1.StatusCodes.OK,
@@ -58,28 +53,41 @@ const createProfessional = (0, catchAsync_1.default)((req, res) => __awaiter(voi
     });
 }));
 const updateSingleRetireProfessional = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    // console.log(req.body)
-    if (req.file) {
-        req.body.workSample = {
-            fileName: req.file.filename,
-            filePath: req.file.path,
-            fileType: req.file.mimetype,
-        };
+    const files = req.files; // Get all files uploaded
+    const fileMap = {};
+    // Map files to their respective fields by matching `fieldname`
+    files.forEach((file) => {
+        fileMap[file.fieldname] = file;
+    });
+    // Process each file if it exists
+    let workSampleUrl;
+    let profileImageUrl;
+    if (fileMap["workSample"]) {
+        workSampleUrl = yield (0, uploadTos3_1.uploadFileToSpace)(fileMap["workSample"], "work-samples");
     }
-    const _a = req.body, { firstName, lastName } = _a, retireProfessionalProfile = __rest(_a, ["firstName", "lastName"]);
-    const auth = { firstName, lastName };
-    const result = yield professional_service_1.RetireProfessionalService.updateSingleRetireProfessional(req.params.id, auth, retireProfessionalProfile);
+    if (fileMap["profileUrl"]) {
+        profileImageUrl = yield (0, uploadTos3_1.uploadFileToSpace)(fileMap["profileUrl"], "profileUrl");
+    }
+    // Parse and update body fields
+    const _a = req.body, { name } = _a, retireProfessionalProfile = __rest(_a, ["name"]);
+    const auth = { name };
+    const { workSample, profileImage } = retireProfessionalProfile, others = __rest(retireProfessionalProfile, ["workSample", "profileImage"]);
+    // Include uploaded file URLs in the update payload
+    const updatedProfile = Object.assign(Object.assign({}, others), { workSample: workSampleUrl, profileUrl: profileImageUrl });
+    // Call service to update
+    const result = yield professional_service_1.RetireProfessionalService.updateSingleRetireProfessional(req.params.id, auth, updatedProfile);
     (0, sendResponse_1.default)(res, {
         success: true,
-        statusCode: http_status_codes_1.StatusCodes.ACCEPTED,
-        message: `retire professional  account  updated    successfully`,
+        statusCode: http_status_codes_1.StatusCodes.OK,
+        message: `Retire professional account updated successfully`,
         data: result,
     });
 }));
-const getReitereProfessionals = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const getRetireProfessionals = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const paginationOptions = (0, pick_1.default)(req.query, pagination_1.paginationFileds);
     const filters = (0, pick_1.default)(req.query, searchableField_1.filterableField);
-    const result = yield professional_service_1.RetireProfessionalService.getReitereProfessionals(filters, paginationOptions);
+    // console.log(filters)
+    const result = yield professional_service_1.RetireProfessionalService.getRetireProfessionals(filters, paginationOptions);
     (0, sendResponse_1.default)(res, {
         success: true,
         statusCode: http_status_codes_1.StatusCodes.OK,
@@ -91,5 +99,5 @@ const getReitereProfessionals = (0, catchAsync_1.default)((req, res) => __awaite
 exports.RetireProfessionalController = {
     createProfessional,
     updateSingleRetireProfessional,
-    getReitereProfessionals
+    getRetireProfessionals,
 };

@@ -17,6 +17,17 @@ const createOffer = (offer) => __awaiter(void 0, void 0, void 0, function* () {
     const newOffer = yield offer_model_1.Offer.create(offer);
     return newOffer;
 });
+const getOffersByProfessional = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    const offer = yield offer_model_1.Offer.find({ clientId: id });
+    return offer;
+});
+const getSingleOffer = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    const offer = yield offer_model_1.Offer.findById(id);
+    console.log(offer, "offer");
+    return offer;
+});
 exports.OfferService = {
     createOffer,
+    getOffersByProfessional,
+    getSingleOffer,
 };

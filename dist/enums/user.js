@@ -4,7 +4,7 @@ exports.ENUM_USER_ROLE = void 0;
 /* eslint-disable no-unused-vars */
 var ENUM_USER_ROLE;
 (function (ENUM_USER_ROLE) {
-    ENUM_USER_ROLE["RetireProfessional"] = "retireProfessional";
+    ENUM_USER_ROLE["RETIREPROFESSIONAL"] = "retireProfessional";
     ENUM_USER_ROLE["CLIENT"] = "client";
     ENUM_USER_ROLE["ADMIN"] = "admin";
 })(ENUM_USER_ROLE || (exports.ENUM_USER_ROLE = ENUM_USER_ROLE = {}));

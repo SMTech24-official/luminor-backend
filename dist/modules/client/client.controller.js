@@ -31,24 +31,27 @@ const pagination_1 = require("../../constants/pagination");
 const searchableField_1 = require("../../constants/searchableField");
 const client_service_1 = require("./client.service");
 const http_status_codes_1 = require("http-status-codes");
+const uploadTos3_1 = require("../../utilitis/uploadTos3");
 const createClient = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const data = req.body;
     const { name, email, role, password } = data, others = __rest(data, ["name", "email", "role", "password"]);
-    const result = yield client_service_1.ClientService.createClient({
-        name, email, role, password
-    }, others);
+    const result = yield client_service_1.ClientService.createClient({ name, email, role, password }, others);
+    // console.log(jwtHelpers.verifyToken(result, config.jwt.secret as Secret));
+    // console.log(data, "check data");
     (0, sendResponse_1.default)(res, {
         success: true,
         statusCode: http_status_codes_1.StatusCodes.OK,
-        message: `client  account  created   successfully`,
+        message: `Client account created successfully`,
         data: result,
     });
 }));
 const getClients = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const paginationOptions = (0, pick_1.default)(req.query, pagination_1.paginationFileds);
+    console.log(req.query, "querty check from controller");
     const filters = (0, pick_1.default)(req.query, searchableField_1.filterableField);
     //  console.log(req.query,"check query")
     const result = yield client_service_1.ClientService.getClients(filters, paginationOptions);
+    console.log(filters, "filters");
     (0, sendResponse_1.default)(res, {
         success: true,
         statusCode: http_status_codes_1.StatusCodes.OK,
@@ -64,30 +67,45 @@ const getClientById = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, 
         success: true,
         statusCode: http_status_codes_1.StatusCodes.OK,
         message: "Client   retrived successfully",
-        data: result
+        data: result,
     });
 }));
 const updateSingleClient = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const data = req.body;
     const id = req.params.id;
-    // console.log(req.body)
-    const file = req.file;
-    console.log(req.user, "check user");
-    if (file) {
-        data.projectListing = {
-            fileName: file.filename,
-            filePath: file.path,
-            fileType: file.mimetype,
-        };
+    // console.log(req.body);
+    const files = req.files; // Get all files uploaded
+    const fileMap = {};
+    files.forEach((file) => {
+        fileMap[file.fieldname] = file;
+    });
+    let projectUrl;
+    let profileImageUrl;
+    // console.log(req.body, "check body");
+    // console.log(file, "check file");
+    if (fileMap["projectUrl"]) {
+        projectUrl = yield (0, uploadTos3_1.uploadFileToSpace)(fileMap["projectUrl"], "project-samples");
     }
+    if (fileMap["profileUrl"]) {
+        profileImageUrl = yield (0, uploadTos3_1.uploadFileToSpace)(fileMap["profileUrl"], "profileUrl");
+    }
+    // console.log(req.user, "check user");
     const { name } = data, clientProfile = __rest(data, ["name"]);
-    const auth = { name: JSON.parse(name) };
-    const result = yield client_service_1.ClientService.updateSingleClient(id, auth, clientProfile);
+    const { workSample, profileImage } = clientProfile, others = __rest(clientProfile, ["workSample", "profileImage"]);
+    // Include uploaded file URLs in the update payload
+    const updatedProfile = Object.assign(Object.assign({}, others), { projectUrl: projectUrl, profileUrl: profileImageUrl });
+    const auth = { name };
+    const result = yield client_service_1.ClientService.updateSingleClient(id, auth, updatedProfile);
     (0, sendResponse_1.default)(res, {
         success: true,
-        statusCode: http_status_codes_1.StatusCodes.ACCEPTED,
+        statusCode: http_status_codes_1.StatusCodes.OK,
         message: `client  account  updated    successfully`,
         data: result,
     });
 }));
-exports.ClientController = { createClient, getClients, updateSingleClient, getClientById };
+exports.ClientController = {
+    createClient,
+    getClients,
+    updateSingleClient,
+    getClientById,
+};

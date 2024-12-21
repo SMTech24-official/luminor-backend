@@ -25,28 +25,49 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.RetireProfessionalService = exports.updateSingleRetireProfessional = void 0;
 const mongoose_1 = __importDefault(require("mongoose"));
+const mongodb_1 = require("mongodb");
 const auth_model_1 = require("../auth/auth.model");
 const professional_model_1 = require("./professional.model");
 const handleApiError_1 = __importDefault(require("../../errors/handleApiError"));
 const paginationHelper_1 = require("../../helpers/paginationHelper");
 const searchableField_1 = require("../../constants/searchableField");
 const serviceMapping_1 = require("../../utilitis/serviceMapping");
-const createProfessional = (user, professionalData) => __awaiter(void 0, void 0, void 0, function* () {
+const uploadTos3_1 = require("../../utilitis/uploadTos3");
+const jwtHelpers_1 = require("../../helpers/jwtHelpers");
+const config_1 = __importDefault(require("../../config"));
+const createProfessional = (user, professionalData, file) => __awaiter(void 0, void 0, void 0, function* () {
     const session = yield mongoose_1.default.startSession();
     try {
         session.startTransaction();
         // Map service preferences to industries
         const newUser = yield auth_model_1.User.create([user], { session });
         const userId = newUser[0]._id;
-        const newProfessionalData = Object.assign(Object.assign({}, professionalData), { retireProfessional: userId });
-        const newProfessional = yield professional_model_1.RetireProfessional.create([newProfessionalData], { session });
+        let fileUrl;
+        if (file) {
+            fileUrl = yield (0, uploadTos3_1.uploadFileToSpace)(file, "retire-professional");
+        }
+        const newProfessionalData = Object.assign(Object.assign({}, professionalData), { retireProfessional: userId, cvOrCoverLetter: fileUrl });
+        yield professional_model_1.RetireProfessional.create([newProfessionalData], { session });
         yield session.commitTransaction();
         session.endSession();
-        return newProfessional[0].populate("retireProfessional");
+        const accessToken = jwtHelpers_1.jwtHelpers.createToken({
+            id: newUser[0]._id,
+            email: newUser[0].email,
+            role: newUser[0].role,
+        }, config_1.default.jwt.secret, config_1.default.jwt.expires_in);
+        return {
+            accessToken,
+            user: newUser,
+            retireProfessinal: newProfessionalData,
+        };
+        // return newProfessional[0].populate("retireProfessional");
     }
     catch (error) {
         yield session.abortTransaction();
         session.endSession();
+        if (error instanceof mongodb_1.MongoError && error.code === 11000) {
+            throw new handleApiError_1.default(400, "email  must have to be unique");
+        }
         throw new handleApiError_1.default(400, error);
     }
 });
@@ -54,12 +75,16 @@ const updateSingleRetireProfessional = (id, auth, retireProfessionalPayload) => 
     const session = yield mongoose_1.default.startSession(); // Start a new session for transaction management
     try {
         session.startTransaction();
+        const professionalAccount = yield auth_model_1.User.findById(id);
+        if (!professionalAccount) {
+            throw new handleApiError_1.default(404, "Professional account not found");
+        }
         // Ensure you're updating the existing client, not creating a new one
         if (retireProfessionalPayload.expertise) {
             const industries = (0, serviceMapping_1.getIndustryFromService)(retireProfessionalPayload.expertise);
             retireProfessionalPayload.industry = industries;
         }
-        const updatedRetireProfessional = yield professional_model_1.RetireProfessional.findOneAndUpdate({ retireProfessional: id }, retireProfessionalPayload, {
+        const updatedRetireProfessional = yield professional_model_1.RetireProfessional.findOneAndUpdate({ retireProfessional: professionalAccount._id }, retireProfessionalPayload, {
             new: true, // return the updated document
             session,
         });
@@ -89,11 +114,11 @@ const updateSingleRetireProfessional = (id, auth, retireProfessionalPayload) => 
     }
 });
 exports.updateSingleRetireProfessional = updateSingleRetireProfessional;
-const getReitereProfessionals = (filters, paginationOptions) => __awaiter(void 0, void 0, void 0, function* () {
+const getRetireProfessionals = (filters, paginationOptions) => __awaiter(void 0, void 0, void 0, function* () {
     const { skip, limit, page, sortBy, sortOrder } = paginationHelper_1.paginationHelpers.calculatePagination(paginationOptions);
-    const { query } = filters, filtersData = __rest(filters, ["query"]);
-    //  console.log(filtersData)
+    const { query, location } = filters, filtersData = __rest(filters, ["query", "location"]); // Extract location filter
     const andCondition = [];
+    // Handle text search
     if (query) {
         andCondition.push({
             $or: searchableField_1.searchableField.map((field) => ({
@@ -104,54 +129,93 @@ const getReitereProfessionals = (filters, paginationOptions) => __awaiter(void 0
             })),
         });
     }
+    // Handle other filters
     if (Object.keys(filtersData).length) {
         andCondition.push(...Object.entries(filtersData).map(([field, value]) => {
-            // Handle budget range
             if (field === "industry") {
-                const industryArray = value.split(',').map((item) => item.trim());
-                console.log(industryArray);
+                const parseArray = Array.isArray(value)
+                    ? value
+                    : JSON.parse(value);
                 return {
-                    "expertise": { $in: industryArray }
+                    industry: { $in: parseArray },
                 };
             }
-            // Default regex-based filtering for other fields
+            else if (field === "skillType") {
+                const skillTypeArray = Array.isArray(value)
+                    ? value
+                    : JSON.parse(value);
+                return {
+                    expertise: { $in: skillTypeArray },
+                };
+            }
+            else if (field === "timeline") {
+                return value === "shortTerm"
+                    ? { availability: { $lte: 29 } }
+                    : { availability: { $gte: 30 } };
+            }
             return { [field]: { $regex: value, $options: "i" } };
         }));
     }
+    // Handle location filter using $geoNear
+    const aggregationPipeline = [];
+    if (location) {
+        const [longitude, latitude, minDistance, maxDistance] = JSON.parse(location);
+        aggregationPipeline.push({
+            $geoNear: {
+                near: {
+                    type: "Point",
+                    coordinates: [longitude, latitude],
+                },
+                distanceField: "distance",
+                spherical: true,
+                maxDistance: maxDistance,
+                minDistance: minDistance,
+            },
+        });
+    }
+    // Add match conditions if there are any filters
+    if (andCondition.length > 0) {
+        aggregationPipeline.push({
+            $match: { $and: andCondition },
+        });
+    }
+    // Add a $lookup stage for population
+    aggregationPipeline.push({
+        $lookup: {
+            from: "users", // Replace with the related collection's name
+            localField: "retireProfessional", // Field in RetireProfessional
+            foreignField: "_id", // Matching field in the related collection
+            as: "userDetails", // Populated field name
+        },
+    });
+    // Optionally unwind the array if you want a single object
+    aggregationPipeline.push({
+        $unwind: {
+            path: "$userDetails",
+            preserveNullAndEmptyArrays: true, // Include results with no match
+        },
+    });
+    // Handle sorting, skipping, and limiting
     const sortCondition = {};
     if (sortBy && sortOrder) {
-        sortCondition[sortBy] = sortOrder;
+        sortCondition[sortBy] = sortOrder === "desc" ? -1 : 1;
     }
-    const whereConditions = andCondition.length > 0 ? { $and: andCondition } : {};
-    const result = yield professional_model_1.RetireProfessional.find(whereConditions)
-        .sort(sortCondition)
-        .skip(skip)
-        .limit(limit)
-        .populate("retireProfessional");
+    aggregationPipeline.push({ $sort: sortCondition }, { $skip: skip }, { $limit: limit });
+    // Execute the aggregation pipeline
+    const result = yield professional_model_1.RetireProfessional.aggregate(aggregationPipeline).exec();
+    // Get total document count
     const count = yield professional_model_1.RetireProfessional.countDocuments();
-    if (andCondition.length > 0) {
-        return {
-            meta: {
-                page,
-                limit,
-                count,
-            },
-            data: result,
-        };
-    }
-    else {
-        return {
-            meta: {
-                page,
-                limit,
-                count,
-            },
-            data: result,
-        };
-    }
+    return {
+        meta: {
+            page,
+            limit,
+            count,
+        },
+        data: result,
+    };
 });
 exports.RetireProfessionalService = {
     createProfessional,
     updateSingleRetireProfessional: exports.updateSingleRetireProfessional,
-    getReitereProfessionals
+    getRetireProfessionals,
 };

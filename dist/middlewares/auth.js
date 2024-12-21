@@ -12,38 +12,38 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.auth = void 0;
 const http_status_codes_1 = require("http-status-codes");
 const jwtHelpers_1 = require("../helpers/jwtHelpers");
 const config_1 = __importDefault(require("../config"));
+const auth_model_1 = require("../modules/auth/auth.model");
 const handleApiError_1 = __importDefault(require("../errors/handleApiError"));
-const auth = (...requiredRoles) => (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
-    try {
-        //get authorization token
-        const token = (_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(' ')[1];
-        // console.log(token)
-        if (!token) {
-            throw new handleApiError_1.default(http_status_codes_1.StatusCodes.UNAUTHORIZED, "You are not authorized");
+//  auth(UserRole.SUPER_ADMIN, UserRole.ADMIN)
+const auth = (...roles) => {
+    return (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const token = req.headers.authorization;
+            // console.log(token,"check token")
+            if (!token) {
+                throw new handleApiError_1.default(http_status_codes_1.StatusCodes.UNAUTHORIZED, "You are not authorized!");
+            }
+            const verifiedUser = jwtHelpers_1.jwtHelpers.verifyToken(token, config_1.default.jwt.secret);
+            //  console.log(verifiedUser,"check verified user")
+            const user = yield auth_model_1.User.findOne({
+                _id: verifiedUser.id,
+            });
+            if (!user) {
+                throw new handleApiError_1.default(http_status_codes_1.StatusCodes.UNAUTHORIZED, "This user is not found !");
+            }
+            if (roles.length && !roles.includes(verifiedUser.role)) {
+                throw new handleApiError_1.default(http_status_codes_1.StatusCodes.FORBIDDEN, "Forbidden!");
+            }
+            req.user = verifiedUser;
+            // console.log(req.user,"check user")
+            next();
         }
-        // verify token
-        let verifiedUser = null;
-        verifiedUser = jwtHelpers_1.jwtHelpers.verifyToken(token, config_1.default.jwt.secret);
-        // console.log(verifiedUser,"check verify user")
-        req.user = verifiedUser; // role  , _id
-        console.log(req.user, "from auth to check user");
-        if (requiredRoles.length && !requiredRoles.includes(verifiedUser.role)) {
-            throw new handleApiError_1.default(http_status_codes_1.StatusCodes.FORBIDDEN, "Forbidden");
+        catch (err) {
+            next(err);
         }
-        else if (req.params.id !== req.user._id) {
-            console.log("check wrong header ");
-            throw new handleApiError_1.default(http_status_codes_1.StatusCodes.UNAUTHORIZED, "you are not the owner of this account");
-        }
-        next();
-    }
-    catch (error) {
-        next(error);
-    }
-});
-exports.auth = auth;
-exports.default = exports.auth;
+    });
+};
+exports.default = auth;

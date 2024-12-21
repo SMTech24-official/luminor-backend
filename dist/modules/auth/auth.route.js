@@ -9,3 +9,4 @@ const auth_controller_1 = require("./auth.controller");
 const router = express_1.default.Router();
 exports.AuthRoute = router;
 router.post("/signIn", auth_controller_1.AuthController.loginUser);
+router.post("/otp-enter", auth_controller_1.AuthController.enterOtp);

@@ -6,7 +6,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Client = void 0;
 const mongoose_1 = __importDefault(require("mongoose"));
 const service_1 = require("../../enums/service");
-const client_1 = require("../../enums/client");
 const clientSchema = new mongoose_1.default.Schema({
     client: {
         type: mongoose_1.default.Schema.Types.ObjectId,
@@ -28,11 +27,24 @@ const clientSchema = new mongoose_1.default.Schema({
     jobTitle: { type: String, required: true },
     linkedinProfile: { type: String },
     //client profile field
+    profileUrl: { type: String, default: null },
     problemAreas: { type: String, default: null },
-    location: { type: String, default: null },
+    location: {
+        type: {
+            type: String,
+            enum: ["Point"],
+        },
+        coordinates: {
+            type: [Number],
+        },
+    },
     description: { type: String, default: null },
-    servicePreference: { type: [String], enum: service_1.ENUM_SERVICE_PREFERENCE, default: [] },
-    industry: { type: [String], enum: client_1.ENUM_INDUSTRY_TYPE, defaul: [] },
+    servicePreference: {
+        type: String,
+        enum: service_1.ENUM_SERVICE_PREFERENCE,
+        default: null,
+    },
+    industry: { type: String, defaul: null },
     budgetRange: {
         min: { type: Number, default: null },
         max: { type: Number, default: null },
@@ -41,10 +53,11 @@ const clientSchema = new mongoose_1.default.Schema({
         min: { type: Number, default: null },
         max: { type: Number, default: null },
     },
-    projectListing: {
-        fileName: { type: String, default: null },
-        filePath: { type: String, default: null },
-        fileType: { type: String, default: null },
+    projectListing: { type: String, default: null },
+    projectUrl: {
+        type: String,
+        default: null,
     },
 }, { timestamps: true });
+clientSchema.index({ location: "2dsphere" });
 exports.Client = mongoose_1.default.model("Client", clientSchema);

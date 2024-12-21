@@ -2,24 +2,25 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.filterableField = exports.searchableField = void 0;
 exports.searchableField = [
-    "businessType",
-    "companyName",
-    "jobTitle",
-    "location",
     "industry",
+    "minBudget",
+    "maxBudget",
+    "projectMin",
+    "projectMax",
+    "skilltype",
+    "timeLine",
+    "location",
     "servicePreferences",
     "projectDurationRange",
 ];
 exports.filterableField = [
     "query",
-    "location",
+    "industry",
     "minBudget",
     "maxBudget",
-    "industry",
-    "servicePreferences",
     "projectMin",
     "projectMax",
+    "skilltype",
+    "timeLine",
     "location",
-    "skillType",
-    "timeline"
 ];

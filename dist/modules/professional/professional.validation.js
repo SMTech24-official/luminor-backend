@@ -10,7 +10,6 @@ const fileSchema = zod_1.z.object({
     filePath: zod_1.z.string().nullable(),
     fileType: zod_1.z.string().nullable(),
 });
-// Validation schema for projects
 // Main sign-up validation schema
 const signUpZodSchema = zod_1.z.object({
     body: zod_1.z.object({
@@ -37,6 +36,11 @@ const signUpZodSchema = zod_1.z.object({
         phoneNumber: zod_1.z.string({
             required_error: "Phone Number is required",
         }),
+        password: zod_1.z
+            .string({
+            required_error: "password is required",
+        })
+            .min(6, "at least 6 digit"),
         dateOfBirth: zod_1.z
             .string({
             required_error: "Date of Birth is required",
@@ -45,8 +49,7 @@ const signUpZodSchema = zod_1.z.object({
             message: "Invalid date format",
         }),
         linkedinProfile: zod_1.z.string().optional(),
-        previousPositions: zod_1.z
-            .array(zod_1.z.string()),
+        previousPositions: zod_1.z.array(zod_1.z.string()),
         references: zod_1.z
             .array(zod_1.z.object({
             emailOrPhone: zod_1.z.string({
@@ -65,13 +68,15 @@ const signUpZodSchema = zod_1.z.object({
         relevantQualification: zod_1.z.string({
             required_error: "Relevant qualification is required",
         }),
-        technicalSkill: zod_1.z.string({
-            required_error: "Technical skill is required",
+        technicalSkill: zod_1.z
+            .array(zod_1.z.string(), {
+            required_error: "Technical skills are required",
+        })
+            .nonempty("At least one technical skill must be provided"),
+        industry: zod_1.z.string({
+            required_error: "industry is required",
         }),
         cvOrCoverLetter: fileSchema.optional(),
-        softSkills: zod_1.z.string({
-            required_error: " technical or soft skills required"
-        })
     }),
 });
 exports.RetireProfessionalValidation = {

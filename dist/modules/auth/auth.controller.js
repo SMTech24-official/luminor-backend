@@ -27,6 +27,7 @@ exports.AuthController = void 0;
 const catchAsync_1 = __importDefault(require("../../shared/catchAsync"));
 const sendResponse_1 = __importDefault(require("../../shared/sendResponse"));
 const auth_service_1 = require("./auth.service");
+const config_1 = __importDefault(require("../../config"));
 const http_status_codes_1 = require("http-status-codes");
 const loginUser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const loginData = __rest(req.body, []);
@@ -34,10 +35,28 @@ const loginUser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_codes_1.StatusCodes.OK,
         success: true,
-        message: "User logged in successfully!",
+        message: "send otp",
+        data: result,
+    });
+}));
+const enterOtp = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield auth_service_1.AuthService.enterOtp(req.body);
+    auth_service_1.AuthService;
+    // res.cookie("token", result.accessToken, { httpOnly: true });
+    res.cookie("token", result.accessToken, {
+        secure: config_1.default.env === "production",
+        httpOnly: true,
+        sameSite: "none",
+        maxAge: 1000 * 60 * 60 * 24 * 365,
+    });
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_codes_1.StatusCodes.OK,
+        success: true,
+        message: "User logged in successfully",
         data: result,
     });
 }));
 exports.AuthController = {
-    loginUser
+    loginUser,
+    enterOtp,
 };

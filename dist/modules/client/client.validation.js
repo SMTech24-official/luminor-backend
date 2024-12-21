@@ -18,22 +18,28 @@ const signUpZodSchema = zod_1.z.object({
             required_error: "Email is Required",
         })
             .email("This is not a valid email"),
+        password: zod_1.z
+            .string({
+            required_error: "password is required",
+        })
+            .min(6, "at least 6 digit"),
         role: zod_1.z
             .string({
             required_error: "Role is Required",
         })
-            .refine((value) => {
-            return Object.values(user_1.ENUM_USER_ROLE).includes(value);
-        }, { message: "Invalid role" }),
-        phoneNumber: zod_1.z
-            .string({
+            .refine((value) => value === user_1.ENUM_USER_ROLE.CLIENT, {
+            message: "Invalid role",
+        }),
+        phoneNumber: zod_1.z.string({
             required_error: "Phone Number is Required",
         }),
         dateOfBirth: zod_1.z
             .string({
             required_error: "Date of Birth is Required",
         })
-            .refine((value) => !isNaN(Date.parse(value)), { message: "Invalid date format" }),
+            .refine((value) => !isNaN(Date.parse(value)), {
+            message: "Invalid date format",
+        }),
         linkedinProfile: zod_1.z
             .string()
             .optional()
@@ -41,19 +47,13 @@ const signUpZodSchema = zod_1.z.object({
             .refine((value) => {
             if (!value)
                 return true;
-            return value.startsWith("https://linkedin.com");
+            return value.startsWith("https://www.linkedin.com") || (value === null || value === void 0 ? void 0 : value.startsWith("https://linkedin.com"));
         }, { message: "Invalid LinkedIn Profile URL" }),
-        industry: zod_1.z.string().optional(),
+        businessType: zod_1.z.string().optional(),
         jobTitle: zod_1.z.string({
             required_error: "Job Title is Required",
         }),
-        companyName: zod_1.z
-            .string()
-            .optional()
-            .or(zod_1.z.literal("")),
-        password: zod_1.z.string({
-            required_error: "Password is Required",
-        }),
+        companyName: zod_1.z.string().optional().or(zod_1.z.literal("")),
     }),
 });
 const loginZodSchema = zod_1.z.object({
