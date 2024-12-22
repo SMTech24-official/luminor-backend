@@ -29,7 +29,7 @@ const auth = (...roles: string[]) => {
         token,
         config.jwt.secret as Secret
       );
-  //  console.log(verifiedUser,"check verified user")
+   console.log(verifiedUser,"check verified user")
       const user = await User.findOne({
        
           _id: verifiedUser.id,

@@ -56,7 +56,20 @@ const enterOtp = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 
         data: result,
     });
 }));
+const getProfile = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = req.user;
+    console.log(user, "check user");
+    // res.cookie("token", result.accessToken, { httpOnly: true });
+    const result = yield auth_service_1.AuthService.getProfile(user.id);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_codes_1.StatusCodes.OK,
+        success: true,
+        message: "User profile get successfully",
+        data: result,
+    });
+}));
 exports.AuthController = {
     loginUser,
     enterOtp,
+    getProfile
 };

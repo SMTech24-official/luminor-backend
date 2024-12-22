@@ -38,7 +38,20 @@ const enterOtp = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+const getProfile= catchAsync(async (req: Request, res: Response) => {
+const user=req.user as any
 
+console.log(user,"check user")
+  // res.cookie("token", result.accessToken, { httpOnly: true });
+  const result=await AuthService.getProfile(user.id)
+  
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: "User profile get successfully",
+    data: result,
+  });
+});
 
 
 
@@ -46,4 +59,5 @@ const enterOtp = catchAsync(async (req: Request, res: Response) => {
 export const AuthController = {
   loginUser,
   enterOtp,
+  getProfile
 };

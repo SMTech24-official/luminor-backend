@@ -90,13 +90,15 @@ const loginUser = async (payload: ILoginUser) => {
 
   // };
 };
-const enterOtp = async (payload: { otp: string; identifier: string }) => {
+const enterOtp = async (payload:any) => {
   console.log(payload,"check payload")
-
+ console.log(payload,"check payload")
   
-  const userData = await User.findOne({
-    otp: payload.otp,
-  });
+ const userData = await User.findOne({
+  otp: payload.otp,
+  email: payload.email.toLowerCase(),
+});
+  console.log(userData,"check user")
 
   console.log(userData,"check userdaTA")  
 
@@ -122,8 +124,8 @@ const enterOtp = async (payload: { otp: string; identifier: string }) => {
     { _id: userData.id }, // Filter object
     {
       $set: {
-        otp: undefined,
-        otpExpiry: undefined,
+        otp: null,
+        otpExpiry: null,
       },
     } // Update object
   );
@@ -140,7 +142,15 @@ const enterOtp = async (payload: { otp: string; identifier: string }) => {
   return result;
 };
 
+
+ const getProfile=async(id:string)=>{
+
+   const result =await   User.findById(id)
+   return result
+
+}
 export const AuthService = {
   loginUser,
   enterOtp,
+  getProfile
 };

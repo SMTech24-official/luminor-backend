@@ -86,9 +86,12 @@ const loginUser = (payload) => __awaiter(void 0, void 0, void 0, function* () {
 });
 const enterOtp = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     console.log(payload, "check payload");
+    console.log(payload, "check payload");
     const userData = yield auth_model_1.User.findOne({
         otp: payload.otp,
+        email: payload.email.toLowerCase(),
     });
+    console.log(userData, "check user");
     console.log(userData, "check userdaTA");
     if (!userData) {
         throw new handleApiError_1.default(404, "Your otp is incorrect");
@@ -104,8 +107,8 @@ const enterOtp = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     yield auth_model_1.User.updateOne({ _id: userData.id }, // Filter object
     {
         $set: {
-            otp: undefined,
-            otpExpiry: undefined,
+            otp: null,
+            otpExpiry: null,
         },
     } // Update object
     );
@@ -120,7 +123,12 @@ const enterOtp = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     };
     return result;
 });
+const getProfile = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield auth_model_1.User.findById(id);
+    return result;
+});
 exports.AuthService = {
     loginUser,
     enterOtp,
+    getProfile
 };
