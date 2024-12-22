@@ -4,7 +4,7 @@ export const searchableField = [
   "maxBudget",
   "projectMin",
   "projectMax",
-  "skilltype",
+  "skillType",
   "timeLine",
   "location",
   "servicePreferences",
@@ -18,7 +18,7 @@ export const filterableField = [
   "maxBudget",
   "projectMin",
   "projectMax",
-  "skilltype",
+  "skillType",
   "timeLine",
   "location",
 ];

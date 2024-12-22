@@ -7,6 +7,9 @@ import { StatusCodes } from "http-status-codes";
 
 import emailSender from "../../utilitis/emailSender";
 import { jwtHelpers } from "../../helpers/jwtHelpers";
+import { ENUM_USER_ROLE } from "../../enums/user";
+import { RetireProfessional } from "../professional/professional.model";
+import { Client } from "../client/client.model";
 
 const loginUser = async (payload: ILoginUser) => {
   const { email, password } = payload;
@@ -90,17 +93,17 @@ const loginUser = async (payload: ILoginUser) => {
 
   // };
 };
-const enterOtp = async (payload:any) => {
-  console.log(payload,"check payload")
- console.log(payload,"check payload")
-  
- const userData = await User.findOne({
-  otp: payload.otp,
-  email: payload.email.toLowerCase(),
-});
-  console.log(userData,"check user")
+const enterOtp = async (payload: any) => {
+  console.log(payload, "check payload");
+  console.log(payload, "check payload");
 
-  console.log(userData,"check userdaTA")  
+  const userData = await User.findOne({
+    otp: payload.otp,
+    email: payload.email.toLowerCase(),
+  });
+  console.log(userData, "check user");
+
+  console.log(userData, "check userdaTA");
 
   if (!userData) {
     throw new ApiError(404, "Your otp is incorrect");
@@ -142,15 +145,30 @@ const enterOtp = async (payload:any) => {
   return result;
 };
 
+const getProfile = async (id: string) => {
+  const user = await User.findById(id);
+  console.log(user, "User details");
 
- const getProfile=async(id:string)=>{
+  let result;
 
-   const result =await   User.findById(id)
-   return result
+  if (user?.role === ENUM_USER_ROLE.RETIREPROFESSIONAL) {
 
-}
+    result = await RetireProfessional.findOne({
+      retireProfessional: user.id,
+    }).populate("retireProfessional");
+  } else if (user?.role === ENUM_USER_ROLE.CLIENT) {
+
+     result = await Client.findOne({ client: user.id }).populate("client");
+
+  
+  }
+
+
+  return result;
+};
+
 export const AuthService = {
   loginUser,
   enterOtp,
-  getProfile
+  getProfile,
 };
