@@ -99,8 +99,19 @@ const getRetireProfessionals = (0, catchAsync_1.default)((req, res) => __awaiter
         data: result.data,
     });
 }));
+const getRetireProfessionalsByLocation = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { long, lat, min, max } = req.query;
+    const result = yield professional_service_1.RetireProfessionalService.getRetireProfessionalsByLocation(parseFloat(long), parseFloat(lat), parseFloat(min), parseFloat(max));
+    (0, sendResponse_1.default)(res, {
+        success: true,
+        statusCode: http_status_codes_1.StatusCodes.OK,
+        message: "Retire professional   retrived successfully",
+        data: result,
+    });
+}));
 exports.RetireProfessionalController = {
     createProfessional,
     updateSingleRetireProfessional,
     getRetireProfessionals,
+    getRetireProfessionalsByLocation,
 };

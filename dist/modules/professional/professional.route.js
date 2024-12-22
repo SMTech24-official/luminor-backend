@@ -17,3 +17,4 @@ exports.RetireProfessionalRoute = router;
 router.post("/signUp", multer_1.multerUpload.single("cvOrCoverLetter"), parseJson_1.parseBodyData, (0, validateRequest_1.default)(professional_validation_1.RetireProfessionalValidation.signUpZodSchema), professsional_controller_1.RetireProfessionalController.createProfessional);
 router.patch("/profile/:id", multer_1.multerUpload.any(), parseJson_1.parseBodyData, (0, auth_1.default)(user_1.ENUM_USER_ROLE.RETIREPROFESSIONAL), professsional_controller_1.RetireProfessionalController.updateSingleRetireProfessional);
 router.get("/", professsional_controller_1.RetireProfessionalController.getRetireProfessionals);
+router.get("/location", professsional_controller_1.RetireProfessionalController.getRetireProfessionalsByLocation);

@@ -78,22 +78,14 @@ const updateSingleRetireProfessional = (id, auth, retireProfessionalPayload) => 
         if (!professionalAccount) {
             throw new handleApiError_1.default(404, "Professional account not found");
         }
-        // Ensure you're updating the existing client, not creating a new one
-        // if (retireProfessionalPayload.expertise) {
-        //   const industries = getIndustryFromService(
-        //     retireProfessionalPayload.expertise
-        //   );
-        //   retireProfessionalPayload.industry = industries;
-        // }
         const updatedRetireProfessional = yield professional_model_1.RetireProfessional.findOneAndUpdate({ retireProfessional: professionalAccount._id }, retireProfessionalPayload, {
-            new: true, // return the updated document
+            new: true,
             session,
         });
         if (!updatedRetireProfessional) {
             throw new handleApiError_1.default(404, "retire professional not found");
         }
         // console.log(auth,"check auth");
-        // Update the associated User model (linked by client field)
         const updatedUser = yield auth_model_1.User.findByIdAndUpdate(id, auth, {
             new: true, // return the updated document
             session,
@@ -101,14 +93,11 @@ const updateSingleRetireProfessional = (id, auth, retireProfessionalPayload) => 
         if (!updatedUser) {
             throw new handleApiError_1.default(404, "User not found");
         }
-        // Commit the transaction after both updates are successful
         yield session.commitTransaction();
         session.endSession();
-        // Return the updated client with populated user data
         return updatedRetireProfessional.populate("retireProfessional");
     }
     catch (error) {
-        // In case of error, rollback the transaction
         yield session.abortTransaction();
         session.endSession();
         throw new handleApiError_1.default(400, error.message || "Error updating client");
@@ -117,7 +106,7 @@ const updateSingleRetireProfessional = (id, auth, retireProfessionalPayload) => 
 exports.updateSingleRetireProfessional = updateSingleRetireProfessional;
 const getRetireProfessionals = (filters, paginationOptions) => __awaiter(void 0, void 0, void 0, function* () {
     const { skip, limit, page, sortBy, sortOrder } = paginationHelper_1.paginationHelpers.calculatePagination(paginationOptions);
-    const { query, location } = filters, filtersData = __rest(filters, ["query", "location"]); // Extract location filter
+    const { query } = filters, filtersData = __rest(filters, ["query"]); // Extract location filter
     const andCondition = [];
     // Handle text search
     if (query) {
@@ -142,8 +131,6 @@ const getRetireProfessionals = (filters, paginationOptions) => __awaiter(void 0,
                 };
             }
             else if (field === "skillType") {
-                console.log(field, "cheeck skill type");
-                console.log(value, "check value");
                 const skillTypeArray = Array.isArray(value)
                     ? value
                     : JSON.parse(value);
@@ -151,8 +138,7 @@ const getRetireProfessionals = (filters, paginationOptions) => __awaiter(void 0,
                     expertise: { $in: skillTypeArray },
                 };
             }
-            else if (field === "timeLine") {
-                console.log(field, "chek timeline");
+            else if (field === "timeline") {
                 return value === "shortTerm"
                     ? { availability: { $lte: 29 } }
                     : { availability: { $gte: 30 } };
@@ -162,13 +148,14 @@ const getRetireProfessionals = (filters, paginationOptions) => __awaiter(void 0,
     }
     // Handle location filter using $geoNear
     const aggregationPipeline = [];
-    if (location) {
-        const [longitude, latitude, minDistance, maxDistance] = JSON.parse(location);
+    if (filtersData.location) {
+        const [longitude, latitude, minDistance, maxDistance] = JSON.parse(filtersData.location);
+        console.log(longitude, latitude, minDistance, maxDistance);
         aggregationPipeline.push({
             $geoNear: {
                 near: {
                     type: "Point",
-                    coordinates: [longitude, latitude],
+                    coordinates: [latitude, longitude],
                 },
                 distanceField: "distance",
                 spherical: true,
@@ -218,8 +205,24 @@ const getRetireProfessionals = (filters, paginationOptions) => __awaiter(void 0,
         data: result,
     };
 });
+const getRetireProfessionalsByLocation = (long, lat, min, max) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield professional_model_1.RetireProfessional.find({
+        location: {
+            $near: {
+                $maxDistance: max, // in meters
+                $minDistance: min,
+                $geometry: {
+                    type: "Point",
+                    coordinates: [lat, long],
+                },
+            },
+        },
+    });
+    return result;
+});
 exports.RetireProfessionalService = {
     createProfessional,
     updateSingleRetireProfessional: exports.updateSingleRetireProfessional,
     getRetireProfessionals,
+    getRetireProfessionalsByLocation
 };
