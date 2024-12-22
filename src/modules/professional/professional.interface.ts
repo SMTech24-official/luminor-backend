@@ -42,7 +42,7 @@ export type IProfessional = {
 
   businessType: string;
 
-  availability?: string;
+  availability?: number;
 
   preferedProjects: string;
   hourlyRate: string;

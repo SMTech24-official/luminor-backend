@@ -31,7 +31,6 @@ const professional_model_1 = require("./professional.model");
 const handleApiError_1 = __importDefault(require("../../errors/handleApiError"));
 const paginationHelper_1 = require("../../helpers/paginationHelper");
 const searchableField_1 = require("../../constants/searchableField");
-const serviceMapping_1 = require("../../utilitis/serviceMapping");
 const uploadTos3_1 = require("../../utilitis/uploadTos3");
 const jwtHelpers_1 = require("../../helpers/jwtHelpers");
 const config_1 = __importDefault(require("../../config"));
@@ -80,10 +79,12 @@ const updateSingleRetireProfessional = (id, auth, retireProfessionalPayload) => 
             throw new handleApiError_1.default(404, "Professional account not found");
         }
         // Ensure you're updating the existing client, not creating a new one
-        if (retireProfessionalPayload.expertise) {
-            const industries = (0, serviceMapping_1.getIndustryFromService)(retireProfessionalPayload.expertise);
-            retireProfessionalPayload.industry = industries;
-        }
+        // if (retireProfessionalPayload.expertise) {
+        //   const industries = getIndustryFromService(
+        //     retireProfessionalPayload.expertise
+        //   );
+        //   retireProfessionalPayload.industry = industries;
+        // }
         const updatedRetireProfessional = yield professional_model_1.RetireProfessional.findOneAndUpdate({ retireProfessional: professionalAccount._id }, retireProfessionalPayload, {
             new: true, // return the updated document
             session,

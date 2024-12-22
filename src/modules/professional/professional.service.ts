@@ -85,12 +85,12 @@ export const updateSingleRetireProfessional = async (
     }
 
     // Ensure you're updating the existing client, not creating a new one
-    if (retireProfessionalPayload.expertise) {
-      const industries = getIndustryFromService(
-        retireProfessionalPayload.expertise
-      );
-      retireProfessionalPayload.industry = industries;
-    }
+    // if (retireProfessionalPayload.expertise) {
+    //   const industries = getIndustryFromService(
+    //     retireProfessionalPayload.expertise
+    //   );
+    //   retireProfessionalPayload.industry = industries;
+    // }
     const updatedRetireProfessional = await RetireProfessional.findOneAndUpdate(
       { retireProfessional: professionalAccount._id },
       retireProfessionalPayload,

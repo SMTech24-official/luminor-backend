@@ -16,15 +16,6 @@ const RetireProfessionalSchema = new mongoose_1.default.Schema({
     // Retired Professional account fields
     dateOfBirth: { type: Date, required: true },
     phoneNumber: { type: String, required: true },
-    location: {
-        type: {
-            type: String,
-            enum: ["Point"],
-        },
-        coordinates: {
-            type: [Number],
-        },
-    },
     linkedinProfile: { type: String },
     previousPositions: { type: [String], required: true },
     references: [
@@ -41,12 +32,21 @@ const RetireProfessionalSchema = new mongoose_1.default.Schema({
     technicalSkill: { type: [String], required: true },
     cvOrCoverLetter: { type: String, default: null },
     // Retired professional profile (optional)
+    location: {
+        type: {
+            type: String,
+            enum: ["Point"],
+        },
+        coordinates: {
+            type: [Number],
+        },
+    },
     profileUrl: { type: String, default: null },
     bio: { type: String, default: null },
     description: { type: String, default: null },
     expertise: { type: String, enum: service_1.ENUM_SERVICE_PREFERENCE, default: null },
     industry: { type: String, enum: service_1.INDUSTRIES, defaul: null },
-    availability: { type: String, default: null },
+    availability: { type: Number, default: null },
     preferedProjects: { type: String, default: null },
     hourlyRate: { type: String, default: null },
     workSample: { type: String, default: null },
