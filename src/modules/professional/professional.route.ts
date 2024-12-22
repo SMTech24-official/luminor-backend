@@ -30,3 +30,5 @@ router.patch(
   RetireProfessionalController.updateSingleRetireProfessional
 );
 router.get("/", RetireProfessionalController.getRetireProfessionals);
+
+router.get("/location", RetireProfessionalController.getRetireProfessionalsByLocation)

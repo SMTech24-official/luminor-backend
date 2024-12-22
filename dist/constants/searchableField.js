@@ -7,7 +7,7 @@ exports.searchableField = [
     "maxBudget",
     "projectMin",
     "projectMax",
-    "skilltype",
+    "skillType",
     "timeLine",
     "location",
     "servicePreferences",
@@ -20,7 +20,7 @@ exports.filterableField = [
     "maxBudget",
     "projectMin",
     "projectMax",
-    "skilltype",
+    "skillType",
     "timeLine",
     "location",
 ];

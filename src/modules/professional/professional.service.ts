@@ -84,18 +84,12 @@ export const updateSingleRetireProfessional = async (
       throw new ApiError(404, "Professional account not found");
     }
 
-    // Ensure you're updating the existing client, not creating a new one
-    // if (retireProfessionalPayload.expertise) {
-    //   const industries = getIndustryFromService(
-    //     retireProfessionalPayload.expertise
-    //   );
-    //   retireProfessionalPayload.industry = industries;
-    // }
+
     const updatedRetireProfessional = await RetireProfessional.findOneAndUpdate(
       { retireProfessional: professionalAccount._id },
       retireProfessionalPayload,
       {
-        new: true, // return the updated document
+        new: true, 
         session,
       }
     );
@@ -105,7 +99,7 @@ export const updateSingleRetireProfessional = async (
     }
     // console.log(auth,"check auth");
 
-    // Update the associated User model (linked by client field)
+  
     const updatedUser = await User.findByIdAndUpdate(id, auth, {
       new: true, // return the updated document
       session,
@@ -115,15 +109,15 @@ export const updateSingleRetireProfessional = async (
       throw new ApiError(404, "User not found");
     }
 
-    // Commit the transaction after both updates are successful
+
     await session.commitTransaction();
     session.endSession();
 
-    // Return the updated client with populated user data
+
 
     return updatedRetireProfessional.populate("retireProfessional");
   } catch (error: any) {
-    // In case of error, rollback the transaction
+    
     await session.abortTransaction();
     session.endSession();
     throw new ApiError(400, error.message || "Error updating client");
@@ -137,7 +131,7 @@ const getRetireProfessionals = async (
   const { skip, limit, page, sortBy, sortOrder } =
     paginationHelpers.calculatePagination(paginationOptions);
 
-  const { query, location, ...filtersData } = filters; // Extract location filter
+  const { query, ...filtersData } = filters; // Extract location filter
 
   const andCondition = [];
 
@@ -166,8 +160,6 @@ const getRetireProfessionals = async (
             industry: { $in: parseArray },
           };
         } else if (field === "skillType") {
-          console.log(field,"cheeck skill type")
-          console.log(value,"check value")
           const skillTypeArray = Array.isArray(value)
             ? value
             : JSON.parse(value as string);
@@ -175,8 +167,7 @@ const getRetireProfessionals = async (
           return {
             expertise: { $in: skillTypeArray },
           };
-        } else if (field === "timeLine") {
-          console.log(field,"chek timeline")
+        } else if (field === "timeline") {
           return value === "shortTerm"
             ? { availability: { $lte: 29 } }
             : { availability: { $gte: 30 } };
@@ -188,16 +179,18 @@ const getRetireProfessionals = async (
 
   // Handle location filter using $geoNear
   const aggregationPipeline: any[] = [];
-  if (location) {
+  if (filtersData.location) {
     const [longitude, latitude, minDistance, maxDistance] = JSON.parse(
-      location as string
+      filtersData.location
     );
+
+    console.log(longitude,latitude,minDistance,maxDistance)
 
     aggregationPipeline.push({
       $geoNear: {
         near: {
           type: "Point",
-          coordinates: [longitude, latitude],
+          coordinates: [ latitude,longitude],
         },
         distanceField: "distance",
         spherical: true,
@@ -259,8 +252,37 @@ const getRetireProfessionals = async (
   };
 };
 
+const getRetireProfessionalsByLocation = async (
+  long: number,
+  lat: number,
+  min: number,
+  max: number
+) => {
+
+
+ 
+    const result = await RetireProfessional.find({
+      location: {
+        $near: {
+          $maxDistance: max, // in meters
+          $minDistance:min,
+       
+          $geometry: {
+            type: "Point",
+            coordinates: [lat, long],
+          },
+        },
+      },
+    });
+
+
+    return result;
+  
+};
+
 export const RetireProfessionalService = {
   createProfessional,
   updateSingleRetireProfessional,
   getRetireProfessionals,
+  getRetireProfessionalsByLocation
 };

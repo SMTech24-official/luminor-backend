@@ -7,9 +7,8 @@ import pick from "../../shared/pick";
 import { paginationFileds } from "../../constants/pagination";
 import { filterableField } from "../../constants/searchableField";
 import { IProfessional } from "./professional.interface";
-import ApiError from "../../errors/handleApiError";
+
 import { uploadFileToSpace } from "../../utilitis/uploadTos3";
-import { IUser } from "../auth/auth.interface";
 
 const createProfessional = catchAsync(async (req: Request, res: Response) => {
   const file = req.file as unknown as Express.Multer.File;
@@ -45,13 +44,13 @@ const updateSingleRetireProfessional = catchAsync(
   async (req: Request, res: Response) => {
     const files = req.files as Express.Multer.File[]; // Get all files uploaded
     const fileMap: { [key: string]: Express.Multer.File } = {};
-    let workSampleUrl ;
-    let profileImageUrl ;
+    let workSampleUrl;
+    let profileImageUrl;
     const { name, ...retireProfessionalProfile } = req.body;
 
     const auth = { name };
     const { workSample, profileImage, ...others } = retireProfessionalProfile;
-    let updatedProfile={...others}
+    let updatedProfile = { ...others };
 
     // Map files to their respective fields by matching `fieldname`
     if (files.length) {
@@ -79,13 +78,12 @@ const updateSingleRetireProfessional = catchAsync(
         workSample: workSampleUrl,
         profileUrl: profileImageUrl,
       };
-  
     }
-   
+
     // Parse and update body fields
 
     // Include uploaded file URLs in the update payload
-   
+
     // Call service to update
     const result =
       await RetireProfessionalService.updateSingleRetireProfessional(
@@ -124,9 +122,31 @@ const getRetireProfessionals = catchAsync(
     });
   }
 );
+const getRetireProfessionalsByLocation = catchAsync(
+  async (req: Request, res: Response) => {
+    const { long, lat, min, max } = req.query;
+
+    const result =
+      await RetireProfessionalService.getRetireProfessionalsByLocation(
+        parseFloat(long as string),
+        parseFloat(lat as string),
+        parseFloat(min as string),
+        parseFloat(max as string)
+      );
+
+    sendResponse<IProfessional[]>(res, {
+      success: true,
+      statusCode: StatusCodes.OK,
+
+      message: "Retire professional   retrived successfully",
+      data: result,
+    });
+  }
+);
 
 export const RetireProfessionalController = {
   createProfessional,
   updateSingleRetireProfessional,
   getRetireProfessionals,
+  getRetireProfessionalsByLocation,
 };

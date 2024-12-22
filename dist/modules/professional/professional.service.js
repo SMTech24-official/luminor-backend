@@ -142,6 +142,8 @@ const getRetireProfessionals = (filters, paginationOptions) => __awaiter(void 0,
                 };
             }
             else if (field === "skillType") {
+                console.log(field, "cheeck skill type");
+                console.log(value, "check value");
                 const skillTypeArray = Array.isArray(value)
                     ? value
                     : JSON.parse(value);
@@ -149,7 +151,8 @@ const getRetireProfessionals = (filters, paginationOptions) => __awaiter(void 0,
                     expertise: { $in: skillTypeArray },
                 };
             }
-            else if (field === "timeline") {
+            else if (field === "timeLine") {
+                console.log(field, "chek timeline");
                 return value === "shortTerm"
                     ? { availability: { $lte: 29 } }
                     : { availability: { $gte: 30 } };

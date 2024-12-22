@@ -19,6 +19,9 @@ const auth_model_1 = require("./auth.model");
 const http_status_codes_1 = require("http-status-codes");
 const emailSender_1 = __importDefault(require("../../utilitis/emailSender"));
 const jwtHelpers_1 = require("../../helpers/jwtHelpers");
+const user_1 = require("../../enums/user");
+const professional_model_1 = require("../professional/professional.model");
+const client_model_1 = require("../client/client.model");
 const loginUser = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, password } = payload;
     console.log(password, "check password");
@@ -124,11 +127,21 @@ const enterOtp = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     return result;
 });
 const getProfile = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield auth_model_1.User.findById(id);
+    const user = yield auth_model_1.User.findById(id);
+    console.log(user, "User details");
+    let result;
+    if ((user === null || user === void 0 ? void 0 : user.role) === user_1.ENUM_USER_ROLE.RETIREPROFESSIONAL) {
+        result = yield professional_model_1.RetireProfessional.findOne({
+            retireProfessional: user.id,
+        }).populate("retireProfessional");
+    }
+    else if ((user === null || user === void 0 ? void 0 : user.role) === user_1.ENUM_USER_ROLE.CLIENT) {
+        result = yield client_model_1.Client.findOne({ client: user.id }).populate("client");
+    }
     return result;
 });
 exports.AuthService = {
     loginUser,
     enterOtp,
-    getProfile
+    getProfile,
 };
