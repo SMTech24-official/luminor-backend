@@ -47,7 +47,7 @@ const createProfessional = (0, catchAsync_1.default)((req, res) => __awaiter(voi
     const result = yield professional_service_1.RetireProfessionalService.createProfessional(user, professionalData, file);
     (0, sendResponse_1.default)(res, {
         success: true,
-        statusCode: http_status_codes_1.StatusCodes.OK,
+        statusCode: http_status_codes_1.StatusCodes.CREATED,
         message: `retire professional   account  created   successfully`,
         data: result,
     });
