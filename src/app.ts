@@ -11,7 +11,12 @@ import session from "express-session";
 import config from "./config";
 const app: Application = express();
 
-app.use(cors());
+app.use(cors({
+  
+    origin: "http://localhost:3000", 
+
+  
+}));
 app.use(cookieParser());
 
 //parser
